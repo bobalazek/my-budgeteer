@@ -1,11 +1,18 @@
 datasource db {
-  provider = "sqlite"
+  provider = "postgres"
   url      = env("DATABASE_URL")
 }
 
 generator client {
   provider      = "prisma-client-js"
   binaryTargets = "native"
+}
+
+model RW_DataMigration {
+  version    String   @id
+  name       String
+  startedAt  DateTime
+  finishedAt DateTime
 }
 
 model User {
@@ -16,4 +23,78 @@ model User {
   name                String
   resetToken          String?
   resetTokenExpiresAt DateTime?
+  projects            Project[] @relation(name: "User_Projects")
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+}
+
+model Category {
+  id          String    @id @default(uuid())
+  name        String
+  description String
+  projects    Project[] @relation(name: "Category_Projects")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Project {
+  id               String            @id @default(uuid())
+  name             String
+  description      String
+  currencySymbol   String
+  isPublic         Boolean           @default(false)
+  costEstimated    Float?
+  categoryId       String?
+  category         Category?         @relation(name: "Category_Projects", fields: [categoryId], references: [id])
+  userId           String?
+  user             User?             @relation(name: "User_Projects", fields: [userId], references: [id])
+  projectVariables ProjectVariable[] @relation(name: "Project_ProjectVariables")
+  projectExpenses  ProjectExpense[]  @relation(name: "Project_ProjectExpenses")
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+}
+
+model ProjectVariable {
+  id        String   @id @default(uuid())
+  name      String
+  value     String
+  type      String // available: "string"
+  projectId String
+  project   Project  @relation(name: "Project_ProjectVariables", fields: [projectId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum ProjectExpenseRecurringInterval {
+  NONE
+  DAILY
+  WEEKLY
+  MONTHLY
+  QUARTER_YEARLY
+  HALF_YEARLY
+  YEARLY
+}
+
+model ProjectExpense {
+  id                 String                          @id @default(uuid())
+  name               String
+  description        String?
+  note               String?
+  recurringInterval  ProjectExpenseRecurringInterval @default(NONE)
+  costRangeFrom      Float
+  costRangeTo        Float
+  costActual         Float // How much did it actually cost at the end?
+  progressPercentage Float
+  meta               Json
+  conditions         Json
+  links              Json
+  tags               Json
+  isArchived         Boolean                         @default(false)
+  projectId          String
+  project            Project                         @relation(name: "Project_ProjectExpenses", fields: [projectId], references: [id])
+  parentId           String?
+  parent             ProjectExpense?                 @relation(name: "ProjectExpense_Parent", fields: [parentId], references: [id])
+  children           ProjectExpense[]                @relation(name: "ProjectExpense_Parent")
+  createdAt          DateTime                        @default(now())
+  updatedAt          DateTime                        @updatedAt
 }

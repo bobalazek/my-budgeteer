@@ -17,12 +17,14 @@ model RW_DataMigration {
 
 model User {
   id                  String    @id @default(uuid())
+  username            String    @unique
   email               String    @unique
   hashedPassword      String
   salt                String
   name                String
   resetToken          String?
   resetTokenExpiresAt DateTime?
+  roles               String[]
   projects            Project[] @relation(name: "User_Projects")
   createdAt           DateTime  @default(now())
   updatedAt           DateTime  @updatedAt
@@ -87,8 +89,8 @@ model ProjectExpense {
   progressPercentage Float
   meta               Json
   conditions         Json
-  links              Json
-  tags               Json
+  links              String[]
+  tags               String[]
   isArchived         Boolean                         @default(false)
   projectId          String
   project            Project                         @relation(name: "Project_ProjectExpenses", fields: [projectId], references: [id])

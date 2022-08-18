@@ -14,12 +14,14 @@ CREATE TABLE "RW_DataMigration" (
 -- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
+    "username" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "hashedPassword" TEXT NOT NULL,
     "salt" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "resetToken" TEXT,
     "resetTokenExpiresAt" TIMESTAMP(3),
+    "roles" TEXT[],
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -79,8 +81,8 @@ CREATE TABLE "ProjectExpense" (
     "progressPercentage" DOUBLE PRECISION NOT NULL,
     "meta" JSONB NOT NULL,
     "conditions" JSONB NOT NULL,
-    "links" JSONB NOT NULL,
-    "tags" JSONB NOT NULL,
+    "links" TEXT[],
+    "tags" TEXT[],
     "isArchived" BOOLEAN NOT NULL DEFAULT false,
     "projectId" TEXT NOT NULL,
     "parentId" TEXT,
@@ -89,6 +91,9 @@ CREATE TABLE "ProjectExpense" (
 
     CONSTRAINT "ProjectExpense_pkey" PRIMARY KEY ("id")
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");

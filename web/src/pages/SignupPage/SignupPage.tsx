@@ -57,6 +57,26 @@ const SignupPage = () => {
               <div className="rw-form-wrapper">
                 <Form onSubmit={onSubmit} className="rw-form-wrapper">
                   <Label
+                    name="name"
+                    className="rw-label"
+                    errorClassName="rw-label rw-label-error"
+                  >
+                    Name
+                  </Label>
+                  <TextField
+                    name="name"
+                    className="rw-input"
+                    errorClassName="rw-input rw-input-error"
+                    validation={{
+                      required: {
+                        value: true,
+                        message: 'Name is required',
+                      },
+                    }}
+                  />
+                  <FieldError name="name" className="rw-field-error" />
+
+                  <Label
                     name="username"
                     className="rw-label"
                     errorClassName="rw-label rw-label-error"
@@ -76,6 +96,26 @@ const SignupPage = () => {
                     }}
                   />
                   <FieldError name="username" className="rw-field-error" />
+
+                  <Label
+                    name="email"
+                    className="rw-label"
+                    errorClassName="rw-label rw-label-error"
+                  >
+                    Email
+                  </Label>
+                  <TextField
+                    name="email"
+                    className="rw-input"
+                    errorClassName="rw-input rw-input-error"
+                    validation={{
+                      required: {
+                        value: true,
+                        message: 'Email is required',
+                      },
+                    }}
+                  />
+                  <FieldError name="email" className="rw-field-error" />
 
                   <Label
                     name="password"

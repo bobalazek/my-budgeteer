@@ -1,14 +1,6 @@
 import { db } from 'api/src/lib/db'
-import { genSalt, hash } from 'bcrypt'
 
-const usersData = [
-  {
-    email: 'bobalazek124@gmail.com',
-    rawPassword: 'password',
-    salt: 'salt',
-    name: 'borut',
-  },
-]
+const users = [] // TODO: figure out a programatic way, to have the correct salt and hashedpassword
 
 export default async () => {
   try {
@@ -18,13 +10,10 @@ export default async () => {
 
     // Users
     console.log('========== Users ==========')
-    usersData.map(async (userData) => {
-      console.log(`Inserting the "${userData.email}" user ...`)
+    users.map(async (data) => {
+      console.log(`Inserting the "${data.email}" user ...`)
 
-      const salt = await genSalt()
-      const hashedPassword = await hash(userData.rawPassword, salt)
-
-      await db.user.create({ data: { ...userData, salt, hashedPassword } })
+      await db.user.create({ data })
     })
   } catch (error) {
     console.warn('Please define your seed data.')

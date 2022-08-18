@@ -1,5 +1,6 @@
 import { Toaster } from '@redwoodjs/web/toast'
 
+import Footer from './Footer'
 import Header from './Header'
 
 type DefaultLayoutProps = {
@@ -10,11 +11,9 @@ const DefaultLayout = ({ children }: DefaultLayoutProps) => {
   return (
     <>
       <Toaster toastOptions={{ className: 'rw-toast', duration: 6000 }} />
-      <header>
-        <Header />
-      </header>
+      <Header />
       <main>{children}</main>
-      <footer>Copyright &copy; 2022 My Budgeteer</footer>
+      <Footer />
     </>
   )
 }

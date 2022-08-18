@@ -1,6 +1,7 @@
 import { Router, Route, Private, Set } from '@redwoodjs/router'
 
 import AdminLayout from './layouts/AdminLayout/AdminLayout'
+import DefaultLayout from './layouts/DefaultLayout/DefaultLayout'
 
 const Routes = () => {
   return (
@@ -18,15 +19,17 @@ const Routes = () => {
           <Route path="/admin/categories" page={AdminCategoryCategoriesPage} name="categories" />
         </Set>
       </Private>
-      <Route path="/" page={HomePage} name="home" />
-      <Route path="/login" page={LoginPage} name="login" />
-      <Route path="/signup" page={SignupPage} name="signup" />
-      <Route path="/forgot-password" page={ForgotPasswordPage} name="forgotPassword" />
-      <Route path="/reset-password" page={ResetPasswordPage} name="resetPassword" />
-      <Route path="/projects/new" page={ProjectNewProjectPage} name="newProject" />
-      <Route path="/projects/{id}/edit" page={ProjectEditProjectPage} name="editProject" />
-      <Route path="/projects/{id}" page={ProjectProjectPage} name="project" />
-      <Route path="/projects" page={ProjectProjectsPage} name="projects" />
+      <Set wrap={DefaultLayout}>
+        <Route path="/" page={HomePage} name="home" />
+        <Route path="/login" page={LoginPage} name="login" />
+        <Route path="/signup" page={SignupPage} name="signup" />
+        <Route path="/forgot-password" page={ForgotPasswordPage} name="forgotPassword" />
+        <Route path="/reset-password" page={ResetPasswordPage} name="resetPassword" />
+        <Route path="/projects/new" page={ProjectNewProjectPage} name="newProject" />
+        <Route path="/projects/{id}/edit" page={ProjectEditProjectPage} name="editProject" />
+        <Route path="/projects/{id}" page={ProjectProjectPage} name="project" />
+        <Route path="/projects" page={ProjectProjectsPage} name="projects" />
+      </Set>
       <Route notfound page={NotFoundPage} />
     </Router>
   )

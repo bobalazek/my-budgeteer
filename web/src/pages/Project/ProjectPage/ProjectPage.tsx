@@ -1,3 +1,5 @@
+import { Box } from '@mui/material'
+
 import ProjectCell from 'src/components/Project/ProjectCell'
 
 type ProjectPageProps = {
@@ -5,7 +7,12 @@ type ProjectPageProps = {
 }
 
 const ProjectPage = ({ id }: ProjectPageProps) => {
-  return <ProjectCell id={id} />
+  return (
+    <Box p={2}>
+      {' '}
+      <ProjectCell id={id} />
+    </Box>
+  )
 }
 
 export default ProjectPage

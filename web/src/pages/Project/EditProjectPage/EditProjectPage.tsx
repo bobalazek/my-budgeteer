@@ -1,3 +1,5 @@
+import { Box } from '@mui/material'
+
 import EditProjectCell from 'src/components/Project/EditProjectCell'
 
 type ProjectPageProps = {
@@ -5,7 +7,11 @@ type ProjectPageProps = {
 }
 
 const EditProjectPage = ({ id }: ProjectPageProps) => {
-  return <EditProjectCell id={id} />
+  return (
+    <Box p={2}>
+      <EditProjectCell id={id} />
+    </Box>
+  )
 }
 
 export default EditProjectPage

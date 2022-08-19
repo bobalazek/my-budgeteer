@@ -8,7 +8,7 @@ export default function Header() {
 
   return (
     <header>
-      <AppBar>
+      <AppBar position="static">
         <Toolbar style={{ display: 'flex', justifyContent: 'space-between' }}>
           <Typography
             variant="h6"
@@ -25,6 +25,16 @@ export default function Header() {
           >
             My Budgeteer
           </Typography>
+          {isAuthenticated && (
+            <Button
+              href="#"
+              color="inherit"
+              component={Link}
+              to={routes.projects()}
+            >
+              My Projects
+            </Button>
+          )}
           {!isAuthenticated && (
             <Button
               href="#"

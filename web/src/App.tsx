@@ -1,4 +1,4 @@
-import { createTheme, ThemeProvider } from '@mui/material'
+import { createTheme, ThemeProvider, CssBaseline } from '@mui/material'
 
 import { AuthProvider } from '@redwoodjs/auth'
 import { FatalErrorBoundary, RedwoodProvider } from '@redwoodjs/web'
@@ -17,6 +17,7 @@ const App = () => (
       <AuthProvider type="dbAuth">
         <RedwoodApolloProvider>
           <ThemeProvider theme={theme}>
+            <CssBaseline />
             <Routes />
           </ThemeProvider>
         </RedwoodApolloProvider>

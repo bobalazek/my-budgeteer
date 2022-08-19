@@ -2,12 +2,25 @@ import type {
   QueryResolvers,
   MutationResolvers,
   ProjectResolvers,
+  CreateProjectInput,
 } from 'types/graphql'
 
+import { validate, validateWith } from '@redwoodjs/api'
+
+import { ALLOWED_CURRENCIES } from 'src/constants'
 import { db } from 'src/lib/db'
 
 export const projects: QueryResolvers['projects'] = () => {
-  return db.project.findMany()
+  const userId = context.currentUser?.id
+  if (!userId) {
+    return []
+  }
+
+  return db.project.findMany({
+    where: {
+      userId,
+    },
+  })
 }
 
 export const project: QueryResolvers['project'] = ({ id }) => {
@@ -19,8 +32,43 @@ export const project: QueryResolvers['project'] = ({ id }) => {
 export const createProject: MutationResolvers['createProject'] = ({
   input,
 }) => {
+  const userId = context.currentUser?.id
+  if (!userId) {
+    throw 'You must be logged in to create a project'
+  }
+
+  validate(input.currencySymbol, {
+    inclusion: {
+      in: ALLOWED_CURRENCIES,
+      message: 'Invalid currency symbol. Valid: $ or €',
+    },
+  })
+
+  validateWith(() => {
+    if (input.categoryId) {
+      const category = db.category.findUnique({
+        where: {
+          id: input.categoryId,
+        },
+      })
+      if (!category) {
+        throw 'Category with this ID does not exist'
+      }
+    }
+  })
+
+  const data: CreateProjectInput = {
+    name: input.name,
+    description: input.description,
+    currencySymbol: input.currencySymbol,
+    isPublic: input.isPublic ?? false,
+    costEstimated: input.costEstimated,
+    userId,
+    categoryId: input.categoryId,
+  }
+
   return db.project.create({
-    data: input,
+    data,
   })
 }
 

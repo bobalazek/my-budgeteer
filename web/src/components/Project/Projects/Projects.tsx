@@ -32,10 +32,6 @@ const timeTag = (datetime) => {
   )
 }
 
-const checkboxInputTag = (checked) => {
-  return <input type="checkbox" checked={checked} disabled />
-}
-
 const ProjectsList = ({ projects }) => {
   const [deleteProject] = useMutation(DELETE_PROJECT_MUTATION, {
     onCompleted: () => {
@@ -62,14 +58,11 @@ const ProjectsList = ({ projects }) => {
       <table className="rw-table">
         <thead>
           <tr>
-            <th>Id</th>
             <th>Name</th>
             <th>Description</th>
-            <th>Currency symbol</th>
             <th>Is public</th>
             <th>Cost estimated</th>
-            <th>Category id</th>
-            <th>User id</th>
+            <th>Category</th>
             <th>Created at</th>
             <th>Updated at</th>
             <th>&nbsp;</th>
@@ -78,14 +71,17 @@ const ProjectsList = ({ projects }) => {
         <tbody>
           {projects.map((project) => (
             <tr key={project.id}>
-              <td>{truncate(project.id)}</td>
               <td>{truncate(project.name)}</td>
               <td>{truncate(project.description)}</td>
-              <td>{truncate(project.currencySymbol)}</td>
-              <td>{checkboxInputTag(project.isPublic)}</td>
-              <td>{truncate(project.costEstimated)}</td>
-              <td>{truncate(project.categoryId)}</td>
-              <td>{truncate(project.userId)}</td>
+              <td>{project.isPublic ? 'Yes' : 'No'}</td>
+              <td>
+                {project.costEstimated && (
+                  <>
+                    {project.costEstimated} {project.currencySymbol}
+                  </>
+                )}
+              </td>
+              <td>{truncate(project.category?.name)}</td>
               <td>{timeTag(project.createdAt)}</td>
               <td>{timeTag(project.updatedAt)}</td>
               <td>

@@ -9,7 +9,6 @@ type ProjectPageProps = {
 const ProjectPage = ({ id }: ProjectPageProps) => {
   return (
     <Box p={2}>
-      {' '}
       <ProjectCell id={id} />
     </Box>
   )

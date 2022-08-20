@@ -1,5 +1,3 @@
-import humanize from 'humanize-string'
-
 import { Link, routes, navigate } from '@redwoodjs/router'
 import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
@@ -12,25 +10,6 @@ const DELETE_PROJECT_MUTATION = gql`
   }
 `
 
-const formatEnum = (values: string | string[] | null | undefined) => {
-  if (values) {
-    if (Array.isArray(values)) {
-      const humanizedValues = values.map((value) => humanize(value))
-      return humanizedValues.join(', ')
-    } else {
-      return humanize(values as string)
-    }
-  }
-}
-
-const jsonDisplay = (obj) => {
-  return (
-    <pre>
-      <code>{JSON.stringify(obj, null, 2)}</code>
-    </pre>
-  )
-}
-
 const timeTag = (datetime) => {
   return (
     datetime && (
@@ -39,10 +18,6 @@ const timeTag = (datetime) => {
       </time>
     )
   )
-}
-
-const checkboxInputTag = (checked) => {
-  return <input type="checkbox" checked={checked} disabled />
 }
 
 const Project = ({ project }) => {
@@ -66,38 +41,47 @@ const Project = ({ project }) => {
     <>
       <div className="rw-segment">
         <header className="rw-segment-header">
-          <h2 className="rw-heading rw-heading-secondary">Project {project.id} Detail</h2>
+          <h2 className="rw-heading rw-heading-secondary">
+            Project &quot;{project.name}&quot; Detail
+          </h2>
         </header>
         <table className="rw-table">
           <tbody>
             <tr>
               <th>Id</th>
               <td>{project.id}</td>
-            </tr><tr>
+            </tr>
+            <tr>
               <th>Name</th>
               <td>{project.name}</td>
-            </tr><tr>
+            </tr>
+            <tr>
               <th>Description</th>
               <td>{project.description}</td>
-            </tr><tr>
-              <th>Currency symbol</th>
-              <td>{project.currencySymbol}</td>
-            </tr><tr>
+            </tr>
+            <tr>
               <th>Is public</th>
-              <td>{checkboxInputTag(project.isPublic)}</td>
-            </tr><tr>
+              <td>{project.isPublic ? 'Yes' : 'No'}</td>
+            </tr>
+            <tr>
               <th>Cost estimated</th>
-              <td>{project.costEstimated}</td>
-            </tr><tr>
-              <th>Category id</th>
-              <td>{project.categoryId}</td>
-            </tr><tr>
-              <th>User id</th>
-              <td>{project.userId}</td>
-            </tr><tr>
+              <td>
+                {project.costEstimated && (
+                  <>
+                    {project.costEstimated} {project.currencySymbol}
+                  </>
+                )}
+              </td>
+            </tr>
+            <tr>
+              <th>Category</th>
+              <td>{project.category?.name}</td>
+            </tr>
+            <tr>
               <th>Created at</th>
               <td>{timeTag(project.createdAt)}</td>
-            </tr><tr>
+            </tr>
+            <tr>
               <th>Updated at</th>
               <td>{timeTag(project.updatedAt)}</td>
             </tr>
@@ -105,6 +89,9 @@ const Project = ({ project }) => {
         </table>
       </div>
       <nav className="rw-button-group">
+        <Link to={routes.projects()} className="rw-button">
+          Back
+        </Link>
         <Link
           to={routes.editProject({ id: project.id })}
           className="rw-button rw-button-blue"

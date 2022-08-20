@@ -17,7 +17,9 @@ export const QUERY = gql`
       isPublic
       costEstimated
       categoryId
-      userId
+      category {
+        name
+      }
       createdAt
       updatedAt
     }
@@ -33,7 +35,6 @@ const UPDATE_PROJECT_MUTATION = gql`
       isPublic
       costEstimated
       categoryId
-      userId
       createdAt
       updatedAt
     }
@@ -68,7 +69,7 @@ export const Success = ({ project }: CellSuccessProps<EditProjectById>) => {
     <div className="rw-segment">
       <header className="rw-segment-header">
         <h2 className="rw-heading rw-heading-secondary">
-          Edit Project {project.id}
+          Edit Project &quot;{project.name}&quot;
         </h2>
       </header>
       <div className="rw-segment-main">

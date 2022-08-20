@@ -1,3 +1,4 @@
+import currenciesMap from 'currency-symbol-map/map'
 import type {
   QueryResolvers,
   MutationResolvers,
@@ -7,7 +8,6 @@ import type {
 
 import { validate, validateWith } from '@redwoodjs/api'
 
-import { ALLOWED_CURRENCIES } from 'src/constants'
 import { db } from 'src/lib/db'
 
 export const projects: QueryResolvers['projects'] = () => {
@@ -39,8 +39,8 @@ export const createProject: MutationResolvers['createProject'] = ({
 
   validate(input.currencySymbol, {
     inclusion: {
-      in: ALLOWED_CURRENCIES,
-      message: 'Invalid currency symbol. Valid: $ or €',
+      in: Object.keys(currenciesMap),
+      message: 'Invalid currency symbol',
     },
   })
 

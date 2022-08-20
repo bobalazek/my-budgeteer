@@ -1,3 +1,6 @@
+import getSymbolFromCurrency from 'currency-symbol-map'
+import currenciesMap from 'currency-symbol-map/map'
+
 import {
   Form,
   FormError,
@@ -7,7 +10,13 @@ import {
   CheckboxField,
   Submit,
   SelectField,
+  TextAreaField,
 } from '@redwoodjs/forms'
+import { Link, routes } from '@redwoodjs/router'
+
+const currencies = Object.keys(currenciesMap).sort((a: string) => {
+  return ['USD', 'EUR', 'AUD', 'CAD'].includes(a) ? -1 : 1
+})
 
 const ProjectForm = (props) => {
   const onSubmit = (data) => {
@@ -29,7 +38,7 @@ const ProjectForm = (props) => {
           className="rw-label"
           errorClassName="rw-label rw-label-error"
         >
-          Name
+          Name*
         </Label>
         <TextField
           name="name"
@@ -45,9 +54,9 @@ const ProjectForm = (props) => {
           className="rw-label"
           errorClassName="rw-label rw-label-error"
         >
-          Description
+          Description*
         </Label>
-        <TextField
+        <TextAreaField
           name="description"
           defaultValue={props.project?.description}
           className="rw-input"
@@ -61,18 +70,22 @@ const ProjectForm = (props) => {
           className="rw-label"
           errorClassName="rw-label rw-label-error"
         >
-          Currency symbol
+          Currency symbol*
         </Label>
         <SelectField
           name="currencySymbol"
-          defaultValue={props.project?.currencySymbol}
+          defaultValue={props.project?.currencySymbol ?? '$'}
           className="rw-input"
           errorClassName="rw-input rw-input-error"
           validation={{ required: true }}
         >
-          <option value="">Please select a symbol</option>
-          <option value="$">$</option>
-          <option value="€">€</option>
+          {currencies.map((currency) => {
+            return (
+              <option key={currency} value={currency}>
+                {currency} ({getSymbolFromCurrency(currency)})
+              </option>
+            )
+          })}
         </SelectField>
         <FieldError name="currencySymbol" className="rw-field-error" />
 
@@ -112,7 +125,7 @@ const ProjectForm = (props) => {
           className="rw-label"
           errorClassName="rw-label rw-label-error"
         >
-          Category id
+          Category
         </Label>
         <TextField
           name="categoryId"
@@ -123,6 +136,9 @@ const ProjectForm = (props) => {
         <FieldError name="categoryId" className="rw-field-error" />
 
         <div className="rw-button-group">
+          <Link to={routes.projects()} className="rw-button">
+            Back
+          </Link>
           <Submit disabled={props.loading} className="rw-button rw-button-blue">
             Save
           </Submit>

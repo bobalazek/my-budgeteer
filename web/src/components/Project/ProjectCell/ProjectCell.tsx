@@ -14,7 +14,9 @@ export const QUERY = gql`
       isPublic
       costEstimated
       categoryId
-      userId
+      category {
+        name
+      }
       createdAt
       updatedAt
     }

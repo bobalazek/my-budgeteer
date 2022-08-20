@@ -10677,6 +10677,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"currency-symbol-map@npm:^5.1.0":
+  version: 5.1.0
+  resolution: "currency-symbol-map@npm:5.1.0"
+  checksum: 1c6442efe74fc407ed7d5b5b936487e2ab276400ff7a3dceb283a3f688e83613d32c2ba719757d12944b7d9e6c74722bb8de65b5f7c914d35a9119eafec94651
+  languageName: node
+  linkType: hard
+
 "currently-unhandled@npm:^0.4.1":
   version: 0.4.1
   resolution: "currently-unhandled@npm:0.4.1"
@@ -24125,6 +24132,7 @@ __metadata:
     "@redwoodjs/forms": 2.2.0
     "@redwoodjs/router": 2.2.0
     "@redwoodjs/web": 2.2.0
+    currency-symbol-map: ^5.1.0
     prop-types: 15.8.1
     react: 17.0.2
     react-dom: 17.0.2

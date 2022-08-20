@@ -31,18 +31,21 @@ model User {
 }
 
 model Category {
-  id          String    @id @default(uuid())
+  id          String     @id @default(uuid())
   name        String
-  description String
-  projects    Project[] @relation(name: "Category_Projects")
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  description String?
+  parentId    String?
+  parent      Category?  @relation(name: "Category_Parent", fields: [parentId], references: [id])
+  children    Category[] @relation(name: "Category_Parent")
+  projects    Project[]  @relation(name: "Category_Projects")
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
 }
 
 model Project {
   id               String            @id @default(uuid())
   name             String
-  description      String
+  description      String?
   currencySymbol   String
   costEstimated    Float?
   isPublic         Boolean           @default(false)

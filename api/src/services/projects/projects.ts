@@ -76,6 +76,21 @@ export const updateProject: MutationResolvers['updateProject'] = ({
   id,
   input,
 }) => {
+  const userId = context.currentUser?.id
+  if (!userId) {
+    throw 'You must be logged in to update a project'
+  }
+
+  const project = db.project.findFirst({
+    where: {
+      id,
+      userId,
+    },
+  })
+  if (!project) {
+    throw 'Project with this ID does not exist'
+  }
+
   return db.project.update({
     data: input,
     where: { id },
@@ -83,6 +98,21 @@ export const updateProject: MutationResolvers['updateProject'] = ({
 }
 
 export const deleteProject: MutationResolvers['deleteProject'] = ({ id }) => {
+  const userId = context.currentUser?.id
+  if (!userId) {
+    throw 'You must be logged in to delete a project'
+  }
+
+  const project = db.project.findFirst({
+    where: {
+      id,
+      userId,
+    },
+  })
+  if (!project) {
+    throw 'Project with this ID does not exist'
+  }
+
   return db.project.delete({
     where: { id },
   })

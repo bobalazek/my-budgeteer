@@ -2,7 +2,7 @@ export const schema = gql`
   type Project {
     id: String!
     name: String!
-    description: String!
+    description: String
     currencySymbol: String!
     costEstimated: Float
     isPublic: Boolean!

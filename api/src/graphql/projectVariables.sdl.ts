@@ -11,7 +11,7 @@ export const schema = gql`
   }
 
   type Query {
-    projectVariables: [ProjectVariable!]! @requireAuth
+    projectVariables(projectId: String!): [ProjectVariable!]! @requireAuth
     projectVariable(id: String!): ProjectVariable @requireAuth
   }
 

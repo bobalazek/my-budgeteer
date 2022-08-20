@@ -34,7 +34,7 @@ export const schema = gql`
   }
 
   type Query {
-    projectExpenses: [ProjectExpense!]! @requireAuth
+    projectExpenses(projectId: String!): [ProjectExpense!]! @requireAuth
     projectExpense(id: String!): ProjectExpense @requireAuth
   }
 

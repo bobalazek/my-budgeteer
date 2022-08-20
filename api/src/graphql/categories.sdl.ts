@@ -2,7 +2,7 @@ export const schema = gql`
   type Category {
     id: String!
     name: String!
-    description: String!
+    description: String
     projects: [Project]!
     createdAt: DateTime!
     updatedAt: DateTime!

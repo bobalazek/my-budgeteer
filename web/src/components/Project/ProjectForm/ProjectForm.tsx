@@ -14,6 +14,8 @@ import {
 } from '@redwoodjs/forms'
 import { Link, routes } from '@redwoodjs/router'
 
+import CategoryField from './CategoryField'
+
 const currencies = Object.keys(currenciesMap).sort((a: string) => {
   return ['USD', 'EUR', 'AUD', 'CAD'].includes(a) ? -1 : 1
 })
@@ -90,21 +92,6 @@ const ProjectForm = (props) => {
         <FieldError name="currencySymbol" className="rw-field-error" />
 
         <Label
-          name="isPublic"
-          className="rw-label"
-          errorClassName="rw-label rw-label-error"
-        >
-          Is public
-        </Label>
-        <CheckboxField
-          name="isPublic"
-          defaultChecked={props.project?.isPublic}
-          className="rw-input"
-          errorClassName="rw-input rw-input-error"
-        />
-        <FieldError name="isPublic" className="rw-field-error" />
-
-        <Label
           name="costEstimated"
           className="rw-label"
           errorClassName="rw-label rw-label-error"
@@ -121,13 +108,28 @@ const ProjectForm = (props) => {
         <FieldError name="costEstimated" className="rw-field-error" />
 
         <Label
+          name="isPublic"
+          className="rw-label"
+          errorClassName="rw-label rw-label-error"
+        >
+          Is public
+        </Label>
+        <CheckboxField
+          name="isPublic"
+          defaultChecked={props.project?.isPublic}
+          className="rw-input"
+          errorClassName="rw-input rw-input-error"
+        />
+        <FieldError name="isPublic" className="rw-field-error" />
+
+        <Label
           name="categoryId"
           className="rw-label"
           errorClassName="rw-label rw-label-error"
         >
           Category
         </Label>
-        <TextField
+        <CategoryField
           name="categoryId"
           defaultValue={props.project?.categoryId}
           className="rw-input"

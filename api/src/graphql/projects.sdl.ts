@@ -4,8 +4,8 @@ export const schema = gql`
     name: String!
     description: String!
     currencySymbol: String!
-    isPublic: Boolean!
     costEstimated: Float
+    isPublic: Boolean!
     categoryId: String
     category: Category
     userId: String
@@ -25,8 +25,8 @@ export const schema = gql`
     name: String!
     description: String!
     currencySymbol: String!
-    isPublic: Boolean!
     costEstimated: Float
+    isPublic: Boolean!
     categoryId: String
     userId: String
   }
@@ -35,8 +35,8 @@ export const schema = gql`
     name: String
     description: String
     currencySymbol: String
-    isPublic: Boolean
     costEstimated: Float
+    isPublic: Boolean
     categoryId: String
     userId: String
   }

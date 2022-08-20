@@ -60,10 +60,6 @@ const Project = ({ project }) => {
               <td>{project.description}</td>
             </tr>
             <tr>
-              <th>Is public</th>
-              <td>{project.isPublic ? 'Yes' : 'No'}</td>
-            </tr>
-            <tr>
               <th>Cost estimated</th>
               <td>
                 {project.costEstimated && (
@@ -72,6 +68,10 @@ const Project = ({ project }) => {
                   </>
                 )}
               </td>
+            </tr>
+            <tr>
+              <th>Is public</th>
+              <td>{project.isPublic ? 'Yes' : 'No'}</td>
             </tr>
             <tr>
               <th>Category</th>

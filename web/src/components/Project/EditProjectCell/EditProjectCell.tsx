@@ -32,8 +32,8 @@ const UPDATE_PROJECT_MUTATION = gql`
       name
       description
       currencySymbol
-      isPublic
       costEstimated
+      isPublic
       categoryId
       createdAt
       updatedAt

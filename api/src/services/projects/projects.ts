@@ -61,8 +61,8 @@ export const createProject: MutationResolvers['createProject'] = ({
     name: input.name,
     description: input.description,
     currencySymbol: input.currencySymbol,
-    isPublic: input.isPublic ?? false,
     costEstimated: input.costEstimated,
+    isPublic: input.isPublic ?? false,
     userId,
     categoryId: input.categoryId,
   }

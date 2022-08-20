@@ -12,8 +12,8 @@ export const QUERY = gql`
       name
       description
       currencySymbol
-      isPublic
       costEstimated
+      isPublic
       categoryId
       category {
         name

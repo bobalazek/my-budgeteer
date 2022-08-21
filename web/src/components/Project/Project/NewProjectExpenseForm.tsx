@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { Button, Grid, TextField, Select, MenuItem } from '@mui/material'
+import { Button, Grid, TextField, NativeSelect } from '@mui/material'
 import { useRecoilState } from 'recoil'
 
 import { useMutation } from '@redwoodjs/web'
@@ -18,10 +18,30 @@ const CREATE_PROJECT_EXPENSE_MUTATION = gql`
   }
 `
 
+const ProjectExpenseOption = ({ projectExpense, level }) => {
+  return (
+    <>
+      <option key={projectExpense.id} value={projectExpense.id}>
+        {level ? '-'.repeat(level) + ' ' : ''}
+        {projectExpense.name}
+      </option>
+      {projectExpense.children?.map((child) => {
+        return (
+          <ProjectExpenseOption
+            key={child.id}
+            projectExpense={child}
+            level={level + 1}
+          />
+        )
+      })}
+    </>
+  )
+}
+
 const NewProjectExpenseForm = ({ project }) => {
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
-  const [parentId, setParentId] = useState(null)
+  const [parentId, setParentId] = useState('')
   const [createProjectExpense, { loading }] = useMutation(
     CREATE_PROJECT_EXPENSE_MUTATION,
     {
@@ -30,7 +50,7 @@ const NewProjectExpenseForm = ({ project }) => {
 
         setName('')
         setDescription('')
-        setParentId(null)
+        setParentId('')
       },
       onError: (error) => {
         toast.error(error.message)
@@ -85,24 +105,25 @@ const NewProjectExpenseForm = ({ project }) => {
         />
       </Grid>
       <Grid item>
-        <Select
+        <NativeSelect
           size="small"
-          value={parentId ?? ''}
+          variant="outlined"
+          value={parentId}
           onChange={(event) => {
             setParentId(event.target.value)
           }}
-          displayEmpty
         >
-          <MenuItem value="">-- none --</MenuItem>
+          <option value="">-- none --</option>
           {projectExpenses?.map((projectExpense) => {
-            // TODO: show children!
             return (
-              <MenuItem key={projectExpense.id} value={projectExpense.id}>
-                {projectExpense.name}
-              </MenuItem>
+              <ProjectExpenseOption
+                key={projectExpense.id}
+                projectExpense={projectExpense}
+                level={0}
+              />
             )
           })}
-        </Select>
+        </NativeSelect>
       </Grid>
       <Grid item>
         <Button

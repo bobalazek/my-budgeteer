@@ -1,7 +1,8 @@
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 
 import { Delete as DeleteIcon } from '@mui/icons-material'
 import { Box, IconButton, Typography } from '@mui/material'
+import { useConfirm } from 'material-ui-confirm'
 import { useSetRecoilState } from 'recoil'
 
 import { useMutation, useQuery } from '@redwoodjs/web'
@@ -129,22 +130,32 @@ const ProjectExpenses = ({ project }) => {
       },
     ],
   })
+  const confirm = useConfirm()
   const setProjectExpenses = useSetRecoilState(projectExpensesState)
 
-  const processedProjectExpenses = processProjectExpenses(
-    data?.projectExpenses ?? []
-  )
+  const processedProjectExpenses = useMemo(() => {
+    return processProjectExpenses(data?.projectExpenses || [])
+  }, [data])
 
   useEffect(() => {
     setProjectExpenses(processedProjectExpenses)
   }, [setProjectExpenses, processedProjectExpenses])
 
-  const onDeleteButtonClick = (id: string) => {
-    deleteProjectExpense({
-      variables: {
-        id,
-      },
-    })
+  const onDeleteButtonClick = async (id: string) => {
+    try {
+      await confirm({
+        description:
+          'Are you sure you want to delete this expense? This action is irreversible!',
+      })
+
+      deleteProjectExpense({
+        variables: {
+          id,
+        },
+      })
+    } catch (err) {
+      // Nothing to do
+    }
   }
 
   if (loading) {

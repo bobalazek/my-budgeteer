@@ -37,7 +37,7 @@ export const hasRole = (roles: AllowedRoles): boolean => {
     return false
   }
 
-  const currentUserRoles = context.currentUser?.roles ?? []
+  const currentUserRoles = context.currentUser?.roles || []
   return currentUserRoles.some((allowedRole) => {
     return Array.isArray(roles)
       ? roles.includes(allowedRole)

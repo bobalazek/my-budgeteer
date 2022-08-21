@@ -6,7 +6,7 @@ import { QUERY } from 'src/components/Category/CategoriesCell'
 const CategoryField = (props) => {
   const { data } = useQuery(QUERY)
 
-  const categories = data?.categories ?? []
+  const categories = data?.categories || []
 
   return (
     <SelectField emptyAs={null} {...props}>

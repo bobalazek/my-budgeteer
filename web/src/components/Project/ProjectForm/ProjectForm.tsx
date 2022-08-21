@@ -75,7 +75,7 @@ const ProjectForm = (props) => {
         </Label>
         <SelectField
           name="currencySymbol"
-          defaultValue={props.project?.currencySymbol ?? '$'}
+          defaultValue={props.project?.currencySymbol || '$'}
           className="rw-input"
           errorClassName="rw-input rw-input-error"
           validation={{ required: true }}

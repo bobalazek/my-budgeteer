@@ -1,5 +1,6 @@
 import { Delete as DeleteIcon } from '@mui/icons-material'
 import { Box, IconButton } from '@mui/material'
+import { useConfirm } from 'material-ui-confirm'
 
 import { useMutation, useQuery } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
@@ -48,13 +49,23 @@ const ProjectVariables = ({ project }) => {
       ],
     }
   )
+  const confirm = useConfirm()
 
-  const onDeleteButtonClick = (id: string) => {
-    deleteProjectVariable({
-      variables: {
-        id,
-      },
-    })
+  const onDeleteButtonClick = async (id: string) => {
+    try {
+      await confirm({
+        description:
+          'Are you sure you want to delete this variable? This action is irreversible!',
+      })
+
+      deleteProjectVariable({
+        variables: {
+          id,
+        },
+      })
+    } catch (err) {
+      // Nothing to do
+    }
   }
 
   if (loading) {

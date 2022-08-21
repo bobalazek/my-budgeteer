@@ -1,4 +1,5 @@
 import { createTheme, ThemeProvider, CssBaseline } from '@mui/material'
+import { ConfirmProvider } from 'material-ui-confirm'
 import { RecoilRoot } from 'recoil'
 
 import { AuthProvider } from '@redwoodjs/auth'
@@ -18,10 +19,12 @@ const App = () => (
       <AuthProvider type="dbAuth">
         <RedwoodApolloProvider>
           <RecoilRoot>
-            <ThemeProvider theme={theme}>
-              <CssBaseline />
-              <Routes />
-            </ThemeProvider>
+            <ConfirmProvider>
+              <ThemeProvider theme={theme}>
+                <CssBaseline />
+                <Routes />
+              </ThemeProvider>
+            </ConfirmProvider>
           </RecoilRoot>
         </RedwoodApolloProvider>
       </AuthProvider>

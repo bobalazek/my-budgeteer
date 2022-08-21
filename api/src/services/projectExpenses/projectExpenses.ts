@@ -51,6 +51,7 @@ export const createProjectExpense: MutationResolvers['createProjectExpense'] =
 
     const data = {
       ...input,
+      parentId: input.parentId || null,
       isArchived: true,
     }
 
@@ -107,7 +108,7 @@ export const deleteProjectExpense: MutationResolvers['deleteProjectExpense'] =
       },
     })
     if (children.length) {
-      db.projectExpense.updateMany({
+      await db.projectExpense.updateMany({
         data: {
           parentId: projectExpense.parentId,
         },

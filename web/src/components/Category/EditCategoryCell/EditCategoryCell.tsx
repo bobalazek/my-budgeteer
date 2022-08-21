@@ -37,15 +37,18 @@ export const Failure = ({ error }: CellFailureProps) => (
 )
 
 export const Success = ({ category }: CellSuccessProps<EditCategoryById>) => {
-  const [updateCategory, { loading, error }] = useMutation(UPDATE_CATEGORY_MUTATION, {
-    onCompleted: () => {
-      toast.success('Category updated')
-      navigate(routes.categories())
-    },
-    onError: (error) => {
-      toast.error(error.message)
-    },
-  })
+  const [updateCategory, { loading, error }] = useMutation(
+    UPDATE_CATEGORY_MUTATION,
+    {
+      onCompleted: () => {
+        toast.success('Category updated')
+        navigate(routes.categories())
+      },
+      onError: (error) => {
+        toast.error(error.message)
+      },
+    }
+  )
 
   const onSave = (input, id) => {
     updateCategory({ variables: { id, input } })
@@ -54,10 +57,17 @@ export const Success = ({ category }: CellSuccessProps<EditCategoryById>) => {
   return (
     <div className="rw-segment">
       <header className="rw-segment-header">
-        <h2 className="rw-heading rw-heading-secondary">Edit Category {category.id}</h2>
+        <h2 className="rw-heading rw-heading-secondary">
+          Edit Category {category.id}
+        </h2>
       </header>
       <div className="rw-segment-main">
-        <CategoryForm category={category} onSave={onSave} error={error} loading={loading} />
+        <CategoryForm
+          category={category}
+          onSave={onSave}
+          error={error}
+          loading={loading}
+        />
       </div>
     </div>
   )

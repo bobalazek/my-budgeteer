@@ -4,6 +4,8 @@ import type {
   ProjectVariableResolvers,
 } from 'types/graphql'
 
+import { validate } from '@redwoodjs/api'
+
 import { db } from 'src/lib/db'
 
 export const projectVariables: QueryResolvers['projectVariables'] = ({
@@ -38,6 +40,21 @@ export const createProjectVariable: MutationResolvers['createProjectVariable'] =
     if (!project) {
       throw 'Project with this ID does not exist'
     }
+
+    validate(input.name, {
+      length: {
+        min: 2,
+        max: 255,
+        message: 'Name needs to be between 2 and 255 characters long',
+      },
+    })
+
+    validate(input.value, {
+      length: {
+        min: 1,
+        message: 'Please set a value',
+      },
+    })
 
     return db.projectVariable.create({
       data: input,

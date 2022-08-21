@@ -1,6 +1,15 @@
 import { db } from 'api/src/lib/db'
+import CryptoJS from 'crypto-js'
 
-const users = [] // TODO: figure out a programatic way, to have the correct salt and hashedpassword
+const users = [
+  {
+    name: 'Borut',
+    username: 'borut',
+    email: 'bobalazek124@gmail.com',
+    rawPassword: 'password',
+    roles: ['admin'],
+  },
+]
 
 const categories = [
   { name: 'Building', description: 'All building related stuff' },
@@ -36,10 +45,24 @@ export default async () => {
 
     // Users
     console.log('========== Users ==========')
-    for (const data of users) {
-      console.log(`Inserting the "${data.email}" user ...`)
+    for (const user of users) {
+      console.log(`Inserting the "${user.email}" user ...`)
 
-      await db.user.create({ data })
+      const salt = CryptoJS.lib.WordArray.random(128 / 8).toString()
+      const hashedPassword = CryptoJS.PBKDF2(user.rawPassword, salt, {
+        keySize: 256 / 32,
+      }).toString()
+
+      await db.user.create({
+        data: {
+          name: user.name,
+          username: user.username,
+          email: user.email,
+          roles: user.roles,
+          salt,
+          hashedPassword,
+        },
+      })
     }
 
     // Categories

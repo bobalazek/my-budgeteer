@@ -56,14 +56,13 @@ const ProjectForm = (props) => {
           className="rw-label"
           errorClassName="rw-label rw-label-error"
         >
-          Description*
+          Description
         </Label>
         <TextAreaField
           name="description"
           defaultValue={props.project?.description}
           className="rw-input"
           errorClassName="rw-input rw-input-error"
-          validation={{ required: true }}
         />
         <FieldError name="description" className="rw-field-error" />
 

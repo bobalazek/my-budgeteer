@@ -1,4 +1,5 @@
 import { createTheme, ThemeProvider, CssBaseline } from '@mui/material'
+import { RecoilRoot } from 'recoil'
 
 import { AuthProvider } from '@redwoodjs/auth'
 import { FatalErrorBoundary, RedwoodProvider } from '@redwoodjs/web'
@@ -16,10 +17,12 @@ const App = () => (
     <RedwoodProvider titleTemplate="%PageTitle | %AppTitle">
       <AuthProvider type="dbAuth">
         <RedwoodApolloProvider>
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <Routes />
-          </ThemeProvider>
+          <RecoilRoot>
+            <ThemeProvider theme={theme}>
+              <CssBaseline />
+              <Routes />
+            </ThemeProvider>
+          </RecoilRoot>
         </RedwoodApolloProvider>
       </AuthProvider>
     </RedwoodProvider>

@@ -1,8 +1,13 @@
+import { useEffect } from 'react'
+
 import { Delete as DeleteIcon } from '@mui/icons-material'
-import { Box, IconButton } from '@mui/material'
+import { Box, IconButton, Typography } from '@mui/material'
+import { useSetRecoilState } from 'recoil'
 
 import { useMutation, useQuery } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
+
+import { projectExpensesState } from 'src/state/ProjextExpensesState'
 
 export const GET_PROJECT_EXPENSES_QUERY = gql`
   query GetProjectExpenses($projectId: String!) {
@@ -36,6 +41,74 @@ const DELETE_PROJECT_EXPENSE_MUTATION = gql`
   }
 `
 
+type ProjectExpenseType = {
+  id: string
+  name: string
+  description: string
+  note: string
+  recurringInterval: string
+  parentId: string
+  children: ProjectExpenseType[]
+}
+
+const processProjectExpenses = (
+  projectExpenses: ProjectExpenseType[]
+): ProjectExpenseType[] => {
+  const array = JSON.parse(JSON.stringify(projectExpenses))
+  const tree: ProjectExpenseType[] = []
+
+  for (let i = 0; i < array.length; i++) {
+    const item = array[i] as ProjectExpenseType
+
+    if (item.parentId) {
+      const parent = array.filter((elem) => elem.id === item.parentId).pop()
+      if (!parent.children) {
+        parent.children = []
+      }
+      parent.children.push(item)
+    } else {
+      tree.push(item)
+    }
+  }
+
+  return tree
+}
+
+const ProjectExpense = ({ projectExpense, onDeleteButtonClick }) => {
+  return (
+    <Box key={projectExpense.id} sx={{ mb: '4px' }}>
+      <div>
+        <b>{projectExpense.name}</b>
+        <IconButton
+          size="small"
+          sx={{ ml: 1 }}
+          onClick={() => onDeleteButtonClick(projectExpense.id)}
+        >
+          <DeleteIcon />
+        </IconButton>
+      </div>
+      {projectExpense.description && (
+        <Typography sx={{ color: 'text.secondary' }}>
+          {projectExpense.description}
+        </Typography>
+      )}
+      {projectExpense.children?.length > 0 && (
+        <Box sx={{ ml: 2 }}>
+          {projectExpense.children.map((child) => {
+            return (
+              <ProjectExpense
+                key={child.id}
+                projectExpense={child}
+                onDeleteButtonClick={onDeleteButtonClick}
+              />
+            )
+          })}
+        </Box>
+      )}
+    </Box>
+  )
+}
+
 const ProjectExpenses = ({ project }) => {
   const { data, loading, error } = useQuery(GET_PROJECT_EXPENSES_QUERY, {
     variables: {
@@ -56,6 +129,15 @@ const ProjectExpenses = ({ project }) => {
       },
     ],
   })
+  const setProjectExpenses = useSetRecoilState(projectExpensesState)
+
+  const processedProjectExpenses = processProjectExpenses(
+    data?.projectExpenses ?? []
+  )
+
+  useEffect(() => {
+    setProjectExpenses(processedProjectExpenses)
+  }, [setProjectExpenses, processedProjectExpenses])
 
   const onDeleteButtonClick = (id: string) => {
     deleteProjectExpense({
@@ -79,18 +161,13 @@ const ProjectExpenses = ({ project }) => {
 
   return (
     <Box sx={{ mb: 2 }}>
-      {data.projectExpenses.map((projectExpense) => {
+      {processedProjectExpenses.map((projectExpense) => {
         return (
-          <Box key={projectExpense.id} sx={{ mb: '4px' }}>
-            <b>{projectExpense.name}</b>
-            <IconButton
-              size="small"
-              sx={{ ml: 1 }}
-              onClick={() => onDeleteButtonClick(projectExpense.id)}
-            >
-              <DeleteIcon />
-            </IconButton>
-          </Box>
+          <ProjectExpense
+            key={projectExpense.id}
+            projectExpense={projectExpense}
+            onDeleteButtonClick={onDeleteButtonClick}
+          />
         )
       })}
     </Box>

@@ -4,6 +4,8 @@ import type {
   ProjectExpenseResolvers,
 } from 'types/graphql'
 
+import { validate } from '@redwoodjs/api'
+
 import { db } from 'src/lib/db'
 
 export const projectExpenses: QueryResolvers['projectExpenses'] = ({
@@ -23,13 +25,13 @@ export const projectExpense: QueryResolvers['projectExpense'] = ({ id }) => {
 }
 
 export const createProjectExpense: MutationResolvers['createProjectExpense'] =
-  ({ input }) => {
+  async ({ input }) => {
     const userId = context.currentUser?.id
     if (!userId) {
       throw 'You must be logged in to update a project'
     }
 
-    const project = db.project.findFirst({
+    const project = await db.project.findFirst({
       where: {
         id: input.projectId,
         userId,
@@ -38,6 +40,14 @@ export const createProjectExpense: MutationResolvers['createProjectExpense'] =
     if (!project) {
       throw 'Project with this ID does not exist'
     }
+
+    validate(input.name, {
+      length: {
+        min: 2,
+        max: 255,
+        message: 'Name needs to be between 2 and 255 characters long',
+      },
+    })
 
     const data = {
       ...input,
@@ -50,13 +60,13 @@ export const createProjectExpense: MutationResolvers['createProjectExpense'] =
   }
 
 export const updateProjectExpense: MutationResolvers['updateProjectExpense'] =
-  ({ id, input }) => {
+  async ({ id, input }) => {
     const userId = context.currentUser?.id
     if (!userId) {
       throw 'You must be logged in to update a project'
     }
 
-    const project = db.project.findFirst({
+    const project = await db.project.findFirst({
       where: {
         id: input.projectId,
         userId,
@@ -73,13 +83,13 @@ export const updateProjectExpense: MutationResolvers['updateProjectExpense'] =
   }
 
 export const deleteProjectExpense: MutationResolvers['deleteProjectExpense'] =
-  ({ id }) => {
+  async ({ id }) => {
     const userId = context.currentUser?.id
     if (!userId) {
       throw 'You must be logged in to update a project'
     }
 
-    const projectExpense = db.projectExpense.findFirst({
+    const projectExpense = await db.projectExpense.findFirst({
       where: {
         id,
         project: {
@@ -89,6 +99,26 @@ export const deleteProjectExpense: MutationResolvers['deleteProjectExpense'] =
     })
     if (!projectExpense) {
       throw 'Project expense with this ID does not exist'
+    }
+
+    const children = await db.projectExpense.findMany({
+      where: {
+        parentId: projectExpense.id,
+      },
+    })
+    if (children.length) {
+      db.projectExpense.updateMany({
+        data: {
+          parentId: projectExpense.parentId,
+        },
+        where: {
+          id: {
+            in: children.map((child) => {
+              return child.id
+            }),
+          },
+        },
+      })
     }
 
     return db.projectExpense.delete({

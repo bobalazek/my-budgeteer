@@ -1,9 +1,12 @@
 import { useState } from 'react'
 
-import { Button, Grid, TextField } from '@mui/material'
+import { Button, Grid, TextField, Select, MenuItem } from '@mui/material'
+import { useRecoilState } from 'recoil'
 
 import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
+
+import { projectExpensesState } from 'src/state/ProjextExpensesState'
 
 import { GET_PROJECT_EXPENSES_QUERY } from './ProjectExpenses'
 
@@ -18,6 +21,7 @@ const CREATE_PROJECT_EXPENSE_MUTATION = gql`
 const NewProjectExpenseForm = ({ project }) => {
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
+  const [parentId, setParentId] = useState(null)
   const [createProjectExpense, { loading }] = useMutation(
     CREATE_PROJECT_EXPENSE_MUTATION,
     {
@@ -26,6 +30,7 @@ const NewProjectExpenseForm = ({ project }) => {
 
         setName('')
         setDescription('')
+        setParentId(null)
       },
       onError: (error) => {
         toast.error(error.message)
@@ -38,6 +43,7 @@ const NewProjectExpenseForm = ({ project }) => {
       ],
     }
   )
+  const [projectExpenses, _] = useRecoilState(projectExpensesState)
 
   const onSubmitButtonClick = async () => {
     await createProjectExpense({
@@ -45,6 +51,7 @@ const NewProjectExpenseForm = ({ project }) => {
         input: {
           name,
           description,
+          parentId,
           projectId: project.id,
         },
       },
@@ -76,6 +83,26 @@ const NewProjectExpenseForm = ({ project }) => {
             setDescription(event.target.value)
           }}
         />
+      </Grid>
+      <Grid item>
+        <Select
+          size="small"
+          value={parentId ?? ''}
+          onChange={(event) => {
+            setParentId(event.target.value)
+          }}
+          displayEmpty
+        >
+          <MenuItem value="">-- none --</MenuItem>
+          {projectExpenses?.map((projectExpense) => {
+            // TODO: show children!
+            return (
+              <MenuItem key={projectExpense.id} value={projectExpense.id}>
+                {projectExpense.name}
+              </MenuItem>
+            )
+          })}
+        </Select>
       </Grid>
       <Grid item>
         <Button

@@ -25,13 +25,13 @@ export const projectVariable: QueryResolvers['projectVariable'] = ({ id }) => {
 }
 
 export const createProjectVariable: MutationResolvers['createProjectVariable'] =
-  ({ input }) => {
+  async ({ input }) => {
     const userId = context.currentUser?.id
     if (!userId) {
       throw 'You must be logged in to update a project'
     }
 
-    const project = db.project.findFirst({
+    const project = await db.project.findFirst({
       where: {
         id: input.projectId,
         userId,
@@ -62,13 +62,13 @@ export const createProjectVariable: MutationResolvers['createProjectVariable'] =
   }
 
 export const updateProjectVariable: MutationResolvers['updateProjectVariable'] =
-  ({ id, input }) => {
+  async ({ id, input }) => {
     const userId = context.currentUser?.id
     if (!userId) {
       throw 'You must be logged in to update a project'
     }
 
-    const project = db.project.findFirst({
+    const project = await db.project.findFirst({
       where: {
         id: input.projectId,
         userId,
@@ -85,13 +85,13 @@ export const updateProjectVariable: MutationResolvers['updateProjectVariable'] =
   }
 
 export const deleteProjectVariable: MutationResolvers['deleteProjectVariable'] =
-  ({ id }) => {
+  async ({ id }) => {
     const userId = context.currentUser?.id
     if (!userId) {
       throw 'You must be logged in to update a project'
     }
 
-    const projectVariable = db.projectVariable.findFirst({
+    const projectVariable = await db.projectVariable.findFirst({
       where: {
         id,
         project: {

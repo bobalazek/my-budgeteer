@@ -52,7 +52,7 @@ export const createProjectExpense: MutationResolvers['createProjectExpense'] =
     const data = {
       ...input,
       parentId: input.parentId || null,
-      isArchived: true,
+      isArchived: false,
     }
 
     return db.projectExpense.create({

@@ -86,14 +86,14 @@ model ProjectExpense {
   description        String?
   note               String?
   recurringInterval  ProjectExpenseRecurringInterval @default(NONE)
-  costRangeFrom      Float
-  costRangeTo        Float
-  costActual         Float // How much did it actually cost at the end?
-  progressPercentage Float
-  meta               Json
-  conditions         Json
-  links              String[]
-  tags               String[]
+  costRangeFrom      Float?
+  costRangeTo        Float?
+  costActual         Float? // How much did it actually cost at the end?
+  progressPercentage Float?
+  meta               Json                            @default("{}")
+  conditions         Json                            @default("[]")
+  links              Json                            @default("[]")
+  tags               Json                            @default("[]")
   isArchived         Boolean                         @default(false)
   projectId          String
   project            Project                         @relation(name: "Project_ProjectExpenses", fields: [projectId], references: [id])

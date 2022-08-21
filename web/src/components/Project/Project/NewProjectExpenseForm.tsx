@@ -1,40 +1,38 @@
 import { useState } from 'react'
 
-import { Button, Grid, MenuItem, Select, TextField } from '@mui/material'
+import { Button, Grid, TextField } from '@mui/material'
 
 import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
-import { GET_PROJECT_VARIABLES_QUERY } from './ProjectVariables'
+import { GET_PROJECT_EXPENSES_QUERY } from './ProjectExpenses'
 
-const CREATE_PROJECT_VARIABLE_MUTATION = gql`
-  mutation CreateProjectVariableMutation($input: CreateProjectVariableInput!) {
-    createProjectVariable(input: $input) {
+const CREATE_PROJECT_EXPENSE_MUTATION = gql`
+  mutation CreateProjectExpenseMutation($input: CreateProjectExpenseInput!) {
+    createProjectExpense(input: $input) {
       id
     }
   }
 `
 
-const NewProjectVariableForm = ({ project }) => {
+const NewProjectExpenseForm = ({ project }) => {
   const [name, setName] = useState('')
-  const [type, setType] = useState('string')
-  const [value, setValue] = useState('')
-  const [createProjectVariable, { loading }] = useMutation(
-    CREATE_PROJECT_VARIABLE_MUTATION,
+  const [description, setDescription] = useState('')
+  const [createProjectExpense, { loading }] = useMutation(
+    CREATE_PROJECT_EXPENSE_MUTATION,
     {
       onCompleted: () => {
-        toast.success('Project variable created')
+        toast.success('Project expense created')
 
         setName('')
-        setType('string')
-        setValue('')
+        setDescription('')
       },
       onError: (error) => {
         toast.error(error.message)
       },
       refetchQueries: [
         {
-          query: GET_PROJECT_VARIABLES_QUERY,
+          query: GET_PROJECT_EXPENSES_QUERY,
           variables: { projectId: project.id },
         },
       ],
@@ -42,12 +40,11 @@ const NewProjectVariableForm = ({ project }) => {
   )
 
   const onSubmitButtonClick = async () => {
-    await createProjectVariable({
+    await createProjectExpense({
       variables: {
         input: {
           name,
-          type,
-          value,
+          description,
           projectId: project.id,
         },
       },
@@ -69,26 +66,14 @@ const NewProjectVariableForm = ({ project }) => {
         />
       </Grid>
       <Grid item>
-        <Select
-          size="small"
-          required
-          value={type}
-          onChange={(event) => {
-            setName(event.target.value)
-          }}
-        >
-          <MenuItem value="string">String</MenuItem>
-        </Select>
-      </Grid>
-      <Grid item>
         <TextField
-          label="Value"
+          label="Description"
           variant="outlined"
           size="small"
-          required
-          value={value}
+          multiline
+          value={description}
           onChange={(event) => {
-            setValue(event.target.value)
+            setDescription(event.target.value)
           }}
         />
       </Grid>
@@ -99,11 +84,11 @@ const NewProjectVariableForm = ({ project }) => {
           disabled={loading}
           onClick={onSubmitButtonClick}
         >
-          Add variable
+          Add expense
         </Button>
       </Grid>
     </Grid>
   )
 }
 
-export default NewProjectVariableForm
+export default NewProjectExpenseForm

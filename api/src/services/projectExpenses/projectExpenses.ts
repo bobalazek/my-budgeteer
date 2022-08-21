@@ -39,8 +39,13 @@ export const createProjectExpense: MutationResolvers['createProjectExpense'] =
       throw 'Project with this ID does not exist'
     }
 
+    const data = {
+      ...input,
+      isArchived: true,
+    }
+
     return db.projectExpense.create({
-      data: input,
+      data,
     })
   }
 

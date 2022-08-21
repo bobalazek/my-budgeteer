@@ -5,14 +5,14 @@ export const schema = gql`
     description: String
     note: String
     recurringInterval: ProjectExpenseRecurringInterval!
-    costRangeFrom: Float!
-    costRangeTo: Float!
-    costActual: Float!
-    progressPercentage: Float!
+    costRangeFrom: Float
+    costRangeTo: Float
+    costActual: Float
+    progressPercentage: Float
     meta: JSON!
     conditions: JSON!
-    links: [String]!
-    tags: [String]!
+    links: JSON!
+    tags: JSON!
     isArchived: Boolean!
     projectId: String!
     project: Project!
@@ -42,16 +42,16 @@ export const schema = gql`
     name: String!
     description: String
     note: String
-    recurringInterval: ProjectExpenseRecurringInterval!
-    costRangeFrom: Float!
-    costRangeTo: Float!
-    costActual: Float!
-    progressPercentage: Float!
-    meta: JSON!
-    conditions: JSON!
-    links: [String]!
-    tags: [String]!
-    isArchived: Boolean!
+    recurringInterval: ProjectExpenseRecurringInterval
+    costRangeFrom: Float
+    costRangeTo: Float
+    costActual: Float
+    progressPercentage: Float
+    meta: JSON
+    conditions: JSON
+    links: JSON
+    tags: JSON
+    isArchived: Boolean
     projectId: String!
     parentId: String
   }
@@ -67,8 +67,8 @@ export const schema = gql`
     progressPercentage: Float
     meta: JSON
     conditions: JSON
-    links: [String]!
-    tags: [String]!
+    links: JSON
+    tags: JSON
     isArchived: Boolean
     projectId: String
     parentId: String

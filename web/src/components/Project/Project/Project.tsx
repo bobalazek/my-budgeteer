@@ -1,5 +1,6 @@
 import { Typography } from '@mui/material'
 
+import NewProjectExpenseForm from './NewProjectExpenseForm'
 import NewProjectVariableForm from './NewProjectVariableForm'
 import ProjectExpenses from './ProjectExpenses'
 import ProjectVariables from './ProjectVariables'
@@ -22,6 +23,7 @@ const Project = ({ project }) => {
         Expenses
       </Typography>
       <ProjectExpenses project={project} />
+      <NewProjectExpenseForm project={project} />
     </>
   )
 }

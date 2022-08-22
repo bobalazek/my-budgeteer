@@ -5,26 +5,10 @@ import { useConfirm } from 'material-ui-confirm'
 import { useMutation, useQuery } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
-export const GET_PROJECT_VARIABLES_QUERY = gql`
-  query GetProjectVariables($projectId: String!) {
-    projectVariables(projectId: $projectId) {
-      id
-      name
-      value
-      type
-      createdAt
-      updatedAt
-    }
-  }
-`
-
-const DELETE_PROJECT_VARIABLE_MUTATION = gql`
-  mutation DeleteProjectVariableMutation($id: String!) {
-    deleteProjectVariable(id: $id) {
-      id
-    }
-  }
-`
+import {
+  DELETE_PROJECT_VARIABLE_MUTATION,
+  GET_PROJECT_VARIABLES_QUERY,
+} from 'src/graphql/ProjectVariableQueries'
 
 const ProjectVariables = ({ project }) => {
   const { data, loading, error } = useQuery(GET_PROJECT_VARIABLES_QUERY, {

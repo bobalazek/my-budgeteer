@@ -1,19 +1,14 @@
 import { useState } from 'react'
 
-import { Button, Grid, MenuItem, Select, TextField } from '@mui/material'
+import { Button, Grid, TextField, Typography } from '@mui/material'
 
 import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
-import { GET_PROJECT_VARIABLES_QUERY } from './ProjectVariables'
-
-const CREATE_PROJECT_VARIABLE_MUTATION = gql`
-  mutation CreateProjectVariableMutation($input: CreateProjectVariableInput!) {
-    createProjectVariable(input: $input) {
-      id
-    }
-  }
-`
+import {
+  CREATE_PROJECT_VARIABLE_MUTATION,
+  GET_PROJECT_VARIABLES_QUERY,
+} from 'src/graphql/ProjectVariableQueries'
 
 const NewProjectVariableForm = ({ project }) => {
   const [name, setName] = useState('')
@@ -55,54 +50,65 @@ const NewProjectVariableForm = ({ project }) => {
   }
 
   return (
-    <Grid container spacing={1} sx={{ mb: 3 }}>
-      <Grid item>
-        <TextField
-          label="Name"
-          variant="outlined"
-          size="small"
-          required
-          value={name}
-          onChange={(event) => {
-            setName(event.target.value)
-          }}
-        />
+    <>
+      <Typography variant="h5" sx={{ mb: 1 }}>
+        New variable
+      </Typography>
+      <Grid container spacing={1} sx={{ mb: 3 }}>
+        <Grid item>
+          <TextField
+            label="Name"
+            variant="standard"
+            size="small"
+            required
+            value={name}
+            onChange={(event) => {
+              setName(event.target.value)
+            }}
+          />
+        </Grid>
+        <Grid item>
+          <TextField
+            select
+            required
+            label="Type"
+            size="small"
+            variant="standard"
+            value={type}
+            onChange={(event) => {
+              setType(event.target.value)
+            }}
+            SelectProps={{
+              native: true,
+            }}
+          >
+            <option value="string">String</option>
+          </TextField>
+        </Grid>
+        <Grid item>
+          <TextField
+            label="Value"
+            variant="standard"
+            size="small"
+            required
+            value={value}
+            onChange={(event) => {
+              setValue(event.target.value)
+            }}
+          />
+        </Grid>
+        <Grid item>
+          <Button
+            variant="outlined"
+            size="large"
+            disabled={loading}
+            onClick={onSubmitButtonClick}
+          >
+            Add variable
+          </Button>
+        </Grid>
       </Grid>
-      <Grid item>
-        <Select
-          size="small"
-          required
-          value={type}
-          onChange={(event) => {
-            setName(event.target.value)
-          }}
-        >
-          <MenuItem value="string">String</MenuItem>
-        </Select>
-      </Grid>
-      <Grid item>
-        <TextField
-          label="Value"
-          variant="outlined"
-          size="small"
-          required
-          value={value}
-          onChange={(event) => {
-            setValue(event.target.value)
-          }}
-        />
-      </Grid>
-      <Grid item>
-        <Button
-          variant="outlined"
-          size="large"
-          disabled={loading}
-          onClick={onSubmitButtonClick}
-        >
-          Add variable
-        </Button>
-      </Grid>
-    </Grid>
+    </>
   )
 }
 

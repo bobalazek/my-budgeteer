@@ -1,46 +1,19 @@
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import { Delete as DeleteIcon } from '@mui/icons-material'
-import { Box, IconButton, Typography } from '@mui/material'
+import { Box, IconButton, TextField, Typography } from '@mui/material'
 import { useConfirm } from 'material-ui-confirm'
 import { useSetRecoilState } from 'recoil'
+import { useDebounce } from 'usehooks-ts'
 
 import { useMutation, useQuery } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
+import {
+  DELETE_PROJECT_EXPENSE_MUTATION,
+  GET_PROJECT_EXPENSES_QUERY,
+} from 'src/graphql/ProjectExpenseQueries'
 import { projectExpensesState } from 'src/state/ProjextExpensesState'
-
-export const GET_PROJECT_EXPENSES_QUERY = gql`
-  query GetProjectExpenses($projectId: String!) {
-    projectExpenses(projectId: $projectId) {
-      id
-      name
-      description
-      note
-      recurringInterval
-      costRangeFrom
-      costRangeTo
-      costActual
-      progressPercentage
-      meta
-      conditions
-      links
-      tags
-      isArchived
-      parentId
-      createdAt
-      updatedAt
-    }
-  }
-`
-
-const DELETE_PROJECT_EXPENSE_MUTATION = gql`
-  mutation DeleteProjectExpenseMutation($id: String!) {
-    deleteProjectExpense(id: $id) {
-      id
-    }
-  }
-`
 
 type ProjectExpenseType = {
   id: string
@@ -55,7 +28,9 @@ type ProjectExpenseType = {
 const processProjectExpenses = (
   projectExpenses: ProjectExpenseType[]
 ): ProjectExpenseType[] => {
-  const array = JSON.parse(JSON.stringify(projectExpenses))
+  const array = JSON.parse(
+    JSON.stringify(projectExpenses)
+  ) as typeof projectExpenses
   const tree: ProjectExpenseType[] = []
 
   for (let i = 0; i < array.length; i++) {
@@ -76,23 +51,42 @@ const processProjectExpenses = (
 }
 
 const ProjectExpense = ({ projectExpense, onDeleteButtonClick }) => {
+  const [name, setName] = useState(projectExpense.name)
+  const debouncedName = useDebounce(name, 500)
+
+  useEffect(() => {
+    if (debouncedName === projectExpense.name) {
+      return
+    }
+
+    console.log(debouncedName)
+  }, [projectExpense, debouncedName])
+
   return (
-    <Box key={projectExpense.id} sx={{ mb: '4px' }}>
-      <div>
-        <b>{projectExpense.name}</b>
-        <IconButton
-          size="small"
-          sx={{ ml: 1 }}
-          onClick={() => onDeleteButtonClick(projectExpense.id)}
-        >
-          <DeleteIcon />
-        </IconButton>
-      </div>
-      {projectExpense.description && (
-        <Typography sx={{ color: 'text.secondary' }}>
-          {projectExpense.description}
-        </Typography>
-      )}
+    <Box sx={{ mb: '4px' }} alignContent="center">
+      <Box>
+        <Box>
+          <TextField
+            hiddenLabel
+            variant="standard"
+            size="small"
+            value={name}
+            onChange={(event) => setName(event.target.value)}
+          />
+          <IconButton
+            size="small"
+            sx={{ ml: 1 }}
+            onClick={() => onDeleteButtonClick(projectExpense.id)}
+          >
+            <DeleteIcon />
+          </IconButton>
+        </Box>
+        {projectExpense.description && (
+          <Typography sx={{ color: 'text.secondary' }}>
+            {projectExpense.description}
+          </Typography>
+        )}
+      </Box>
       {projectExpense.children?.length > 0 && (
         <Box sx={{ ml: 2 }}>
           {projectExpense.children.map((child) => {

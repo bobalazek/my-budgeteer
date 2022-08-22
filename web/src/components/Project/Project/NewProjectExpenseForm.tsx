@@ -1,22 +1,16 @@
 import { useState } from 'react'
 
-import { Button, Grid, TextField, NativeSelect } from '@mui/material'
+import { Button, Grid, TextField, Typography } from '@mui/material'
 import { useRecoilState } from 'recoil'
 
 import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
+import {
+  CREATE_PROJECT_EXPENSE_MUTATION,
+  GET_PROJECT_EXPENSES_QUERY,
+} from 'src/graphql/ProjectExpenseQueries'
 import { projectExpensesState } from 'src/state/ProjextExpensesState'
-
-import { GET_PROJECT_EXPENSES_QUERY } from './ProjectExpenses'
-
-const CREATE_PROJECT_EXPENSE_MUTATION = gql`
-  mutation CreateProjectExpenseMutation($input: CreateProjectExpenseInput!) {
-    createProjectExpense(input: $input) {
-      id
-    }
-  }
-`
 
 const ProjectExpenseOption = ({ projectExpense, level }) => {
   return (
@@ -79,63 +73,74 @@ const NewProjectExpenseForm = ({ project }) => {
   }
 
   return (
-    <Grid container spacing={1} sx={{ mb: 3 }}>
-      <Grid item>
-        <TextField
-          label="Name"
-          variant="outlined"
-          size="small"
-          required
-          value={name}
-          onChange={(event) => {
-            setName(event.target.value)
-          }}
-        />
+    <>
+      <Typography variant="h5" sx={{ mb: 1 }}>
+        New expense
+      </Typography>
+      <Grid container spacing={1} sx={{ mb: 3 }}>
+        <Grid item>
+          <TextField
+            label="Name"
+            variant="standard"
+            size="small"
+            required
+            value={name}
+            onChange={(event) => {
+              setName(event.target.value)
+            }}
+          />
+        </Grid>
+        <Grid item>
+          <TextField
+            label="Description"
+            variant="standard"
+            size="small"
+            multiline
+            value={description}
+            onChange={(event) => {
+              setDescription(event.target.value)
+            }}
+          />
+        </Grid>
+        <Grid item>
+          <TextField
+            select
+            label="Parent"
+            size="small"
+            variant="standard"
+            value={parentId || '__NONE__'}
+            onChange={(event) => {
+              setParentId(event.target.value)
+            }}
+            SelectProps={{
+              native: true,
+            }}
+          >
+            {/* NOTE: Dirty hack with __NONE__, because it won't work with an empty string, whitout overflowing the label text */}
+            <option value={'__NONE__'}>-- none --</option>
+            {projectExpenses?.map((projectExpense) => {
+              return (
+                <ProjectExpenseOption
+                  key={projectExpense.id}
+                  projectExpense={projectExpense}
+                  level={0}
+                />
+              )
+            })}
+          </TextField>
+        </Grid>
+        <Grid item>
+          <Button
+            variant="outlined"
+            size="large"
+            disabled={loading}
+            onClick={onSubmitButtonClick}
+          >
+            Add expense
+          </Button>
+        </Grid>
       </Grid>
-      <Grid item>
-        <TextField
-          label="Description"
-          variant="outlined"
-          size="small"
-          multiline
-          value={description}
-          onChange={(event) => {
-            setDescription(event.target.value)
-          }}
-        />
-      </Grid>
-      <Grid item>
-        <NativeSelect
-          size="small"
-          variant="outlined"
-          value={parentId}
-          onChange={(event) => {
-            setParentId(event.target.value)
-          }}
-        >
-          <option value="">-- none --</option>
-          {projectExpenses?.map((projectExpense) => {
-            return (
-              <ProjectExpenseOption
-                key={projectExpense.id}
-                projectExpense={projectExpense}
-                level={0}
-              />
-            )
-          })}
-        </NativeSelect>
-      </Grid>
-      <Grid item>
-        <Button
-          variant="outlined"
-          size="large"
-          disabled={loading}
-          onClick={onSubmitButtonClick}
-        >
-          Add expense
-        </Button>
-      </Grid>
-    </Grid>
+    </>
   )
 }
 

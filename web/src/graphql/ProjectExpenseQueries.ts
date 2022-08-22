@@ -15,6 +15,7 @@ export const GET_PROJECT_EXPENSES_QUERY = gql`
       links
       tags
       isArchived
+      order
       parentId
       createdAt
       updatedAt
@@ -33,6 +34,17 @@ export const CREATE_PROJECT_EXPENSE_MUTATION = gql`
 export const DELETE_PROJECT_EXPENSE_MUTATION = gql`
   mutation DeleteProjectExpenseMutation($id: String!) {
     deleteProjectExpense(id: $id) {
+      id
+    }
+  }
+`
+
+export const UPDATE_PROJECT_EXPENSE_MUTATION = gql`
+  mutation UpdateProjectExpenseMutation(
+    $id: String!
+    $input: UpdateProjectExpenseInput!
+  ) {
+    updateProjectExpense(id: $id, input: $input) {
       id
     }
   }

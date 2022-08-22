@@ -1,10 +1,8 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo } from 'react'
 
-import { Delete as DeleteIcon } from '@mui/icons-material'
-import { Box, IconButton, TextField, Typography } from '@mui/material'
+import { Box } from '@mui/material'
 import { useConfirm } from 'material-ui-confirm'
 import { useSetRecoilState } from 'recoil'
-import { useDebounce } from 'usehooks-ts'
 
 import { useMutation, useQuery } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
@@ -12,8 +10,11 @@ import { toast } from '@redwoodjs/web/toast'
 import {
   DELETE_PROJECT_EXPENSE_MUTATION,
   GET_PROJECT_EXPENSES_QUERY,
+  UPDATE_PROJECT_EXPENSE_MUTATION,
 } from 'src/graphql/ProjectExpenseQueries'
 import { projectExpensesState } from 'src/state/ProjextExpensesState'
+
+import ProjectExpense from './ProjectExpense'
 
 type ProjectExpenseType = {
   id: string
@@ -34,13 +35,14 @@ const processProjectExpenses = (
   const tree: ProjectExpenseType[] = []
 
   for (let i = 0; i < array.length; i++) {
-    const item = array[i] as ProjectExpenseType
+    const item = array[i]
 
     if (item.parentId) {
       const parent = array.filter((elem) => elem.id === item.parentId).pop()
       if (!parent.children) {
         parent.children = []
       }
+
       parent.children.push(item)
     } else {
       tree.push(item)
@@ -48,60 +50,6 @@ const processProjectExpenses = (
   }
 
   return tree
-}
-
-const ProjectExpense = ({ projectExpense, onDeleteButtonClick }) => {
-  const [name, setName] = useState(projectExpense.name)
-  const debouncedName = useDebounce(name, 500)
-
-  useEffect(() => {
-    if (debouncedName === projectExpense.name) {
-      return
-    }
-
-    console.log(debouncedName)
-  }, [projectExpense, debouncedName])
-
-  return (
-    <Box sx={{ mb: '4px' }} alignContent="center">
-      <Box>
-        <Box>
-          <TextField
-            hiddenLabel
-            variant="standard"
-            size="small"
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-          />
-          <IconButton
-            size="small"
-            sx={{ ml: 1 }}
-            onClick={() => onDeleteButtonClick(projectExpense.id)}
-          >
-            <DeleteIcon />
-          </IconButton>
-        </Box>
-        {projectExpense.description && (
-          <Typography sx={{ color: 'text.secondary' }}>
-            {projectExpense.description}
-          </Typography>
-        )}
-      </Box>
-      {projectExpense.children?.length > 0 && (
-        <Box sx={{ ml: 2 }}>
-          {projectExpense.children.map((child) => {
-            return (
-              <ProjectExpense
-                key={child.id}
-                projectExpense={child}
-                onDeleteButtonClick={onDeleteButtonClick}
-              />
-            )
-          })}
-        </Box>
-      )}
-    </Box>
-  )
 }
 
 const ProjectExpenses = ({ project }) => {
@@ -124,6 +72,20 @@ const ProjectExpenses = ({ project }) => {
       },
     ],
   })
+  const [updateProjectExpense] = useMutation(UPDATE_PROJECT_EXPENSE_MUTATION, {
+    onCompleted: () => {
+      toast.success('Project expense updated')
+    },
+    onError: (error) => {
+      toast.error(error.message)
+    },
+    refetchQueries: [
+      {
+        query: GET_PROJECT_EXPENSES_QUERY,
+        variables: { projectId: project.id },
+      },
+    ],
+  })
   const confirm = useConfirm()
   const setProjectExpenses = useSetRecoilState(projectExpensesState)
 
@@ -135,7 +97,7 @@ const ProjectExpenses = ({ project }) => {
     setProjectExpenses(processedProjectExpenses)
   }, [setProjectExpenses, processedProjectExpenses])
 
-  const onDeleteButtonClick = async (id: string) => {
+  const onEntryDeleteButtonClick = async (id: string) => {
     try {
       await confirm({
         description:
@@ -152,6 +114,15 @@ const ProjectExpenses = ({ project }) => {
     }
   }
 
+  const onEntryUpdate = async (id: string, input: any) => {
+    updateProjectExpense({
+      variables: {
+        id,
+        input,
+      },
+    })
+  }
+
   if (loading) {
     return <>Loading ...</>
   }
@@ -166,12 +137,14 @@ const ProjectExpenses = ({ project }) => {
 
   return (
     <Box sx={{ mb: 2 }}>
-      {processedProjectExpenses.map((projectExpense) => {
+      {processedProjectExpenses.map((projectExpense, index) => {
         return (
           <ProjectExpense
             key={projectExpense.id}
             projectExpense={projectExpense}
-            onDeleteButtonClick={onDeleteButtonClick}
+            index={index}
+            onDeleteButtonClick={onEntryDeleteButtonClick}
+            onUpdate={onEntryUpdate}
           />
         )
       })}

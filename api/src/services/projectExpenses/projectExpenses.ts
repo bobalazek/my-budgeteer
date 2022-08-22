@@ -15,6 +15,9 @@ export const projectExpenses: QueryResolvers['projectExpenses'] = ({
     where: {
       projectId,
     },
+    orderBy: {
+      order: 'asc',
+    },
   })
 }
 
@@ -49,10 +52,18 @@ export const createProjectExpense: MutationResolvers['createProjectExpense'] =
       },
     })
 
+    const parentId = input.parentId || null
+    const order = await db.projectExpense.count({
+      where: {
+        projectId: input.projectId,
+        parentId,
+      },
+    })
     const data = {
       ...input,
-      parentId: input.parentId || null,
       isArchived: false,
+      parentId,
+      order,
     }
 
     return db.projectExpense.create({
@@ -77,10 +88,43 @@ export const updateProjectExpense: MutationResolvers['updateProjectExpense'] =
       throw 'Project with this ID does not exist'
     }
 
-    return db.projectExpense.update({
-      data: input,
-      where: { id },
+    const projectExpense = await db.projectExpense.findFirst({
+      where: {
+        id,
+        project: {
+          userId,
+        },
+      },
     })
+    if (!projectExpense) {
+      throw 'Project expense with this ID does not exist'
+    }
+
+    const transactionPromises = []
+    if (typeof input.order === 'undefined') {
+      transactionPromises.push(
+        db.projectExpense.updateMany({
+          data: {
+            order: projectExpense.order,
+          },
+          where: {
+            projectId: projectExpense.projectId,
+            parentId: projectExpense.parentId,
+            order: input.order,
+          },
+        })
+      )
+    }
+    transactionPromises.push(
+      db.projectExpense.update({
+        data: input,
+        where: { id },
+      })
+    )
+
+    await db.$transaction(transactionPromises)
+
+    return db.projectExpense.findUnique({ where: { id: projectExpense.id } })
   }
 
 export const deleteProjectExpense: MutationResolvers['deleteProjectExpense'] =
@@ -122,9 +166,34 @@ export const deleteProjectExpense: MutationResolvers['deleteProjectExpense'] =
       })
     }
 
-    return db.projectExpense.delete({
-      where: { id },
-    })
+    const transactionPromises = []
+    transactionPromises.push(
+      await db.projectExpense.updateMany({
+        where: {
+          projectId: projectExpense.projectId,
+          parentId: projectExpense.parentId,
+          order: {
+            gt: projectExpense.order,
+          },
+        },
+        data: {
+          order: {
+            decrement: 1,
+          },
+        },
+      })
+    )
+    transactionPromises.push(
+      db.projectExpense.delete({
+        where: { id },
+      })
+    )
+
+    await db.$transaction(transactionPromises)
+
+    return {
+      id,
+    }
   }
 
 export const ProjectExpense: ProjectExpenseResolvers = {

@@ -15,6 +15,9 @@ export const projectVariables: QueryResolvers['projectVariables'] = ({
     where: {
       projectId,
     },
+    orderBy: {
+      order: 'asc',
+    },
   })
 }
 
@@ -56,8 +59,18 @@ export const createProjectVariable: MutationResolvers['createProjectVariable'] =
       },
     })
 
+    const order = await db.projectVariable.count({
+      where: {
+        projectId: input.projectId,
+      },
+    })
+    const data = {
+      ...input,
+      order,
+    }
+
     return db.projectVariable.create({
-      data: input,
+      data,
     })
   }
 
@@ -103,9 +116,33 @@ export const deleteProjectVariable: MutationResolvers['deleteProjectVariable'] =
       throw 'Project variable with this ID does not exist'
     }
 
-    return db.projectVariable.delete({
-      where: { id },
-    })
+    const transactionPromises = []
+    transactionPromises.push(
+      db.projectVariable.updateMany({
+        where: {
+          projectId: projectVariable.projectId,
+          order: {
+            gt: projectVariable.order,
+          },
+        },
+        data: {
+          order: {
+            decrement: 1,
+          },
+        },
+      })
+    )
+    transactionPromises.push(
+      db.projectVariable.delete({
+        where: { id },
+      })
+    )
+
+    await db.$transaction(transactionPromises)
+
+    return {
+      id,
+    }
   }
 
 export const ProjectVariable: ProjectVariableResolvers = {

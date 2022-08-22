@@ -4,6 +4,7 @@ export const schema = gql`
     name: String!
     value: String!
     type: String!
+    order: Int!
     projectId: String!
     project: Project!
     createdAt: DateTime!
@@ -19,6 +20,7 @@ export const schema = gql`
     name: String!
     value: String!
     type: String!
+    order: Int
     projectId: String!
   }
 
@@ -26,6 +28,7 @@ export const schema = gql`
     name: String
     value: String
     type: String
+    order: Int
     projectId: String
   }
 

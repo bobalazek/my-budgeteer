@@ -14,6 +14,7 @@ export const schema = gql`
     links: JSON!
     tags: JSON!
     isArchived: Boolean!
+    order: Int!
     projectId: String!
     project: Project!
     parentId: String
@@ -52,6 +53,7 @@ export const schema = gql`
     links: JSON
     tags: JSON
     isArchived: Boolean
+    order: Int
     projectId: String!
     parentId: String
   }
@@ -70,6 +72,7 @@ export const schema = gql`
     links: JSON
     tags: JSON
     isArchived: Boolean
+    order: Int
     projectId: String
     parentId: String
   }

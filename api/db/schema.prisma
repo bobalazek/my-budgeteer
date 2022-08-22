@@ -64,6 +64,7 @@ model ProjectVariable {
   name      String
   value     String
   type      String // available: "string"
+  order     Int      @default(0)
   projectId String
   project   Project  @relation(name: "Project_ProjectVariables", fields: [projectId], references: [id])
   createdAt DateTime @default(now())
@@ -95,6 +96,7 @@ model ProjectExpense {
   links              Json                            @default("[]")
   tags               Json                            @default("[]")
   isArchived         Boolean                         @default(false)
+  order              Int                             @default(0)
   projectId          String
   project            Project                         @relation(name: "Project_ProjectExpenses", fields: [projectId], references: [id])
   parentId           String?

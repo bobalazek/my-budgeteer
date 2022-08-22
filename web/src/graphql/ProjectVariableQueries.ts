@@ -5,6 +5,7 @@ export const GET_PROJECT_VARIABLES_QUERY = gql`
       name
       value
       type
+      order
       createdAt
       updatedAt
     }

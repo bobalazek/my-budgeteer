@@ -168,7 +168,7 @@ export const deleteProjectExpense: MutationResolvers['deleteProjectExpense'] =
 
     const transactionPromises = []
     transactionPromises.push(
-      await db.projectExpense.updateMany({
+      db.projectExpense.updateMany({
         where: {
           projectId: projectExpense.projectId,
           parentId: projectExpense.parentId,

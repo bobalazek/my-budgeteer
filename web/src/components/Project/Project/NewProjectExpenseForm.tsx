@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { Button, Grid, TextField, Typography } from '@mui/material'
+import { Button, Grid, TextField } from '@mui/material'
 import { useRecoilState } from 'recoil'
 
 import { useMutation } from '@redwoodjs/web'
@@ -73,74 +73,69 @@ const NewProjectExpenseForm = ({ project }) => {
   }
 
   return (
-    <>
-      <Typography variant="h5" sx={{ mb: 1 }}>
-        New expense
-      </Typography>
-      <Grid container spacing={1} sx={{ mb: 3 }}>
-        <Grid item>
-          <TextField
-            label="Name"
-            variant="standard"
-            size="small"
-            required
-            value={name}
-            onChange={(event) => {
-              setName(event.target.value)
-            }}
-          />
-        </Grid>
-        <Grid item>
-          <TextField
-            label="Description"
-            variant="standard"
-            size="small"
-            multiline
-            value={description}
-            onChange={(event) => {
-              setDescription(event.target.value)
-            }}
-          />
-        </Grid>
-        <Grid item>
-          <TextField
-            select
-            label="Parent"
-            size="small"
-            variant="standard"
-            value={parentId || '__NONE__'}
-            onChange={(event) => {
-              setParentId(event.target.value)
-            }}
-            SelectProps={{
-              native: true,
-            }}
-          >
-            {/* NOTE: Dirty hack with __NONE__, because it won't work with an empty string, whitout overflowing the label text */}
-            <option value={'__NONE__'}>-- none --</option>
-            {projectExpenses?.map((projectExpense) => {
-              return (
-                <ProjectExpenseOption
-                  key={projectExpense.id}
-                  projectExpense={projectExpense}
-                  level={0}
-                />
-              )
-            })}
-          </TextField>
-        </Grid>
-        <Grid item>
-          <Button
-            variant="outlined"
-            size="large"
-            disabled={loading}
-            onClick={onSubmitButtonClick}
-          >
-            Add expense
-          </Button>
-        </Grid>
+    <Grid container spacing={2} sx={{ mb: 3 }}>
+      <Grid item>
+        <TextField
+          label="Name"
+          variant="standard"
+          size="small"
+          required
+          value={name}
+          onChange={(event) => {
+            setName(event.target.value)
+          }}
+        />
       </Grid>
-    </>
+      <Grid item>
+        <TextField
+          label="Description"
+          variant="standard"
+          size="small"
+          multiline
+          value={description}
+          onChange={(event) => {
+            setDescription(event.target.value)
+          }}
+        />
+      </Grid>
+      <Grid item>
+        <TextField
+          select
+          label="Parent"
+          size="small"
+          variant="standard"
+          value={parentId || '__NONE__'}
+          onChange={(event) => {
+            setParentId(event.target.value)
+          }}
+          SelectProps={{
+            native: true,
+          }}
+        >
+          {/* NOTE: Dirty hack with __NONE__, because it won't work with an empty string, whitout overflowing the label text */}
+          <option value={'__NONE__'}>-- none --</option>
+          {projectExpenses?.map((projectExpense) => {
+            return (
+              <ProjectExpenseOption
+                key={projectExpense.id}
+                projectExpense={projectExpense}
+                level={0}
+              />
+            )
+          })}
+        </TextField>
+      </Grid>
+      <Grid item sx={{ alignSelf: 'self-end' }}>
+        <Button
+          variant="outlined"
+          size="small"
+          disabled={loading}
+          onClick={onSubmitButtonClick}
+        >
+          Save
+        </Button>
+      </Grid>
+    </Grid>
   )
 }
 

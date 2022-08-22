@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 
 import { Box } from '@mui/material'
 import { useConfirm } from 'material-ui-confirm'
@@ -97,31 +97,37 @@ const ProjectExpenses = ({ project }) => {
     setProjectExpenses(processedProjectExpenses)
   }, [setProjectExpenses, processedProjectExpenses])
 
-  const onEntryDeleteButtonClick = async (id: string) => {
-    try {
-      await confirm({
-        description:
-          'Are you sure you want to delete this expense? This action is irreversible!',
-      })
+  const onEntryDeleteButtonClick = useCallback(
+    async (id: string) => {
+      try {
+        await confirm({
+          description:
+            'Are you sure you want to delete this expense? This action is irreversible!',
+        })
 
-      deleteProjectExpense({
+        deleteProjectExpense({
+          variables: {
+            id,
+          },
+        })
+      } catch (err) {
+        // Nothing to do
+      }
+    },
+    [confirm, deleteProjectExpense]
+  )
+
+  const onEntryUpdate = useCallback(
+    (id: string, input: any) => {
+      updateProjectExpense({
         variables: {
           id,
+          input,
         },
       })
-    } catch (err) {
-      // Nothing to do
-    }
-  }
-
-  const onEntryUpdate = async (id: string, input: any) => {
-    updateProjectExpense({
-      variables: {
-        id,
-        input,
-      },
-    })
-  }
+    },
+    [updateProjectExpense]
+  )
 
   if (loading) {
     return <>Loading ...</>
@@ -143,6 +149,7 @@ const ProjectExpenses = ({ project }) => {
             key={projectExpense.id}
             projectExpense={projectExpense}
             index={index}
+            level={0}
             onDeleteButtonClick={onEntryDeleteButtonClick}
             onUpdate={onEntryUpdate}
           />

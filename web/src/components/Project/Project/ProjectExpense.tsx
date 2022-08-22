@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react'
 
 import { Delete as DeleteIcon } from '@mui/icons-material'
-import { Box, IconButton, TextField, Typography } from '@mui/material'
+import { Grid, IconButton, TextField, Typography } from '@mui/material'
 import { useDebounce } from 'usehooks-ts'
 
 const ProjectExpense = ({
   projectExpense,
   index,
+  level,
   onDeleteButtonClick,
   onUpdate,
 }) => {
@@ -24,10 +25,22 @@ const ProjectExpense = ({
     })
   }, [onUpdate, projectExpense, debouncedName, index])
 
+  const sx =
+    level === 0
+      ? {
+          borderBottom: '1px solid #ddd',
+          paddingBottom: '12px',
+          marginBottom: '12px',
+          width: '100%',
+        }
+      : {
+          mt: 1,
+        }
+
   return (
-    <Box sx={{ mb: '4px' }} alignContent="center">
-      <Box>
-        <Box>
+    <Grid container sx={sx}>
+      <Grid item container>
+        <Grid item>
           <TextField
             hiddenLabel
             variant="standard"
@@ -35,6 +48,8 @@ const ProjectExpense = ({
             value={name}
             onChange={(event) => setName(event.target.value)}
           />
+        </Grid>
+        <Grid item>
           <IconButton
             size="small"
             sx={{ ml: 1 }}
@@ -42,29 +57,32 @@ const ProjectExpense = ({
           >
             <DeleteIcon />
           </IconButton>
-        </Box>
-        {projectExpense.description && (
+        </Grid>
+      </Grid>
+      {projectExpense.description && (
+        <Grid item>
           <Typography sx={{ color: 'text.secondary' }}>
             {projectExpense.description}
           </Typography>
-        )}
-      </Box>
+        </Grid>
+      )}
       {projectExpense.children?.length > 0 && (
-        <Box sx={{ ml: 2 }}>
-          {projectExpense.children.map((child, childIndex) => {
+        <Grid item sx={{ ml: 2 }}>
+          {projectExpense.children?.map((child, childIndex) => {
             return (
               <ProjectExpense
                 key={child.id}
                 projectExpense={child}
                 index={childIndex}
+                level={level + 1}
                 onDeleteButtonClick={onDeleteButtonClick}
                 onUpdate={onUpdate}
               />
             )
           })}
-        </Box>
+        </Grid>
       )}
-    </Box>
+    </Grid>
   )
 }
 

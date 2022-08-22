@@ -40,9 +40,10 @@ const ProjectExpense = ({
   return (
     <Grid container sx={sx}>
       <Grid item container>
-        <Grid item>
+        <Grid item sx={{ flexGrow: 1 }}>
           <TextField
             hiddenLabel
+            fullWidth
             variant="standard"
             size="small"
             value={name}
@@ -53,7 +54,7 @@ const ProjectExpense = ({
           <IconButton
             size="small"
             sx={{ ml: 1 }}
-            onClick={() => onDeleteButtonClick(projectExpense.id)}
+            onClick={() => onDeleteButtonClick(projectExpense)}
           >
             <DeleteIcon />
           </IconButton>
@@ -67,7 +68,7 @@ const ProjectExpense = ({
         </Grid>
       )}
       {projectExpense.children?.length > 0 && (
-        <Grid item sx={{ ml: 2 }}>
+        <Grid item sx={{ ml: 3, flexGrow: 1 }}>
           {projectExpense.children?.map((child, childIndex) => {
             return (
               <ProjectExpense

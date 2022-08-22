@@ -98,16 +98,21 @@ const ProjectExpenses = ({ project }) => {
   }, [setProjectExpenses, processedProjectExpenses])
 
   const onEntryDeleteButtonClick = useCallback(
-    async (id: string) => {
+    async (projectExpense: ProjectExpenseType) => {
       try {
         await confirm({
-          description:
-            'Are you sure you want to delete this expense? This action is irreversible!',
+          content: (
+            <>
+              Are you sure you want to delete the &quot;
+              <b>{projectExpense.name}</b>&quot; expense? This action is
+              irreversible!
+            </>
+          ),
         })
 
         deleteProjectExpense({
           variables: {
-            id,
+            id: projectExpense.id,
           },
         })
       } catch (err) {

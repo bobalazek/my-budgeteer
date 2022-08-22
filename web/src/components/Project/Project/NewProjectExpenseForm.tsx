@@ -10,7 +10,7 @@ import {
   CREATE_PROJECT_EXPENSE_MUTATION,
   GET_PROJECT_EXPENSES_QUERY,
 } from 'src/graphql/ProjectExpenseQueries'
-import { projectExpensesState } from 'src/state/ProjextExpensesState'
+import { projectExpensesState } from 'src/state/ProjectExpensesState'
 
 const ProjectExpenseOption = ({ projectExpense, level }) => {
   return (

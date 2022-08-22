@@ -12,45 +12,11 @@ import {
   GET_PROJECT_EXPENSES_QUERY,
   UPDATE_PROJECT_EXPENSE_MUTATION,
 } from 'src/graphql/ProjectExpenseQueries'
-import { projectExpensesState } from 'src/state/ProjextExpensesState'
+import { projectExpensesState } from 'src/state/ProjectExpensesState'
+import { ProjectExpenseType } from 'src/types/ProjectExpenseType'
+import { getProjectExpensesTree } from 'src/utils/helpers'
 
 import ProjectExpense from './ProjectExpense'
-
-type ProjectExpenseType = {
-  id: string
-  name: string
-  description: string
-  note: string
-  recurringInterval: string
-  parentId: string
-  children: ProjectExpenseType[]
-}
-
-const processProjectExpenses = (
-  projectExpenses: ProjectExpenseType[]
-): ProjectExpenseType[] => {
-  const array = JSON.parse(
-    JSON.stringify(projectExpenses)
-  ) as typeof projectExpenses
-  const tree: ProjectExpenseType[] = []
-
-  for (let i = 0; i < array.length; i++) {
-    const item = array[i]
-
-    if (item.parentId) {
-      const parent = array.filter((elem) => elem.id === item.parentId).pop()
-      if (!parent.children) {
-        parent.children = []
-      }
-
-      parent.children.push(item)
-    } else {
-      tree.push(item)
-    }
-  }
-
-  return tree
-}
 
 const ProjectExpenses = ({ project }) => {
   const { data, loading, error } = useQuery(GET_PROJECT_EXPENSES_QUERY, {
@@ -89,13 +55,13 @@ const ProjectExpenses = ({ project }) => {
   const confirm = useConfirm()
   const setProjectExpenses = useSetRecoilState(projectExpensesState)
 
-  const processedProjectExpenses = useMemo(() => {
-    return processProjectExpenses(data?.projectExpenses || [])
+  const projectExpensesTree = useMemo(() => {
+    return getProjectExpensesTree(data?.projectExpenses || [])
   }, [data])
 
   useEffect(() => {
-    setProjectExpenses(processedProjectExpenses)
-  }, [setProjectExpenses, processedProjectExpenses])
+    setProjectExpenses(projectExpensesTree)
+  }, [setProjectExpenses, projectExpensesTree])
 
   const onEntryDeleteButtonClick = useCallback(
     async (projectExpense: ProjectExpenseType) => {
@@ -148,7 +114,7 @@ const ProjectExpenses = ({ project }) => {
 
   return (
     <Box sx={{ mb: 2 }}>
-      {processedProjectExpenses.map((projectExpense, index) => {
+      {projectExpensesTree.map((projectExpense, index) => {
         return (
           <ProjectExpense
             key={projectExpense.id}

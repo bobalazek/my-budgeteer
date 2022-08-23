@@ -101,7 +101,10 @@ export const updateProjectExpense: MutationResolvers['updateProjectExpense'] =
     }
 
     const transactionPromises = []
-    if (typeof input.order === 'undefined') {
+    if (
+      typeof input.order !== 'undefined' &&
+      input.order !== projectExpense.order
+    ) {
       transactionPromises.push(
         db.projectExpense.updateMany({
           data: {

@@ -16,6 +16,7 @@ import { toast } from '@redwoodjs/web/toast'
 import {
   CREATE_PROJECT_EXPENSE_MUTATION,
   GET_PROJECT_EXPENSES_QUERY,
+  UPDATE_PROJECT_EXPENSE_MUTATION,
 } from 'src/graphql/ProjectExpenseQueries'
 import { projectExpenseModalState } from 'src/state/ProjectExpenseModalState'
 import { projectExpensesState } from 'src/state/ProjectExpensesState'
@@ -41,7 +42,20 @@ const ProjectExpenseOption = ({ projectExpense, level }) => {
 }
 
 const ProjectExpenseDialog = ({ project }) => {
-  const [createProjectExpense, { loading }] = useMutation(
+  const [projectExpenses, _] = useRecoilState(projectExpensesState)
+  const [projectExpenseModal, setProjectExpenseModal] = useRecoilState(
+    projectExpenseModalState
+  )
+  const [name, setName] = useState('')
+  const [description, setDescription] = useState('')
+  const [parentId, setParentId] = useState('')
+  const refetchQueries = [
+    {
+      query: GET_PROJECT_EXPENSES_QUERY,
+      variables: { projectId: project.id },
+    },
+  ]
+  const [createProjectExpense, { loading: createLoading }] = useMutation(
     CREATE_PROJECT_EXPENSE_MUTATION,
     {
       onCompleted: () => {
@@ -54,21 +68,25 @@ const ProjectExpenseDialog = ({ project }) => {
       onError: (error) => {
         toast.error(error.message)
       },
-      refetchQueries: [
-        {
-          query: GET_PROJECT_EXPENSES_QUERY,
-          variables: { projectId: project.id },
-        },
-      ],
+      refetchQueries,
     }
   )
-  const [projectExpenses, _] = useRecoilState(projectExpensesState)
-  const [projectExpenseModal, setProjectExpenseModal] = useRecoilState(
-    projectExpenseModalState
+  const [updateProjectExpense, { loading: updateLoading }] = useMutation(
+    UPDATE_PROJECT_EXPENSE_MUTATION,
+    {
+      onCompleted: () => {
+        toast.success('Project expense updated')
+
+        setName('')
+        setDescription('')
+        setParentId('')
+      },
+      onError: (error) => {
+        toast.error(error.message)
+      },
+      refetchQueries,
+    }
   )
-  const [name, setName] = useState('')
-  const [description, setDescription] = useState('')
-  const [parentId, setParentId] = useState('')
 
   useEffect(() => {
     setName(projectExpenseModal.selectedProjectExpense?.name || '')
@@ -91,16 +109,23 @@ const ProjectExpenseDialog = ({ project }) => {
   }, [setProjectExpenseModal])
 
   const onSubmitButtonClick = async () => {
-    await createProjectExpense({
+    const options = {
       variables: {
+        id: projectExpenseModal.selectedProjectExpense?.id || undefined,
         input: {
           name,
           description,
-          parentId,
+          parentId: parentId || undefined,
           projectId: project.id,
         },
       },
-    })
+    }
+
+    if (projectExpenseModal.selectedProjectExpense) {
+      await updateProjectExpense(options)
+    } else {
+      await createProjectExpense(options)
+    }
 
     onClose()
   }
@@ -167,7 +192,7 @@ const ProjectExpenseDialog = ({ project }) => {
         <Button onClick={onClose}>Close</Button>
         <Button
           variant="outlined"
-          disabled={loading}
+          disabled={createLoading || updateLoading}
           onClick={onSubmitButtonClick}
         >
           Save

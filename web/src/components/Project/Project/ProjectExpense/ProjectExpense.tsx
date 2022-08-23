@@ -1,6 +1,21 @@
 import { useEffect, useState } from 'react'
 
-import { Box, Button, TextField, Typography } from '@mui/material'
+import {
+  Add as AddIcon,
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+  ExpandCircleDown as ExpandCircleDownIcon,
+} from '@mui/icons-material'
+import {
+  Box,
+  Grid,
+  IconButton,
+  ListItemIcon,
+  Menu,
+  MenuItem,
+  TextField,
+  Typography,
+} from '@mui/material'
 import { useSetRecoilState } from 'recoil'
 import { useDebounce } from 'usehooks-ts'
 
@@ -14,6 +29,7 @@ const ProjectExpense = ({
   onUpdate,
 }) => {
   const [name, setName] = useState(projectExpense.name)
+  const [anchorElement, setAnchorElement] = useState(null)
   const setProjectExpenseModal = useSetRecoilState(projectExpenseModalState)
   const debouncedName = useDebounce(name, 500)
 
@@ -27,14 +43,6 @@ const ProjectExpense = ({
       order: index,
     })
   }, [onUpdate, projectExpense, debouncedName, index])
-
-  const onNewChildButton = () => {
-    setProjectExpenseModal({
-      open: true,
-      selectedProjectExpenseParentId: projectExpense.id,
-      selectedProjectExpense: null,
-    })
-  }
 
   const sx =
     level === 0
@@ -50,8 +58,8 @@ const ProjectExpense = ({
 
   return (
     <Box sx={sx}>
-      <Box>
-        <Box sx={{ flexGrow: 1 }}>
+      <Grid container>
+        <Grid sx={{ flexGrow: 1 }}>
           <TextField
             hiddenLabel
             fullWidth
@@ -61,27 +69,69 @@ const ProjectExpense = ({
             value={name}
             onChange={(event) => setName(event.target.value)}
           />
-        </Box>
-      </Box>
+        </Grid>
+        <Grid>
+          <IconButton
+            onClick={(event) => setAnchorElement(event.currentTarget)}
+          >
+            <ExpandCircleDownIcon />
+          </IconButton>
+          <Menu
+            anchorEl={anchorElement}
+            open={!!anchorElement}
+            onClose={() => setAnchorElement(null)}
+          >
+            <MenuItem
+              onClick={() => {
+                setAnchorElement(null)
+                setProjectExpenseModal({
+                  open: true,
+                  selectedProjectExpenseParentId: null,
+                  selectedProjectExpense: projectExpense,
+                })
+              }}
+            >
+              <ListItemIcon>
+                <EditIcon fontSize="small" />
+              </ListItemIcon>
+              <Typography variant="inherit">Edit</Typography>
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                setAnchorElement(null)
+                setProjectExpenseModal({
+                  open: true,
+                  selectedProjectExpenseParentId: projectExpense.id,
+                  selectedProjectExpense: null,
+                })
+              }}
+            >
+              <ListItemIcon>
+                <AddIcon fontSize="small" />
+              </ListItemIcon>
+              <Typography variant="inherit">Add child expense</Typography>
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                setAnchorElement(null)
+                onDeleteButtonClick(projectExpense)
+              }}
+            >
+              <ListItemIcon>
+                <DeleteIcon fontSize="small" />
+              </ListItemIcon>
+              <Typography variant="inherit">Delete</Typography>
+            </MenuItem>
+          </Menu>
+        </Grid>
+      </Grid>
       {projectExpense.description && (
         <Box>
-          <Typography sx={{ color: 'text.secondary' }}>
+          <Typography sx={{ color: 'text.secondary', whiteSpace: 'pre-wrap' }}>
             {projectExpense.description}
           </Typography>
         </Box>
       )}
-      <Box textAlign="right" sx={{ mt: 1 }}>
-        <Button color="primary" size="small" onClick={onNewChildButton}>
-          New child
-        </Button>
-        <Button
-          color="error"
-          size="small"
-          onClick={() => onDeleteButtonClick(projectExpense)}
-        >
-          Delete
-        </Button>
-      </Box>
       {projectExpense.children?.length > 0 && (
         <Box sx={{ ml: 3, flexGrow: 1 }}>
           {projectExpense.children?.map((child, childIndex) => {

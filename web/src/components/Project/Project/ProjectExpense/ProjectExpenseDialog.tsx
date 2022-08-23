@@ -6,9 +6,7 @@ import {
   DialogContent,
   DialogTitle,
   Button,
-  TextField,
   DialogActions,
-  Grid,
   Typography,
 } from '@mui/material'
 import { useRecoilState } from 'recoil'
@@ -21,40 +19,15 @@ import {
   UPDATE_PROJECT_EXPENSE_MUTATION,
 } from 'src/graphql/ProjectExpenseQueries'
 import { projectExpenseModalState } from 'src/state/ProjectExpenseModalState'
-import { projectExpensesState } from 'src/state/ProjectExpensesState'
 
-const ProjectExpenseRecurringIntervalsMap = {
-  NONE: 'None',
-  DAILY: 'Daily',
-  WEEKLY: 'Weekly',
-  MONTHLY: 'Monthly',
-  QUARTER_YEARLY: 'Quarter yearly',
-  HALF_YEARLY: 'Half yearly',
-  YEARLY: 'Yearly',
-}
-
-const ProjectExpenseOption = ({ projectExpense, level }) => {
-  return (
-    <>
-      <option key={projectExpense.id} value={projectExpense.id}>
-        {level ? '-'.repeat(level) + ' ' : ''}
-        {projectExpense.name}
-      </option>
-      {projectExpense.children?.map((child) => {
-        return (
-          <ProjectExpenseOption
-            key={child.id}
-            projectExpense={child}
-            level={level + 1}
-          />
-        )
-      })}
-    </>
-  )
-}
+import ProjectExpenseDialogCostRangeFields from './ProjectExpenseDialog/ProjectExpenseDialogCostFields'
+import ProjectExpenseDialogDescriptionField from './ProjectExpenseDialog/ProjectExpenseDialogDescriptionField'
+import ProjectExpenseDialogNameField from './ProjectExpenseDialog/ProjectExpenseDialogNameField'
+import ProjectExpenseDialogNoteField from './ProjectExpenseDialog/ProjectExpenseDialogNoteField'
+import ProjectExpenseDialogParentField from './ProjectExpenseDialog/ProjectExpenseDialogParentField'
+import ProjectExpenseDialogRecurringIntervalField from './ProjectExpenseDialog/ProjectExpenseDialogRecurringIntervalField'
 
 const ProjectExpenseDialog = ({ project }) => {
-  const [projectExpenses, _] = useRecoilState(projectExpensesState)
   const [projectExpenseModal, setProjectExpenseModal] = useRecoilState(
     projectExpenseModalState
   )
@@ -193,118 +166,49 @@ const ProjectExpenseDialog = ({ project }) => {
           '& .MuiTextField-root': { m: 1 },
         }}
       >
-        <TextField
-          required
-          multiline
-          fullWidth
-          label="Name"
-          variant="standard"
-          size="small"
+        <ProjectExpenseDialogNameField
           value={name}
           onChange={(event) => {
             setName(event.target.value)
           }}
         />
-        <TextField
-          multiline
-          fullWidth
-          label="Description"
-          variant="standard"
-          size="small"
+        <ProjectExpenseDialogDescriptionField
           value={description}
           onChange={(event) => {
             setDescription(event.target.value)
           }}
         />
-        <TextField
-          multiline
-          fullWidth
-          label="Note"
-          variant="standard"
-          size="small"
+        <ProjectExpenseDialogNoteField
           value={note}
           onChange={(event) => {
             setNote(event.target.value)
           }}
         />
-        <TextField
-          select
-          fullWidth
-          label="Parent"
-          size="small"
-          variant="standard"
-          value={parentId || '__NONE__'}
+        <ProjectExpenseDialogParentField
+          value={parentId}
           onChange={(event) => {
             setParentId(event.target.value)
           }}
-          SelectProps={{
-            native: true,
-          }}
-        >
-          {/* NOTE: Dirty hack with __NONE__, because it won't work with an empty string, whitout overflowing the label text */}
-          <option value={'__NONE__'}>-- none --</option>
-          {projectExpenses?.map((projectExpense) => {
-            return (
-              <ProjectExpenseOption
-                key={projectExpense.id}
-                projectExpense={projectExpense}
-                level={0}
-              />
-            )
-          })}
-        </TextField>
+        />
         <Typography variant="h6" sx={{ mt: 2 }}>
           Additional information
         </Typography>
-        <Grid container spacing={2} sx={{ width: '100%' }}>
-          <Grid item xs={6}>
-            <TextField
-              fullWidth
-              label="Cost (from)"
-              variant="standard"
-              size="small"
-              value={costRangeFrom}
-              onChange={(event) => {
-                setCostRangeFrom(event.target.value)
-              }}
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              fullWidth
-              label="Cost (to)"
-              variant="standard"
-              size="small"
-              value={costRangeTo}
-              onChange={(event) => {
-                setCostRangeTo(event.target.value)
-              }}
-            />
-          </Grid>
-        </Grid>
-        <TextField
-          select
-          fullWidth
-          label="Recurring interval"
-          size="small"
-          variant="standard"
+        <ProjectExpenseDialogCostRangeFields
+          valueFrom={costRangeFrom}
+          onChangeFrom={(event) => {
+            setCostRangeFrom(event.target.value)
+          }}
+          valueTo={costRangeTo}
+          onChangeTo={(event) => {
+            setCostRangeTo(event.target.value)
+          }}
+        />
+        <ProjectExpenseDialogRecurringIntervalField
           value={recurringInterval}
           onChange={(event) => {
             setRecurringInterval(event.target.value)
           }}
-          SelectProps={{
-            native: true,
-          }}
-        >
-          {Object.keys(ProjectExpenseRecurringIntervalsMap).map((key) => {
-            const label = ProjectExpenseRecurringIntervalsMap[key]
-            return (
-              <option key={key} value={key}>
-                {label}
-              </option>
-            )
-          })}
-        </TextField>
+        />
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Close</Button>

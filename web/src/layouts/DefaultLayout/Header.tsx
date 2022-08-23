@@ -17,7 +17,6 @@ export default function Header() {
             to={routes.home()}
             sx={{
               mr: 2,
-              display: { xs: 'none', md: 'flex' },
               fontWeight: 700,
               color: 'inherit',
               textDecoration: 'none',

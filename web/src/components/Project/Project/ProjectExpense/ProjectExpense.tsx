@@ -44,6 +44,7 @@ const ProjectExpense = ({
           <TextField
             hiddenLabel
             fullWidth
+            multiline
             variant="standard"
             size="small"
             value={name}

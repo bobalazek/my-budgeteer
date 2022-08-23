@@ -76,10 +76,11 @@ const NewProjectExpenseForm = ({ project }) => {
     <Grid container spacing={2} sx={{ mb: 3 }}>
       <Grid item>
         <TextField
+          required
+          multiline
           label="Name"
           variant="standard"
           size="small"
-          required
           value={name}
           onChange={(event) => {
             setName(event.target.value)
@@ -88,10 +89,10 @@ const NewProjectExpenseForm = ({ project }) => {
       </Grid>
       <Grid item>
         <TextField
+          multiline
           label="Description"
           variant="standard"
           size="small"
-          multiline
           value={description}
           onChange={(event) => {
             setDescription(event.target.value)

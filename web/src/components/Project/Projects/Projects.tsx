@@ -60,7 +60,7 @@ const ProjectsList = ({ projects }) => {
           <tr>
             <th>Name</th>
             <th>Description</th>
-            <th>Is public</th>
+            <th>Public</th>
             <th>Cost estimated</th>
             <th>Category</th>
             <th>Created at</th>

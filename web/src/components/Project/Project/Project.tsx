@@ -1,16 +1,34 @@
 import { useState } from 'react'
 
-import { Tabs, Tab, Typography } from '@mui/material'
+import { Tabs, Tab, Typography, Grid, Button } from '@mui/material'
 
-import ProjectExpensesSection from './ProjectExpensesSection'
-import ProjectVariablesSection from './ProjectVariablesSection'
+import { Link, routes } from '@redwoodjs/router'
+
+import ProjectExpensesSection from './ProjectExpense/ProjectExpensesSection'
+import ProjectVariablesSection from './ProjectVariable/ProjectVariablesSection'
 
 const Project = ({ project }) => {
   const [tab, setTab] = useState(0)
 
   return (
     <>
-      <Typography variant="h3">{project.name}</Typography>
+      <Grid container justifyContent="space-between">
+        <Grid item>
+          <Typography variant="h3">{project.name}</Typography>
+        </Grid>
+        <Grid item>
+          <Button
+            href="#"
+            color="inherit"
+            variant="outlined"
+            component={Link}
+            to={routes.projects()}
+          >
+            Back to Projects
+          </Button>
+        </Grid>
+      </Grid>
+
       {project.description && (
         <Typography sx={{ p: 2 }}>{project.description}</Typography>
       )}

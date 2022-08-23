@@ -34,8 +34,8 @@ const ProjectExpenseDialog = ({ project }) => {
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [note, setNote] = useState('')
-  const [costRangeFrom, setCostRangeFrom] = useState(null)
-  const [costRangeTo, setCostRangeTo] = useState(null)
+  const [costRangeFrom, setCostRangeFrom] = useState('')
+  const [costRangeTo, setCostRangeTo] = useState('')
   const [recurringInterval, setRecurringInterval] = useState('NONE')
   const [parentId, setParentId] = useState('')
   const refetchQueries = [
@@ -89,10 +89,10 @@ const ProjectExpenseDialog = ({ project }) => {
     )
     setNote(projectExpenseModal.selectedProjectExpense?.note || '')
     setCostRangeFrom(
-      projectExpenseModal.selectedProjectExpense?.costRangeFrom || null
+      projectExpenseModal.selectedProjectExpense?.costRangeFrom.toString() || ''
     )
     setCostRangeTo(
-      projectExpenseModal.selectedProjectExpense?.costRangeTo || null
+      projectExpenseModal.selectedProjectExpense?.costRangeTo.toString() || ''
     )
     setRecurringInterval(
       projectExpenseModal.selectedProjectExpense?.recurringInterval || 'NONE'

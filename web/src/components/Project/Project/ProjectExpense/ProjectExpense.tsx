@@ -86,7 +86,7 @@ const ProjectExpense = ({
                 setAnchorElement(null)
                 setProjectExpenseModal({
                   open: true,
-                  selectedProjectExpenseParentId: null,
+                  selectedProjectExpenseParent: null,
                   selectedProjectExpense: projectExpense,
                 })
               }}
@@ -101,7 +101,7 @@ const ProjectExpense = ({
                 setAnchorElement(null)
                 setProjectExpenseModal({
                   open: true,
-                  selectedProjectExpenseParentId: projectExpense.id,
+                  selectedProjectExpenseParent: projectExpense,
                   selectedProjectExpense: null,
                 })
               }}

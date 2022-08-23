@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react'
 
-import { Delete as DeleteIcon } from '@mui/icons-material'
-import { Grid, IconButton, TextField, Typography } from '@mui/material'
+import { Box, Button, TextField, Typography } from '@mui/material'
+import { useSetRecoilState } from 'recoil'
 import { useDebounce } from 'usehooks-ts'
+
+import { projectExpenseModalState } from 'src/state/ProjectExpenseModalState'
 
 const ProjectExpense = ({
   projectExpense,
@@ -12,6 +14,7 @@ const ProjectExpense = ({
   onUpdate,
 }) => {
   const [name, setName] = useState(projectExpense.name)
+  const setProjectExpenseModal = useSetRecoilState(projectExpenseModalState)
   const debouncedName = useDebounce(name, 500)
 
   useEffect(() => {
@@ -24,6 +27,14 @@ const ProjectExpense = ({
       order: index,
     })
   }, [onUpdate, projectExpense, debouncedName, index])
+
+  const onNewChildButton = () => {
+    setProjectExpenseModal({
+      open: true,
+      selectedProjectExpenseParentId: projectExpense.id,
+      selectedProjectExpense: null,
+    })
+  }
 
   const sx =
     level === 0
@@ -38,9 +49,9 @@ const ProjectExpense = ({
         }
 
   return (
-    <Grid container sx={sx}>
-      <Grid item container>
-        <Grid item sx={{ flexGrow: 1 }}>
+    <Box sx={sx}>
+      <Box>
+        <Box sx={{ flexGrow: 1 }}>
           <TextField
             hiddenLabel
             fullWidth
@@ -50,26 +61,29 @@ const ProjectExpense = ({
             value={name}
             onChange={(event) => setName(event.target.value)}
           />
-        </Grid>
-        <Grid item>
-          <IconButton
-            size="small"
-            sx={{ ml: 1 }}
-            onClick={() => onDeleteButtonClick(projectExpense)}
-          >
-            <DeleteIcon />
-          </IconButton>
-        </Grid>
-      </Grid>
+        </Box>
+      </Box>
       {projectExpense.description && (
-        <Grid item>
+        <Box>
           <Typography sx={{ color: 'text.secondary' }}>
             {projectExpense.description}
           </Typography>
-        </Grid>
+        </Box>
       )}
+      <Box textAlign="right" sx={{ mt: 1 }}>
+        <Button color="primary" size="small" onClick={onNewChildButton}>
+          New child
+        </Button>
+        <Button
+          color="error"
+          size="small"
+          onClick={() => onDeleteButtonClick(projectExpense)}
+        >
+          Delete
+        </Button>
+      </Box>
       {projectExpense.children?.length > 0 && (
-        <Grid item sx={{ ml: 3, flexGrow: 1 }}>
+        <Box sx={{ ml: 3, flexGrow: 1 }}>
           {projectExpense.children?.map((child, childIndex) => {
             return (
               <ProjectExpense
@@ -82,9 +96,9 @@ const ProjectExpense = ({
               />
             )
           })}
-        </Grid>
+        </Box>
       )}
-    </Grid>
+    </Box>
   )
 }
 

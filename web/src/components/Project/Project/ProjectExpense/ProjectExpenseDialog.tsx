@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 import { useMutation } from '@apollo/client'
 import {
@@ -41,9 +41,6 @@ const ProjectExpenseOption = ({ projectExpense, level }) => {
 }
 
 const ProjectExpenseDialog = ({ project }) => {
-  const [name, setName] = useState('')
-  const [description, setDescription] = useState('')
-  const [parentId, setParentId] = useState('')
   const [createProjectExpense, { loading }] = useMutation(
     CREATE_PROJECT_EXPENSE_MUTATION,
     {
@@ -69,10 +66,27 @@ const ProjectExpenseDialog = ({ project }) => {
   const [projectExpenseModal, setProjectExpenseModal] = useRecoilState(
     projectExpenseModalState
   )
+  const [name, setName] = useState('')
+  const [description, setDescription] = useState('')
+  const [parentId, setParentId] = useState('')
+
+  useEffect(() => {
+    setName(projectExpenseModal.selectedProjectExpense?.name || '')
+    setDescription(
+      projectExpenseModal.selectedProjectExpense?.description || ''
+    )
+    setParentId(
+      projectExpenseModal.selectedProjectExpense?.parentId ||
+        projectExpenseModal.selectedProjectExpenseParentId ||
+        ''
+    )
+  }, [projectExpenseModal])
 
   const onClose = useCallback(() => {
-    setProjectExpenseModal((prev) => {
-      return { ...prev, open: false }
+    setProjectExpenseModal({
+      selectedProjectExpense: null,
+      selectedProjectExpenseParentId: null,
+      open: false,
     })
   }, [setProjectExpenseModal])
 
@@ -87,6 +101,8 @@ const ProjectExpenseDialog = ({ project }) => {
         },
       },
     })
+
+    onClose()
   }
 
   return (

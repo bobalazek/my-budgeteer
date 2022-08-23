@@ -1,15 +1,23 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 
-import { Button, Grid, TextField } from '@mui/material'
+import { useMutation } from '@apollo/client'
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Button,
+  TextField,
+  DialogActions,
+} from '@mui/material'
 import { useRecoilState } from 'recoil'
 
-import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
 import {
   CREATE_PROJECT_EXPENSE_MUTATION,
   GET_PROJECT_EXPENSES_QUERY,
 } from 'src/graphql/ProjectExpenseQueries'
+import { projectExpenseModalState } from 'src/state/ProjectExpenseModalState'
 import { projectExpensesState } from 'src/state/ProjectExpensesState'
 
 const ProjectExpenseOption = ({ projectExpense, level }) => {
@@ -32,7 +40,7 @@ const ProjectExpenseOption = ({ projectExpense, level }) => {
   )
 }
 
-const NewProjectExpenseForm = ({ project }) => {
+const ProjectExpenseDialog = ({ project }) => {
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [parentId, setParentId] = useState('')
@@ -58,6 +66,15 @@ const NewProjectExpenseForm = ({ project }) => {
     }
   )
   const [projectExpenses, _] = useRecoilState(projectExpensesState)
+  const [projectExpenseModal, setProjectExpenseModal] = useRecoilState(
+    projectExpenseModalState
+  )
+
+  const onClose = useCallback(() => {
+    setProjectExpenseModal((prev) => {
+      return { ...prev, open: false }
+    })
+  }, [setProjectExpenseModal])
 
   const onSubmitButtonClick = async () => {
     await createProjectExpense({
@@ -73,11 +90,17 @@ const NewProjectExpenseForm = ({ project }) => {
   }
 
   return (
-    <Grid container spacing={2} sx={{ mb: 3 }}>
-      <Grid item>
+    <Dialog open={projectExpenseModal.open} onClose={onClose}>
+      <DialogTitle>New project expense</DialogTitle>
+      <DialogContent
+        sx={{
+          '& .MuiTextField-root': { m: 1 },
+        }}
+      >
         <TextField
           required
           multiline
+          fullWidth
           label="Name"
           variant="standard"
           size="small"
@@ -86,10 +109,9 @@ const NewProjectExpenseForm = ({ project }) => {
             setName(event.target.value)
           }}
         />
-      </Grid>
-      <Grid item>
         <TextField
           multiline
+          fullWidth
           label="Description"
           variant="standard"
           size="small"
@@ -98,10 +120,9 @@ const NewProjectExpenseForm = ({ project }) => {
             setDescription(event.target.value)
           }}
         />
-      </Grid>
-      <Grid item>
         <TextField
           select
+          fullWidth
           label="Parent"
           size="small"
           variant="standard"
@@ -125,19 +146,19 @@ const NewProjectExpenseForm = ({ project }) => {
             )
           })}
         </TextField>
-      </Grid>
-      <Grid item sx={{ alignSelf: 'self-end' }}>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onClose}>Close</Button>
         <Button
           variant="outlined"
-          size="small"
           disabled={loading}
           onClick={onSubmitButtonClick}
         >
           Save
         </Button>
-      </Grid>
-    </Grid>
+      </DialogActions>
+    </Dialog>
   )
 }
 
-export default NewProjectExpenseForm
+export default ProjectExpenseDialog

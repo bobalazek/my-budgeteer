@@ -2,11 +2,11 @@ import { atom } from 'recoil'
 
 import { ProjectExpenseType } from 'src/types/ProjectExpenseType'
 
-export const newProjectExpenseModalState = atom<{
+export const projectExpenseModalState = atom<{
   open: boolean
   selectedProjectExpense: ProjectExpenseType | null
 }>({
-  key: 'NewProjectExpenseModal',
+  key: 'ProjectExpenseModal',
   default: {
     open: false,
     selectedProjectExpense: null,

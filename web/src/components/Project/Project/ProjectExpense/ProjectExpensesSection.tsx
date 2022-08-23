@@ -2,37 +2,35 @@ import { Add as AddIcon, Close as CloseIcon } from '@mui/icons-material'
 import { Box, Fab } from '@mui/material'
 import { useRecoilState } from 'recoil'
 
-import { newProjectExpenseModalState } from 'src/state/NewProjectExpenseModalState'
+import { projectExpenseModalState } from 'src/state/ProjectExpenseModalState'
 
-import NewProjectExpenseForm from './NewProjectExpenseForm'
+import ProjectExpenseDialog from './ProjectExpenseDialog'
 import ProjectExpenses from './ProjectExpenses'
 
 const ProjectExpensesSection = ({ project }) => {
-  const [newProjectExpenseModal, setNewProjectExpenseModal] = useRecoilState(
-    newProjectExpenseModalState
+  const [projectExpenseModal, setProjectExpenseModal] = useRecoilState(
+    projectExpenseModalState
   )
 
   return (
     <>
       <Box sx={{ p: 2 }}>
         <ProjectExpenses project={project} />
-        {newProjectExpenseModal.open && (
-          <NewProjectExpenseForm project={project} />
-        )}
       </Box>
       <Fab
         color="primary"
         onClick={() => {
-          setNewProjectExpenseModal((prev) => ({
+          setProjectExpenseModal((prev) => ({
             open: !prev.open,
             selectedProjectExpense: null,
           }))
         }}
         sx={{ position: 'fixed', bottom: 16, right: 16 }}
       >
-        {!newProjectExpenseModal.open && <AddIcon />}
-        {newProjectExpenseModal.open && <CloseIcon />}
+        {!projectExpenseModal.open && <AddIcon />}
+        {projectExpenseModal.open && <CloseIcon />}
       </Fab>
+      <ProjectExpenseDialog project={project} />
     </>
   )
 }

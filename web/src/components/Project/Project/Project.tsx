@@ -14,7 +14,9 @@ const Project = ({ project }) => {
     <>
       <Grid container justifyContent="space-between">
         <Grid item>
-          <Typography variant="h3">{project.name}</Typography>
+          <Typography variant="h2" sx={{ fontSize: 32 }}>
+            {project.name}
+          </Typography>
         </Grid>
         <Grid item>
           <Button

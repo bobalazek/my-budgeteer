@@ -20,11 +20,13 @@ import {
 } from 'src/graphql/ProjectExpenseQueries'
 import { projectExpenseModalState } from 'src/state/ProjectExpenseModalState'
 
-import ProjectExpenseDialogCostRangeFields from './ProjectExpenseDialog/ProjectExpenseDialogCostFields'
+import ProjectExpenseDialogCostActualField from './ProjectExpenseDialog/ProjectExpenseDialogCostActualField'
+import ProjectExpenseDialogCostRangeFields from './ProjectExpenseDialog/ProjectExpenseDialogCostRangeFields'
 import ProjectExpenseDialogDescriptionField from './ProjectExpenseDialog/ProjectExpenseDialogDescriptionField'
 import ProjectExpenseDialogNameField from './ProjectExpenseDialog/ProjectExpenseDialogNameField'
 import ProjectExpenseDialogNoteField from './ProjectExpenseDialog/ProjectExpenseDialogNoteField'
 import ProjectExpenseDialogParentField from './ProjectExpenseDialog/ProjectExpenseDialogParentField'
+import ProjectExpenseDialogProgressPercentageField from './ProjectExpenseDialog/ProjectExpenseDialogProgressPercentageField'
 import ProjectExpenseDialogRecurringIntervalField from './ProjectExpenseDialog/ProjectExpenseDialogRecurringIntervalField'
 
 const ProjectExpenseDialog = ({ project }) => {
@@ -37,6 +39,8 @@ const ProjectExpenseDialog = ({ project }) => {
   const [costRangeFrom, setCostRangeFrom] = useState('')
   const [costRangeTo, setCostRangeTo] = useState('')
   const [recurringInterval, setRecurringInterval] = useState('NONE')
+  const [progressPercentage, setProgressPercentage] = useState(0)
+  const [costActual, setCostActual] = useState('')
   const [parentId, setParentId] = useState('')
   const refetchQueries = [
     {
@@ -51,6 +55,8 @@ const ProjectExpenseDialog = ({ project }) => {
     setCostRangeFrom('')
     setCostRangeTo('')
     setRecurringInterval('NONE')
+    setProgressPercentage(0)
+    setCostActual('')
     setParentId('')
   }
   const [createProjectExpense, { loading: createLoading }] = useMutation(
@@ -89,13 +95,20 @@ const ProjectExpenseDialog = ({ project }) => {
     )
     setNote(projectExpenseModal.selectedProjectExpense?.note || '')
     setCostRangeFrom(
-      projectExpenseModal.selectedProjectExpense?.costRangeFrom.toString() || ''
+      projectExpenseModal.selectedProjectExpense?.costRangeFrom?.toString() ||
+        ''
     )
     setCostRangeTo(
-      projectExpenseModal.selectedProjectExpense?.costRangeTo.toString() || ''
+      projectExpenseModal.selectedProjectExpense?.costRangeTo?.toString() || ''
     )
     setRecurringInterval(
       projectExpenseModal.selectedProjectExpense?.recurringInterval || 'NONE'
+    )
+    setProgressPercentage(
+      projectExpenseModal.selectedProjectExpense?.progressPercentage || 0
+    )
+    setCostActual(
+      projectExpenseModal.selectedProjectExpense?.costActual?.toString() || ''
     )
     setParentId(
       projectExpenseModal.selectedProjectExpense?.parentId ||
@@ -123,6 +136,8 @@ const ProjectExpenseDialog = ({ project }) => {
           costRangeFrom,
           costRangeTo,
           recurringInterval,
+          progressPercentage,
+          costActual,
           parentId: parentId || undefined,
           projectId: project.id,
         },
@@ -194,6 +209,7 @@ const ProjectExpenseDialog = ({ project }) => {
           Additional information
         </Typography>
         <ProjectExpenseDialogCostRangeFields
+          project={project}
           valueFrom={costRangeFrom}
           onChangeFrom={(event) => {
             setCostRangeFrom(event.target.value)
@@ -207,6 +223,19 @@ const ProjectExpenseDialog = ({ project }) => {
           value={recurringInterval}
           onChange={(event) => {
             setRecurringInterval(event.target.value)
+          }}
+        />
+        <ProjectExpenseDialogProgressPercentageField
+          value={progressPercentage}
+          onChange={(event) => {
+            setProgressPercentage(event.target.value)
+          }}
+        />
+        <ProjectExpenseDialogCostActualField
+          project={project}
+          value={costActual}
+          onChange={(event) => {
+            setCostActual(event.target.value)
           }}
         />
       </DialogContent>

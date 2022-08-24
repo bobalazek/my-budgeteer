@@ -1,6 +1,7 @@
-import { Grid, TextField } from '@mui/material'
+import { Grid, InputAdornment, TextField } from '@mui/material'
 
 const ProjectExpenseDialogCostRangeFields = ({
+  project,
   valueFrom,
   onChangeFrom,
   valueTo,
@@ -11,21 +12,35 @@ const ProjectExpenseDialogCostRangeFields = ({
       <Grid item xs={6}>
         <TextField
           fullWidth
-          label="Cost (from)"
+          label="Cost from"
           variant="standard"
           size="small"
           value={valueFrom}
           onChange={onChangeFrom}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                {project.currencySymbol}
+              </InputAdornment>
+            ),
+          }}
         />
       </Grid>
       <Grid item xs={6}>
         <TextField
           fullWidth
-          label="Cost (to)"
+          label="Cost to"
           variant="standard"
           size="small"
           value={valueTo}
           onChange={onChangeTo}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                {project.currencySymbol}
+              </InputAdornment>
+            ),
+          }}
         />
       </Grid>
     </Grid>

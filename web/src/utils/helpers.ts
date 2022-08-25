@@ -1,5 +1,9 @@
 import { ProjectExpenseType } from 'src/types/ProjectExpenseType'
 
+export const isNumeric = (n: any): boolean => {
+  return !isNaN(parseFloat(n)) && isFinite(n)
+}
+
 export const getProjectExpensesTree = (
   projectExpenses: ProjectExpenseType[]
 ): ProjectExpenseType[] => {

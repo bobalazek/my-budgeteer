@@ -5,6 +5,7 @@ import type {
 } from 'types/graphql'
 
 import { validate } from '@redwoodjs/api'
+import { ValidationError } from '@redwoodjs/graphql-server'
 
 import { db } from 'src/lib/db'
 
@@ -31,7 +32,7 @@ export const createProjectVariable: MutationResolvers['createProjectVariable'] =
   async ({ input }) => {
     const userId = context.currentUser?.id
     if (!userId) {
-      throw 'You must be logged in to update a project'
+      throw new ValidationError('You must be logged in to update a project')
     }
 
     const project = await db.project.findFirst({
@@ -41,7 +42,7 @@ export const createProjectVariable: MutationResolvers['createProjectVariable'] =
       },
     })
     if (!project) {
-      throw 'Project with this ID does not exist'
+      throw new ValidationError('Project with this ID does not exist')
     }
 
     validate(input.name, {
@@ -78,7 +79,7 @@ export const updateProjectVariable: MutationResolvers['updateProjectVariable'] =
   async ({ id, input }) => {
     const userId = context.currentUser?.id
     if (!userId) {
-      throw 'You must be logged in to update a project'
+      throw new ValidationError('You must be logged in to update a project')
     }
 
     const project = await db.project.findFirst({
@@ -88,7 +89,7 @@ export const updateProjectVariable: MutationResolvers['updateProjectVariable'] =
       },
     })
     if (!project) {
-      throw 'Project with this ID does not exist'
+      throw new ValidationError('Project with this ID does not exist')
     }
 
     return db.projectVariable.update({
@@ -101,7 +102,7 @@ export const deleteProjectVariable: MutationResolvers['deleteProjectVariable'] =
   async ({ id }) => {
     const userId = context.currentUser?.id
     if (!userId) {
-      throw 'You must be logged in to update a project'
+      throw new ValidationError('You must be logged in to update a project')
     }
 
     const projectVariable = await db.projectVariable.findFirst({
@@ -113,7 +114,7 @@ export const deleteProjectVariable: MutationResolvers['deleteProjectVariable'] =
       },
     })
     if (!projectVariable) {
-      throw 'Project variable with this ID does not exist'
+      throw new ValidationError('Project variable with this ID does not exist')
     }
 
     const transactionPromises = []

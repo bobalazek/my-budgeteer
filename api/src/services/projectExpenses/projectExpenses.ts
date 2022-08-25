@@ -5,8 +5,10 @@ import type {
 } from 'types/graphql'
 
 import { validate } from '@redwoodjs/api'
+import { ValidationError } from '@redwoodjs/graphql-server'
 
 import { db } from 'src/lib/db'
+import { isNumeric } from 'src/lib/helpers'
 
 export const projectExpenses: QueryResolvers['projectExpenses'] = ({
   projectId,
@@ -31,7 +33,7 @@ export const createProjectExpense: MutationResolvers['createProjectExpense'] =
   async ({ input }) => {
     const userId = context.currentUser?.id
     if (!userId) {
-      throw 'You must be logged in to update a project'
+      throw new ValidationError('You must be logged in to update a project')
     }
 
     const project = await db.project.findFirst({
@@ -41,7 +43,7 @@ export const createProjectExpense: MutationResolvers['createProjectExpense'] =
       },
     })
     if (!project) {
-      throw 'Project with this ID does not exist'
+      throw new ValidationError('Project with this ID does not exist')
     }
 
     validate(input.name, {
@@ -51,6 +53,16 @@ export const createProjectExpense: MutationResolvers['createProjectExpense'] =
         message: 'Name needs to be between 2 and 255 characters long',
       },
     })
+
+    if (
+      isNumeric(input.costRangeFrom) &&
+      isNumeric(input.costRangeTo) &&
+      input.costRangeTo < input.costRangeFrom
+    ) {
+      throw new ValidationError(
+        'The cost to value must be higher than the cost from value'
+      )
+    }
 
     const parentId = input.parentId || null
     const order = await db.projectExpense.count({
@@ -75,7 +87,7 @@ export const updateProjectExpense: MutationResolvers['updateProjectExpense'] =
   async ({ id, input }) => {
     const userId = context.currentUser?.id
     if (!userId) {
-      throw 'You must be logged in to update a project'
+      throw new ValidationError('You must be logged in to update a project')
     }
 
     const project = await db.project.findFirst({
@@ -85,7 +97,7 @@ export const updateProjectExpense: MutationResolvers['updateProjectExpense'] =
       },
     })
     if (!project) {
-      throw 'Project with this ID does not exist'
+      throw new ValidationError('Project with this ID does not exist')
     }
 
     const projectExpense = await db.projectExpense.findFirst({
@@ -97,7 +109,17 @@ export const updateProjectExpense: MutationResolvers['updateProjectExpense'] =
       },
     })
     if (!projectExpense) {
-      throw 'Project expense with this ID does not exist'
+      throw new ValidationError('Project expense with this ID does not exist')
+    }
+
+    if (
+      isNumeric(input.costRangeFrom) &&
+      isNumeric(input.costRangeTo) &&
+      input.costRangeTo < input.costRangeFrom
+    ) {
+      throw new ValidationError(
+        'The cost to value must be higher than the cost from value'
+      )
     }
 
     const transactionPromises = []
@@ -134,7 +156,7 @@ export const deleteProjectExpense: MutationResolvers['deleteProjectExpense'] =
   async ({ id }) => {
     const userId = context.currentUser?.id
     if (!userId) {
-      throw 'You must be logged in to update a project'
+      throw new ValidationError('You must be logged in to update a project')
     }
 
     const projectExpense = await db.projectExpense.findFirst({
@@ -146,7 +168,7 @@ export const deleteProjectExpense: MutationResolvers['deleteProjectExpense'] =
       },
     })
     if (!projectExpense) {
-      throw 'Project expense with this ID does not exist'
+      throw new ValidationError('Project expense with this ID does not exist')
     }
 
     const children = await db.projectExpense.findMany({

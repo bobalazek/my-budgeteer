@@ -36,11 +36,11 @@ const ProjectExpenseDialog = ({ project }) => {
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [note, setNote] = useState('')
-  const [costRangeFrom, setCostRangeFrom] = useState('')
-  const [costRangeTo, setCostRangeTo] = useState('')
   const [recurringInterval, setRecurringInterval] = useState('NONE')
   const [progressPercentage, setProgressPercentage] = useState(0)
   const [costActual, setCostActual] = useState('')
+  const [costRangeFrom, setCostRangeFrom] = useState('')
+  const [costRangeTo, setCostRangeTo] = useState('')
   const [parentId, setParentId] = useState('')
   const refetchQueries = [
     {
@@ -52,11 +52,11 @@ const ProjectExpenseDialog = ({ project }) => {
     setName('')
     setDescription('')
     setNote('')
-    setCostRangeFrom('')
-    setCostRangeTo('')
     setRecurringInterval('NONE')
     setProgressPercentage(0)
     setCostActual('')
+    setCostRangeFrom('')
+    setCostRangeTo('')
     setParentId('')
   }
   const [createProjectExpense, { loading: createLoading }] = useMutation(
@@ -94,13 +94,6 @@ const ProjectExpenseDialog = ({ project }) => {
       projectExpenseModal.selectedProjectExpense?.description || ''
     )
     setNote(projectExpenseModal.selectedProjectExpense?.note || '')
-    setCostRangeFrom(
-      projectExpenseModal.selectedProjectExpense?.costRangeFrom?.toString() ||
-        ''
-    )
-    setCostRangeTo(
-      projectExpenseModal.selectedProjectExpense?.costRangeTo?.toString() || ''
-    )
     setRecurringInterval(
       projectExpenseModal.selectedProjectExpense?.recurringInterval || 'NONE'
     )
@@ -109,6 +102,13 @@ const ProjectExpenseDialog = ({ project }) => {
     )
     setCostActual(
       projectExpenseModal.selectedProjectExpense?.costActual?.toString() || ''
+    )
+    setCostRangeFrom(
+      projectExpenseModal.selectedProjectExpense?.costRangeFrom?.toString() ||
+        ''
+    )
+    setCostRangeTo(
+      projectExpenseModal.selectedProjectExpense?.costRangeTo?.toString() || ''
     )
     setParentId(
       projectExpenseModal.selectedProjectExpense?.parentId ||
@@ -133,12 +133,12 @@ const ProjectExpenseDialog = ({ project }) => {
           name,
           description,
           note,
-          costRangeFrom,
-          costRangeTo,
           recurringInterval,
           progressPercentage,
-          costActual,
-          parentId: parentId || undefined,
+          costRangeFrom: costRangeFrom ? parseFloat(costRangeFrom) : null,
+          costRangeTo: costRangeTo ? parseFloat(costRangeTo) : null,
+          costActual: costActual ? parseFloat(costActual) : null,
+          parentId: parentId || null,
           projectId: project.id,
         },
       },
@@ -208,17 +208,6 @@ const ProjectExpenseDialog = ({ project }) => {
         <Typography variant="h6" sx={{ mt: 2 }}>
           Additional information
         </Typography>
-        <ProjectExpenseDialogCostRangeFields
-          project={project}
-          valueFrom={costRangeFrom}
-          onChangeFrom={(event) => {
-            setCostRangeFrom(event.target.value)
-          }}
-          valueTo={costRangeTo}
-          onChangeTo={(event) => {
-            setCostRangeTo(event.target.value)
-          }}
-        />
         <ProjectExpenseDialogRecurringIntervalField
           value={recurringInterval}
           onChange={(event) => {
@@ -229,6 +218,17 @@ const ProjectExpenseDialog = ({ project }) => {
           value={progressPercentage}
           onChange={(event) => {
             setProgressPercentage(event.target.value)
+          }}
+        />
+        <ProjectExpenseDialogCostRangeFields
+          project={project}
+          valueFrom={costRangeFrom}
+          onChangeFrom={(event) => {
+            setCostRangeFrom(event.target.value)
+          }}
+          valueTo={costRangeTo}
+          onChangeTo={(event) => {
+            setCostRangeTo(event.target.value)
           }}
         />
         <ProjectExpenseDialogCostActualField

@@ -118,6 +118,7 @@ const ProjectExpenses = ({ project }) => {
         return (
           <ProjectExpense
             key={projectExpense.id}
+            project={project}
             projectExpense={projectExpense}
             index={index}
             level={0}

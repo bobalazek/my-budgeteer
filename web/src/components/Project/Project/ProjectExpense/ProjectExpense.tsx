@@ -20,14 +20,26 @@ import { useSetRecoilState } from 'recoil'
 import { useDebounce } from 'usehooks-ts'
 
 import { projectExpenseModalState } from 'src/state/ProjectExpenseModalState'
+import { ProjectExpenseType } from 'src/types/ProjectExpenseType'
+import { isNumeric } from 'src/utils/helpers'
+
+type ProjectExpensePropsType = {
+  project: any // TODO
+  projectExpense: ProjectExpenseType
+  index: number
+  level: number
+  onDeleteButtonClick: (projectExpense: ProjectExpenseType) => void
+  onUpdate: (id: string, input: any) => void
+}
 
 const ProjectExpense = ({
+  project,
   projectExpense,
   index,
   level,
   onDeleteButtonClick,
   onUpdate,
-}) => {
+}: ProjectExpensePropsType) => {
   const [name, setName] = useState(projectExpense.name)
   const [anchorElement, setAnchorElement] = useState(null)
   const setProjectExpenseModal = useSetRecoilState(projectExpenseModalState)
@@ -126,11 +138,27 @@ const ProjectExpense = ({
         </Grid>
       </Grid>
       {projectExpense.description && (
-        <Box>
-          <Typography sx={{ color: 'text.secondary', whiteSpace: 'pre-wrap' }}>
-            {projectExpense.description}
-          </Typography>
-        </Box>
+        <Typography sx={{ color: 'text.secondary', whiteSpace: 'pre-wrap' }}>
+          {projectExpense.description}
+        </Typography>
+      )}
+      {(isNumeric(projectExpense.costRangeFrom) ||
+        isNumeric(projectExpense.costRangeTo)) && (
+        <Typography sx={{ color: 'text.secondary', whiteSpace: 'pre-wrap' }}>
+          <span>Cost: </span>
+          {isNumeric(projectExpense.costRangeFrom) && (
+            <span>
+              from {projectExpense.costRangeFrom}
+              {project.currencySymbol}{' '}
+            </span>
+          )}
+          {isNumeric(projectExpense.costRangeTo) && (
+            <span>
+              to {projectExpense.costRangeTo}
+              {project.currencySymbol}
+            </span>
+          )}
+        </Typography>
       )}
       {projectExpense.children?.length > 0 && (
         <Box sx={{ ml: 3, flexGrow: 1 }}>
@@ -138,6 +166,7 @@ const ProjectExpense = ({
             return (
               <ProjectExpense
                 key={child.id}
+                project={project}
                 projectExpense={child}
                 index={childIndex}
                 level={level + 1}

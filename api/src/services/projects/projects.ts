@@ -7,6 +7,7 @@ import type {
 } from 'types/graphql'
 
 import { validate, validateWith } from '@redwoodjs/api'
+import { ValidationError } from '@redwoodjs/graphql-server'
 
 import { db } from 'src/lib/db'
 
@@ -34,7 +35,7 @@ export const createProject: MutationResolvers['createProject'] = ({
 }) => {
   const userId = context.currentUser?.id
   if (!userId) {
-    throw 'You must be logged in to create a project'
+    throw new ValidationError('You must be logged in to create a project')
   }
 
   validate(input.currencySymbol, {
@@ -52,7 +53,7 @@ export const createProject: MutationResolvers['createProject'] = ({
         },
       })
       if (!category) {
-        throw 'Category with this ID does not exist'
+        throw new ValidationError('Category with this ID does not exist')
       }
     }
   })
@@ -78,7 +79,7 @@ export const updateProject: MutationResolvers['updateProject'] = ({
 }) => {
   const userId = context.currentUser?.id
   if (!userId) {
-    throw 'You must be logged in to update a project'
+    throw new ValidationError('You must be logged in to update a project')
   }
 
   const project = db.project.findFirst({
@@ -88,7 +89,7 @@ export const updateProject: MutationResolvers['updateProject'] = ({
     },
   })
   if (!project) {
-    throw 'Project with this ID does not exist'
+    throw new ValidationError('Project with this ID does not exist')
   }
 
   return db.project.update({
@@ -100,7 +101,7 @@ export const updateProject: MutationResolvers['updateProject'] = ({
 export const deleteProject: MutationResolvers['deleteProject'] = ({ id }) => {
   const userId = context.currentUser?.id
   if (!userId) {
-    throw 'You must be logged in to delete a project'
+    throw new ValidationError('You must be logged in to delete a project')
   }
 
   const project = db.project.findFirst({
@@ -110,7 +111,7 @@ export const deleteProject: MutationResolvers['deleteProject'] = ({ id }) => {
     },
   })
   if (!project) {
-    throw 'Project with this ID does not exist'
+    throw new ValidationError('Project with this ID does not exist')
   }
 
   return db.project.delete({

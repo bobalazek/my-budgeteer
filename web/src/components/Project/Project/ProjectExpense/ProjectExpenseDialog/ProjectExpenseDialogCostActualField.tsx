@@ -8,7 +8,7 @@ const ProjectExpenseDialogCostActualField = ({ project, value, onChange }) => {
       variant="standard"
       size="small"
       value={value}
-      onChange={onChange}
+      onChange={(event) => onChange(event.target.value)}
       InputProps={{
         endAdornment: (
           <InputAdornment position="end">

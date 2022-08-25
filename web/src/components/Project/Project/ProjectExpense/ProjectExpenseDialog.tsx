@@ -37,10 +37,10 @@ const ProjectExpenseDialog = ({ project }) => {
   const [description, setDescription] = useState('')
   const [note, setNote] = useState('')
   const [recurringInterval, setRecurringInterval] = useState('NONE')
-  const [progressPercentage, setProgressPercentage] = useState(0)
   const [costActual, setCostActual] = useState('')
   const [costRangeFrom, setCostRangeFrom] = useState('')
   const [costRangeTo, setCostRangeTo] = useState('')
+  const [progressPercentage, setProgressPercentage] = useState(0)
   const [parentId, setParentId] = useState('')
   const refetchQueries = [
     {
@@ -53,10 +53,10 @@ const ProjectExpenseDialog = ({ project }) => {
     setDescription('')
     setNote('')
     setRecurringInterval('NONE')
-    setProgressPercentage(0)
     setCostActual('')
     setCostRangeFrom('')
     setCostRangeTo('')
+    setProgressPercentage(0)
     setParentId('')
   }
   const [createProjectExpense, { loading: createLoading }] = useMutation(
@@ -97,9 +97,6 @@ const ProjectExpenseDialog = ({ project }) => {
     setRecurringInterval(
       projectExpenseModal.selectedProjectExpense?.recurringInterval || 'NONE'
     )
-    setProgressPercentage(
-      projectExpenseModal.selectedProjectExpense?.progressPercentage || 0
-    )
     setCostActual(
       projectExpenseModal.selectedProjectExpense?.costActual?.toString() || ''
     )
@@ -109,6 +106,9 @@ const ProjectExpenseDialog = ({ project }) => {
     )
     setCostRangeTo(
       projectExpenseModal.selectedProjectExpense?.costRangeTo?.toString() || ''
+    )
+    setProgressPercentage(
+      projectExpenseModal.selectedProjectExpense?.progressPercentage || 0
     )
     setParentId(
       projectExpenseModal.selectedProjectExpense?.parentId ||
@@ -134,10 +134,10 @@ const ProjectExpenseDialog = ({ project }) => {
           description,
           note,
           recurringInterval,
-          progressPercentage,
           costRangeFrom: costRangeFrom ? parseFloat(costRangeFrom) : null,
           costRangeTo: costRangeTo ? parseFloat(costRangeTo) : null,
           costActual: costActual ? parseFloat(costActual) : null,
+          progressPercentage,
           parentId: parentId || null,
           projectId: project.id,
         },
@@ -183,26 +183,26 @@ const ProjectExpenseDialog = ({ project }) => {
       >
         <ProjectExpenseDialogNameField
           value={name}
-          onChange={(event) => {
-            setName(event.target.value)
+          onChange={(value) => {
+            setName(value)
           }}
         />
         <ProjectExpenseDialogDescriptionField
           value={description}
-          onChange={(event) => {
-            setDescription(event.target.value)
+          onChange={(value) => {
+            setDescription(value)
           }}
         />
         <ProjectExpenseDialogNoteField
           value={note}
-          onChange={(event) => {
-            setNote(event.target.value)
+          onChange={(value) => {
+            setNote(value)
           }}
         />
         <ProjectExpenseDialogParentField
           value={parentId}
-          onChange={(event) => {
-            setParentId(event.target.value)
+          onChange={(value) => {
+            setParentId(value)
           }}
         />
         <Typography variant="h6" sx={{ mt: 2 }}>
@@ -210,32 +210,32 @@ const ProjectExpenseDialog = ({ project }) => {
         </Typography>
         <ProjectExpenseDialogRecurringIntervalField
           value={recurringInterval}
-          onChange={(event) => {
-            setRecurringInterval(event.target.value)
-          }}
-        />
-        <ProjectExpenseDialogProgressPercentageField
-          value={progressPercentage}
-          onChange={(event) => {
-            setProgressPercentage(event.target.value)
+          onChange={(value) => {
+            setRecurringInterval(value)
           }}
         />
         <ProjectExpenseDialogCostRangeFields
           project={project}
           valueFrom={costRangeFrom}
-          onChangeFrom={(event) => {
-            setCostRangeFrom(event.target.value)
+          onChangeFrom={(value) => {
+            setCostRangeFrom(value)
           }}
           valueTo={costRangeTo}
-          onChangeTo={(event) => {
-            setCostRangeTo(event.target.value)
+          onChangeTo={(value) => {
+            setCostRangeTo(value)
           }}
         />
         <ProjectExpenseDialogCostActualField
           project={project}
           value={costActual}
-          onChange={(event) => {
-            setCostActual(event.target.value)
+          onChange={(value) => {
+            setCostActual(value)
+          }}
+        />
+        <ProjectExpenseDialogProgressPercentageField
+          value={progressPercentage}
+          onChange={(value) => {
+            setProgressPercentage(value)
           }}
         />
       </DialogContent>

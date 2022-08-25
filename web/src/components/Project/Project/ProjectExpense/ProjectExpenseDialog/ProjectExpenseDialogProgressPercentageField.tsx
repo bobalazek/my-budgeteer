@@ -7,7 +7,7 @@ const ProjectExpenseDialogProgressPercentageField = ({ value, onChange }) => {
       <Box sx={{ mx: 2 }}>
         <Slider
           value={value}
-          onChange={onChange}
+          onChange={(event) => onChange(event.target.value)}
           min={0}
           max={100}
           marks={[

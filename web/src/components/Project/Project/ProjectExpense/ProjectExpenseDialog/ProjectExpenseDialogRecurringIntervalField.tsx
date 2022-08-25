@@ -19,7 +19,7 @@ const ProjectExpenseDialogRecurringIntervalField = ({ value, onChange }) => {
       size="small"
       variant="standard"
       value={value}
-      onChange={onChange}
+      onChange={(event) => onChange(event.target.value)}
       SelectProps={{
         native: true,
       }}

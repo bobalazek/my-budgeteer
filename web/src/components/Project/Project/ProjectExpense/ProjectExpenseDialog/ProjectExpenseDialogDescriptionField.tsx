@@ -9,7 +9,7 @@ const ProjectExpenseDialogDescriptionField = ({ value, onChange }) => {
       variant="standard"
       size="small"
       value={value}
-      onChange={onChange}
+      onChange={(event) => onChange(event.target.value)}
     />
   )
 }

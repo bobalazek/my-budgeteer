@@ -22,6 +22,7 @@
     "@redwoodjs/router": "2.2.0",
     "@redwoodjs/web": "2.2.0",
     "currency-symbol-map": "^5.1.0",
+    "lodash": "^4.17.21",
     "material-ui-confirm": "^3.0.4",
     "prop-types": "15.8.1",
     "react": "17.0.2",

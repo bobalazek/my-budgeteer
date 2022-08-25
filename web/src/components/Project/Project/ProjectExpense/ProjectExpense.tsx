@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 
 import {
   Add as AddIcon,
@@ -16,8 +16,8 @@ import {
   TextField,
   Typography,
 } from '@mui/material'
+import debounce from 'lodash.debounce'
 import { useSetRecoilState } from 'recoil'
-import { useDebounce } from 'usehooks-ts'
 
 import { projectExpenseModalState } from 'src/state/ProjectExpenseModalState'
 import { ProjectExpenseType } from 'src/types/ProjectExpenseType'
@@ -43,18 +43,22 @@ const ProjectExpense = ({
   const [name, setName] = useState(projectExpense.name)
   const [anchorElement, setAnchorElement] = useState(null)
   const setProjectExpenseModal = useSetRecoilState(projectExpenseModalState)
-  const debouncedName = useDebounce(name, 500)
+  const debouncedUpdate = useCallback(
+    debounce(() => {
+      // TODO: not really working
+      onUpdate(projectExpense.id, {
+        name,
+        order: index,
+      })
+    }, 500),
+    []
+  )
 
-  useEffect(() => {
-    if (debouncedName === projectExpense.name) {
-      return
-    }
+  const onNameChange = (event) => {
+    setName(event.target.value)
 
-    onUpdate(projectExpense.id, {
-      name: debouncedName,
-      order: index,
-    })
-  }, [onUpdate, projectExpense, debouncedName, index])
+    debouncedUpdate()
+  }
 
   const sx =
     level === 0
@@ -79,7 +83,7 @@ const ProjectExpense = ({
             variant="standard"
             size="small"
             value={name}
-            onChange={(event) => setName(event.target.value)}
+            onChange={onNameChange}
           />
         </Grid>
         <Grid>

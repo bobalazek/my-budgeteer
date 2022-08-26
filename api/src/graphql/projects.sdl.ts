@@ -41,10 +41,15 @@ export const schema = gql`
     userId: String
   }
 
+  input CloneProjectInput {
+    name: String
+  }
+
   type Mutation {
     createProject(input: CreateProjectInput!): Project! @requireAuth
     updateProject(id: String!, input: UpdateProjectInput!): Project!
       @requireAuth
+    cloneProject(id: String!, input: CloneProjectInput!): Project! @requireAuth
     deleteProject(id: String!): Project! @requireAuth
   }
 `

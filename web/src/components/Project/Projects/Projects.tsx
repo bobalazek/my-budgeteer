@@ -3,14 +3,7 @@ import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
 import { QUERY } from 'src/components/Project/ProjectsCell'
-
-const DELETE_PROJECT_MUTATION = gql`
-  mutation DeleteProjectMutation($id: String!) {
-    deleteProject(id: $id) {
-      id
-    }
-  }
-`
+import { DELETE_PROJECT_MUTATION } from 'src/graphql/ProjectQueries'
 
 const MAX_STRING_LENGTH = 150
 
@@ -40,16 +33,41 @@ const ProjectsList = ({ projects }) => {
     onError: (error) => {
       toast.error(error.message)
     },
-    // This refetches the query on the list page. Read more about other ways to
-    // update the cache over here:
-    // https://www.apollographql.com/docs/react/data/mutations/#making-all-other-cache-updates
     refetchQueries: [{ query: QUERY }],
     awaitRefetchQueries: true,
   })
 
-  const onDeleteClick = (id) => {
-    if (confirm('Are you sure you want to delete project ' + id + '?')) {
-      deleteProject({ variables: { id } })
+  const [cloneProject] = useMutation(DELETE_PROJECT_MUTATION, {
+    onCompleted: () => {
+      toast.success('Project deleted')
+    },
+    onError: (error) => {
+      toast.error(error.message)
+    },
+    refetchQueries: [{ query: QUERY }],
+    awaitRefetchQueries: true,
+  })
+
+  const onDeleteClick = (project) => {
+    if (confirm(`Are you sure you want to delete project "${project.name}"?`)) {
+      deleteProject({ variables: { id: project.id } })
+    }
+  }
+
+  const onCloneClick = (project) => {
+    const name = prompt(
+      'What do you want to call the new project?',
+      `${project.name} (clone)`
+    )
+    if (name) {
+      cloneProject({
+        variables: {
+          id: project.id,
+          input: {
+            name,
+          },
+        },
+      })
     }
   }
 
@@ -102,9 +120,17 @@ const ProjectsList = ({ projects }) => {
                   </Link>
                   <button
                     type="button"
+                    title={'Clone project ' + project.id}
+                    className="rw-button rw-button-small rw-button-blue"
+                    onClick={() => onCloneClick(project)}
+                  >
+                    Clone
+                  </button>
+                  <button
+                    type="button"
                     title={'Delete project ' + project.id}
                     className="rw-button rw-button-small rw-button-red"
-                    onClick={() => onDeleteClick(project.id)}
+                    onClick={() => onDeleteClick(project)}
                   >
                     Delete
                   </button>

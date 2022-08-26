@@ -73,7 +73,7 @@ export const createProject: MutationResolvers['createProject'] = ({
   })
 }
 
-export const updateProject: MutationResolvers['updateProject'] = ({
+export const updateProject: MutationResolvers['updateProject'] = async ({
   id,
   input,
 }) => {
@@ -82,7 +82,7 @@ export const updateProject: MutationResolvers['updateProject'] = ({
     throw new ValidationError('You must be logged in to update a project')
   }
 
-  const project = db.project.findFirst({
+  const project = await db.project.findFirst({
     where: {
       id,
       userId,
@@ -95,6 +95,36 @@ export const updateProject: MutationResolvers['updateProject'] = ({
   return db.project.update({
     data: input,
     where: { id },
+  })
+}
+
+export const cloneProject: MutationResolvers['cloneProject'] = async ({
+  id,
+  input,
+}) => {
+  const userId = context.currentUser?.id
+  if (!userId) {
+    throw new ValidationError('You must be logged in to delete a project')
+  }
+
+  const project = await db.project.findFirst({
+    where: {
+      id,
+      userId,
+    },
+  })
+  if (!project) {
+    throw new ValidationError('Project with this ID does not exist')
+  }
+
+  const clonedProject = await db.project.create({
+    data: { ...project, ...input },
+  })
+
+  // TODO: also clone expenses and variables
+
+  return db.project.delete({
+    where: { id: clonedProject.id },
   })
 }
 

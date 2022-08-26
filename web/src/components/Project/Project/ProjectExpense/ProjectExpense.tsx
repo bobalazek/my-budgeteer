@@ -151,6 +151,11 @@ const ProjectExpense = ({
           {projectExpense.description}
         </Typography>
       )}
+      {projectExpense.recurringInterval !== 'NONE' && (
+        <Typography sx={{ color: 'text.secondary', whiteSpace: 'pre-wrap' }}>
+          Inverval: {projectExpense.recurringInterval}
+        </Typography>
+      )}
       {(isNumeric(projectExpense.costRangeFrom) ||
         isNumeric(projectExpense.costRangeTo)) && (
         <Typography sx={{ color: 'text.secondary', whiteSpace: 'pre-wrap' }}>
@@ -167,6 +172,16 @@ const ProjectExpense = ({
               {project.currencySymbol}
             </span>
           )}
+        </Typography>
+      )}
+      {isNumeric(projectExpense.costActual) && (
+        <Typography sx={{ color: 'text.secondary', whiteSpace: 'pre-wrap' }}>
+          Actual cost: {projectExpense.costActual}
+        </Typography>
+      )}
+      {isNumeric(projectExpense.progressPercentage) && (
+        <Typography sx={{ color: 'text.secondary', whiteSpace: 'pre-wrap' }}>
+          Progress: {projectExpense.progressPercentage}%
         </Typography>
       )}
       {projectExpense.children?.length > 0 && (

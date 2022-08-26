@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 
 import {
   Add as AddIcon,
@@ -16,7 +16,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material'
-import debounce from 'lodash.debounce'
+import { debounce } from 'lodash'
 import { useSetRecoilState } from 'recoil'
 
 import { projectExpenseModalState } from 'src/state/ProjectExpenseModalState'
@@ -40,25 +40,29 @@ const ProjectExpense = ({
   onDeleteButtonClick,
   onUpdate,
 }: ProjectExpensePropsType) => {
+  const nameInputRef = useRef<HTMLInputElement>()
   const [name, setName] = useState(projectExpense.name)
   const [anchorElement, setAnchorElement] = useState(null)
   const setProjectExpenseModal = useSetRecoilState(projectExpenseModalState)
   const debouncedUpdate = useCallback(
     debounce(() => {
-      // TODO: not really working
+      // TODO. find the proper way to implement this
       onUpdate(projectExpense.id, {
-        name,
+        name: nameInputRef.current.value,
         order: index,
       })
     }, 500),
     []
   )
 
-  const onNameChange = (event) => {
-    setName(event.target.value)
+  const onNameChange = useCallback(
+    (event) => {
+      setName(event.target.value)
 
-    debouncedUpdate()
-  }
+      debouncedUpdate()
+    },
+    [setName, debouncedUpdate]
+  )
 
   const sx =
     level === 0
@@ -82,6 +86,7 @@ const ProjectExpense = ({
             multiline
             variant="standard"
             size="small"
+            inputRef={nameInputRef}
             value={name}
             onChange={onNameChange}
           />

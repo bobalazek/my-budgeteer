@@ -1,5 +1,5 @@
 import currenciesMap from 'currency-symbol-map/map'
-import { depth } from 'treeverse'
+import { breadth } from 'treeverse'
 import type {
   QueryResolvers,
   MutationResolvers,
@@ -148,33 +148,46 @@ export const cloneProject: MutationResolvers['cloneProject'] = async ({
   })
 
   // TODO: optimize this bit
-  const projectExpensesMap = new Map(
-    projectExpenses.map((projectExpense) => {
-      return [projectExpense.id, projectExpense]
-    })
-  )
+  const projectExpensesMap = new Map()
+  const projectExpensesParentMap = new Map()
+  projectExpenses.forEach((projectExpense) => {
+    projectExpensesMap.set(projectExpense.id, projectExpense)
+    projectExpensesParentMap.set(projectExpense.id, projectExpense.parentId)
+  })
 
-  await depth({
+  await breadth({
     tree: { id: 'root', children: generateTree(projectExpenses as any) },
     getChildren: (node) => node.children,
-    leave: async (node) => {
+    visit: async (node) => {
       const projectExpense = projectExpensesMap.get(node.id)
       if (projectExpense) {
-        const { id: _, parentId, ...rawProjectExpense } = projectExpense
+        const { id: projectExpenseId, ...rawProjectExpense } = projectExpense
+        const parentId = projectExpensesParentMap.get(projectExpenseId)
 
-        if (parentId) {
-          // TODO: replace if with newly created parent
-        }
-
-        await db.projectExpense.create({
+        const clonedProjectExpense = await db.projectExpense.create({
           data: {
             ...rawProjectExpense,
             parentId,
             projectId: clonedProject.id,
+            note: undefined,
+            costActual: undefined,
+            progressPercentage: undefined,
             createdAt: undefined,
             updatedAt: undefined,
           },
         })
+
+        // The subsequent children now have a different parent, so let's replace it!
+        projectExpensesParentMap.forEach(
+          (mapProjectExpenseParentId, mapProjectExpenseId) => {
+            if (projectExpenseId === mapProjectExpenseParentId) {
+              projectExpensesParentMap.set(
+                mapProjectExpenseId,
+                clonedProjectExpense.id
+              )
+            }
+          }
+        )
       }
     },
   })

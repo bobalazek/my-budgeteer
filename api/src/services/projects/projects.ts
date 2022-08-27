@@ -1,4 +1,5 @@
 import currenciesMap from 'currency-symbol-map/map'
+import { depth } from 'treeverse'
 import type {
   QueryResolvers,
   MutationResolvers,
@@ -10,6 +11,7 @@ import { validate, validateWith } from '@redwoodjs/api'
 import { ValidationError } from '@redwoodjs/graphql-server'
 
 import { db } from 'src/lib/db'
+import { generateTree } from 'src/lib/helpers'
 
 export const projects: QueryResolvers['projects'] = () => {
   const userId = context.currentUser?.id
@@ -110,31 +112,87 @@ export const cloneProject: MutationResolvers['cloneProject'] = async ({
   const project = await db.project.findFirst({
     where: {
       id,
-      userId,
     },
   })
   if (!project) {
     throw new ValidationError('Project with this ID does not exist')
   }
 
-  const clonedProject = await db.project.create({
-    data: { ...project, ...input },
+  const projectVariables = await db.projectVariable.findMany({
+    where: {
+      projectId: id,
+    },
+  })
+  const projectExpenses = await db.projectExpense.findMany({
+    where: {
+      projectId: id,
+    },
   })
 
-  // TODO: also clone expenses and variables
+  const { id: _, createdAt: __, updatedAt: ___, ...rawProject } = project
 
-  return db.project.delete({
+  const clonedProject = await db.project.create({
+    data: { ...rawProject, ...input, userId },
+  })
+
+  await db.projectVariable.createMany({
+    data: projectVariables.map((projectVariable) => {
+      const { id: _, ...rawProjectVariable } = projectVariable
+      return {
+        ...rawProjectVariable,
+        projectId: clonedProject.id,
+        createdAt: undefined,
+        updatedAt: undefined,
+      }
+    }),
+  })
+
+  // TODO: optimize this bit
+  const projectExpensesMap = new Map(
+    projectExpenses.map((projectExpense) => {
+      return [projectExpense.id, projectExpense]
+    })
+  )
+
+  await depth({
+    tree: { id: 'root', children: generateTree(projectExpenses as any) },
+    getChildren: (node) => node.children,
+    leave: async (node) => {
+      const projectExpense = projectExpensesMap.get(node.id)
+      if (projectExpense) {
+        const { id: _, parentId, ...rawProjectExpense } = projectExpense
+
+        if (parentId) {
+          // TODO: replace if with newly created parent
+        }
+
+        await db.projectExpense.create({
+          data: {
+            ...rawProjectExpense,
+            parentId,
+            projectId: clonedProject.id,
+            createdAt: undefined,
+            updatedAt: undefined,
+          },
+        })
+      }
+    },
+  })
+
+  return db.project.findUnique({
     where: { id: clonedProject.id },
   })
 }
 
-export const deleteProject: MutationResolvers['deleteProject'] = ({ id }) => {
+export const deleteProject: MutationResolvers['deleteProject'] = async ({
+  id,
+}) => {
   const userId = context.currentUser?.id
   if (!userId) {
     throw new ValidationError('You must be logged in to delete a project')
   }
 
-  const project = db.project.findFirst({
+  const project = await db.project.findFirst({
     where: {
       id,
       userId,
@@ -143,6 +201,14 @@ export const deleteProject: MutationResolvers['deleteProject'] = ({ id }) => {
   if (!project) {
     throw new ValidationError('Project with this ID does not exist')
   }
+
+  await db.projectVariable.deleteMany({
+    where: { projectId: id },
+  })
+
+  await db.projectExpense.deleteMany({
+    where: { projectId: id },
+  })
 
   return db.project.delete({
     where: { id },

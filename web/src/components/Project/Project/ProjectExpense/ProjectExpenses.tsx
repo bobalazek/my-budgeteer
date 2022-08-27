@@ -14,7 +14,7 @@ import {
 } from 'src/graphql/ProjectExpenseQueries'
 import { projectExpensesState } from 'src/state/ProjectExpensesState'
 import { ProjectExpenseType } from 'src/types/ProjectExpenseType'
-import { getProjectExpensesTree } from 'src/utils/helpers'
+import { generateProjectExpensesTree } from 'src/utils/helpers'
 
 import ProjectExpense from './ProjectExpense'
 
@@ -56,7 +56,7 @@ const ProjectExpenses = ({ project }) => {
   const setProjectExpenses = useSetRecoilState(projectExpensesState)
 
   const projectExpensesTree = useMemo(() => {
-    return getProjectExpensesTree(data?.projectExpenses || [])
+    return generateProjectExpensesTree(data?.projectExpenses || [])
   }, [data])
 
   useEffect(() => {

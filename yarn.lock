@@ -23148,6 +23148,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"treeverse@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "treeverse@npm:2.0.0"
+  checksum: be37fd0d4d62c62fe7f4bfcac164d82f11456184dc397473896ed2efcdf9b307c3e433e1d275a1dd924fc7e66aa280ab36be8b8966b87f23e0f545417eb52900
+  languageName: node
+  linkType: hard
+
 "trim-newlines@npm:^1.0.0":
   version: 1.0.0
   resolution: "trim-newlines@npm:1.0.0"
@@ -24182,6 +24189,7 @@ __metadata:
     react: 17.0.2
     react-dom: 17.0.2
     recoil: ^0.7.5
+    treeverse: ^2.0.0
     usehooks-ts: ^2.6.0
   languageName: unknown
   linkType: soft

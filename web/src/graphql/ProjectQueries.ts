@@ -26,10 +26,7 @@ export const DELETE_PROJECT_MUTATION = gql`
 `
 
 export const CLONE_PROJECT_MUTATION = gql`
-  mutation CloneProjectMutation(
-    $id: String!
-    $input: CreateProjectExpenseInput!
-  ) {
+  mutation CloneProjectMutation($id: String!, $input: CloneProjectInput!) {
     cloneProject(id: $id, input: $input) {
       id
     }

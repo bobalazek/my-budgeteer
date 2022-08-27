@@ -3,7 +3,10 @@ import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
 import { QUERY } from 'src/components/Project/ProjectsCell'
-import { DELETE_PROJECT_MUTATION } from 'src/graphql/ProjectQueries'
+import {
+  CLONE_PROJECT_MUTATION,
+  DELETE_PROJECT_MUTATION,
+} from 'src/graphql/ProjectQueries'
 
 const MAX_STRING_LENGTH = 150
 
@@ -26,6 +29,7 @@ const timeTag = (datetime) => {
 }
 
 const ProjectsList = ({ projects }) => {
+  const refetchQueries = [{ query: QUERY }]
   const [deleteProject] = useMutation(DELETE_PROJECT_MUTATION, {
     onCompleted: () => {
       toast.success('Project deleted')
@@ -33,18 +37,17 @@ const ProjectsList = ({ projects }) => {
     onError: (error) => {
       toast.error(error.message)
     },
-    refetchQueries: [{ query: QUERY }],
+    refetchQueries,
     awaitRefetchQueries: true,
   })
-
-  const [cloneProject] = useMutation(DELETE_PROJECT_MUTATION, {
+  const [cloneProject] = useMutation(CLONE_PROJECT_MUTATION, {
     onCompleted: () => {
-      toast.success('Project deleted')
+      toast.success('Project cloned')
     },
     onError: (error) => {
       toast.error(error.message)
     },
-    refetchQueries: [{ query: QUERY }],
+    refetchQueries,
     awaitRefetchQueries: true,
   })
 
@@ -53,7 +56,6 @@ const ProjectsList = ({ projects }) => {
       deleteProject({ variables: { id: project.id } })
     }
   }
-
   const onCloneClick = (project) => {
     const name = prompt(
       'What do you want to call the new project?',

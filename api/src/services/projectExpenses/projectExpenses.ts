@@ -8,7 +8,7 @@ import { validate } from '@redwoodjs/api'
 import { ValidationError } from '@redwoodjs/graphql-server'
 
 import { db } from 'src/lib/db'
-import { isArrayOfStrings, isNumeric } from 'src/lib/helpers'
+import { isArrayOfLinks, isArrayOfStrings, isNumeric } from 'src/lib/helpers'
 
 export const projectExpenses: QueryResolvers['projectExpenses'] = ({
   projectId,
@@ -66,6 +66,10 @@ export const createProjectExpense: MutationResolvers['createProjectExpense'] =
 
     if (!isArrayOfStrings(input.tags)) {
       throw new ValidationError('The tags must be an array of strings')
+    }
+
+    if (!isArrayOfLinks(input.links)) {
+      throw new ValidationError('All links are required and must be valid')
     }
 
     const parentId = input.parentId || null
@@ -128,6 +132,10 @@ export const updateProjectExpense: MutationResolvers['updateProjectExpense'] =
 
     if (!isArrayOfStrings(input.tags)) {
       throw new ValidationError('The tags must be an array of strings')
+    }
+
+    if (!isArrayOfLinks(input.links)) {
+      throw new ValidationError('All links are required and must be valid')
     }
 
     const transactionPromises = []

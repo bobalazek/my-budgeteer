@@ -23,6 +23,7 @@ import { projectExpenseModalState } from 'src/state/ProjectExpenseModalState'
 import ProjectExpenseDialogCostActualField from './ProjectExpenseDialog/ProjectExpenseDialogCostActualField'
 import ProjectExpenseDialogCostRangeFields from './ProjectExpenseDialog/ProjectExpenseDialogCostRangeFields'
 import ProjectExpenseDialogDescriptionField from './ProjectExpenseDialog/ProjectExpenseDialogDescriptionField'
+import ProjectExpenseDialogLinksField from './ProjectExpenseDialog/ProjectExpenseDialogLinksField'
 import ProjectExpenseDialogNameField from './ProjectExpenseDialog/ProjectExpenseDialogNameField'
 import ProjectExpenseDialogNoteField from './ProjectExpenseDialog/ProjectExpenseDialogNoteField'
 import ProjectExpenseDialogParentField from './ProjectExpenseDialog/ProjectExpenseDialogParentField'
@@ -43,6 +44,7 @@ const ProjectExpenseDialog = ({ project }) => {
   const [costRangeTo, setCostRangeTo] = useState('')
   const [progressPercentage, setProgressPercentage] = useState(0)
   const [tags, setTags] = useState([])
+  const [links, setLinks] = useState([])
   const [parentId, setParentId] = useState('')
   const refetchQueries = [
     {
@@ -60,6 +62,7 @@ const ProjectExpenseDialog = ({ project }) => {
     setCostRangeTo('')
     setProgressPercentage(0)
     setTags([])
+    setLinks([])
     setParentId('')
   }
   const [createProjectExpense, { loading: createLoading }] = useMutation(
@@ -114,6 +117,7 @@ const ProjectExpenseDialog = ({ project }) => {
       projectExpenseModal.selectedProjectExpense?.progressPercentage || 0
     )
     setTags(projectExpenseModal.selectedProjectExpense?.tags || [])
+    setLinks(projectExpenseModal.selectedProjectExpense?.links || [])
     setParentId(
       projectExpenseModal.selectedProjectExpense?.parentId ||
         projectExpenseModal.selectedProjectExpenseParent?.id ||
@@ -143,19 +147,25 @@ const ProjectExpenseDialog = ({ project }) => {
           costActual: costActual ? parseFloat(costActual) : null,
           progressPercentage,
           tags,
+          links,
           parentId: parentId || null,
           projectId: project.id,
         },
       },
     }
 
+    let errors
     if (projectExpenseModal.selectedProjectExpense) {
-      await updateProjectExpense(options)
+      const updateResponse = await updateProjectExpense(options)
+      errors = updateResponse.errors
     } else {
-      await createProjectExpense(options)
+      const createResponse = await createProjectExpense(options)
+      errors = createResponse.errors
     }
 
-    onClose()
+    if (!errors) {
+      onClose()
+    }
   }
 
   return (
@@ -210,7 +220,7 @@ const ProjectExpenseDialog = ({ project }) => {
             setParentId(value)
           }}
         />
-        <Typography variant="h6" sx={{ mt: 2 }}>
+        <Typography variant="h6" sx={{ mt: 2, fontSize: 18 }}>
           Additional information
         </Typography>
         <ProjectExpenseDialogRecurringIntervalField
@@ -247,6 +257,12 @@ const ProjectExpenseDialog = ({ project }) => {
           value={tags}
           onChange={(value) => {
             setTags(value)
+          }}
+        />
+        <ProjectExpenseDialogLinksField
+          value={links}
+          onChange={(value) => {
+            setLinks(value)
           }}
         />
       </DialogContent>

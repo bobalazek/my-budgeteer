@@ -6,6 +6,30 @@ export const isArrayOfStrings = (array: any): boolean => {
   return array.every((item) => typeof item === 'string')
 }
 
+export const isArrayOfLinks = (array: any): boolean => {
+  return array.every((item) => {
+    if (typeof item !== 'string') {
+      return false
+    }
+
+    if (!item) {
+      return false
+    }
+
+    try {
+      const url = new URL(item)
+
+      if (url.protocol !== 'http:' && url.protocol !== 'https:') {
+        return false
+      }
+    } catch {
+      return false
+    }
+
+    return true
+  })
+}
+
 export function generateTree<
   T extends {
     id: string

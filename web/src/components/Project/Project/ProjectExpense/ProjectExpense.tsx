@@ -15,6 +15,7 @@ import {
   Chip,
   Grid,
   IconButton,
+  Link,
   ListItemIcon,
   Menu,
   MenuItem,
@@ -84,10 +85,18 @@ const ProjectExpense = ({
           mt: 1,
         }
 
+  const isStackValid =
+    projectExpense.recurringInterval !== 'NONE' ||
+    isNumeric(projectExpense.costRangeFrom) ||
+    isNumeric(projectExpense.costRangeTo) ||
+    isNumeric(projectExpense.costActual) ||
+    (isNumeric(projectExpense.progressPercentage) &&
+      projectExpense.progressPercentage > 0)
+
   return (
     <Box sx={sx}>
       <Grid container>
-        <Grid sx={{ flexGrow: 1 }}>
+        <Grid item sx={{ flexGrow: 1 }}>
           <TextField
             hiddenLabel
             fullWidth
@@ -99,7 +108,7 @@ const ProjectExpense = ({
             onChange={onNameChange}
           />
         </Grid>
-        <Grid>
+        <Grid item>
           <IconButton
             onClick={(event) => setAnchorElement(event.currentTarget)}
           >
@@ -159,86 +168,89 @@ const ProjectExpense = ({
           {projectExpense.description}
         </Typography>
       )}
-      <Stack direction="row" spacing={2}>
-        {projectExpense.recurringInterval !== 'NONE' && (
-          <Box
-            sx={{
-              color: 'text.secondary',
-            }}
-          >
-            <span>
-              <AlarmIcon fontSize="small" />{' '}
-            </span>
-            <Box sx={{ display: 'inline', verticalAlign: 'top' }}>
-              {
-                ProjectExpenseRecurringIntervalsMap[
-                  projectExpense.recurringInterval
-                ]
-              }
-            </Box>
-          </Box>
-        )}
-        {(isNumeric(projectExpense.costRangeFrom) ||
-          isNumeric(projectExpense.costRangeTo)) && (
-          <Box
-            sx={{
-              color: 'text.secondary',
-            }}
-          >
-            <span>
-              <PriceChangeIcon fontSize="small" />{' '}
-            </span>
-            <Box sx={{ display: 'inline', verticalAlign: 'top' }}>
-              {isNumeric(projectExpense.costRangeFrom) && (
-                <span>
-                  from {projectExpense.costRangeFrom}
-                  {project.currencySymbol}{' '}
-                </span>
-              )}
-              {isNumeric(projectExpense.costRangeTo) && (
-                <span>
-                  to {projectExpense.costRangeTo}
-                  {project.currencySymbol}
-                </span>
-              )}
-            </Box>
-          </Box>
-        )}
-        {isNumeric(projectExpense.costActual) && (
-          <Box
-            sx={{
-              color: 'text.secondary',
-            }}
-          >
-            <span>
-              <SellIcon fontSize="small" />{' '}
-            </span>
-            <Box sx={{ display: 'inline', verticalAlign: 'top' }}>
-              {projectExpense.costActual}
-              {project.currencySymbol}
-            </Box>
-          </Box>
-        )}
-        {isNumeric(projectExpense.progressPercentage) &&
-          projectExpense.progressPercentage > 0 && (
+      {isStackValid && (
+        <Stack direction="row" spacing={2} sx={{ mt: '4px' }}>
+          {projectExpense.recurringInterval !== 'NONE' && (
             <Box
               sx={{
                 color: 'text.secondary',
               }}
             >
               <span>
-                <TimelineIcon fontSize="small" />{' '}
+                <AlarmIcon fontSize="small" />{' '}
               </span>
               <Box sx={{ display: 'inline', verticalAlign: 'top' }}>
-                {projectExpense.progressPercentage}%
+                {
+                  ProjectExpenseRecurringIntervalsMap[
+                    projectExpense.recurringInterval
+                  ]
+                }
               </Box>
             </Box>
           )}
-      </Stack>
+          {(isNumeric(projectExpense.costRangeFrom) ||
+            isNumeric(projectExpense.costRangeTo)) && (
+            <Box
+              sx={{
+                color: 'text.secondary',
+              }}
+            >
+              <span>
+                <PriceChangeIcon fontSize="small" />{' '}
+              </span>
+              <Box sx={{ display: 'inline', verticalAlign: 'top' }}>
+                {isNumeric(projectExpense.costRangeFrom) && (
+                  <span>
+                    from {projectExpense.costRangeFrom}
+                    {project.currencySymbol}{' '}
+                  </span>
+                )}
+                {isNumeric(projectExpense.costRangeTo) && (
+                  <span>
+                    to {projectExpense.costRangeTo}
+                    {project.currencySymbol}
+                  </span>
+                )}
+              </Box>
+            </Box>
+          )}
+          {isNumeric(projectExpense.costActual) && (
+            <Box
+              sx={{
+                color: 'text.secondary',
+              }}
+            >
+              <span>
+                <SellIcon fontSize="small" />{' '}
+              </span>
+              <Box sx={{ display: 'inline', verticalAlign: 'top' }}>
+                {projectExpense.costActual}
+                {project.currencySymbol}
+              </Box>
+            </Box>
+          )}
+          {isNumeric(projectExpense.progressPercentage) &&
+            projectExpense.progressPercentage > 0 && (
+              <Box
+                sx={{
+                  color: 'text.secondary',
+                }}
+              >
+                <span>
+                  <TimelineIcon fontSize="small" />{' '}
+                </span>
+                <Box sx={{ display: 'inline', verticalAlign: 'top' }}>
+                  {projectExpense.progressPercentage}%
+                </Box>
+              </Box>
+            )}
+        </Stack>
+      )}
       {projectExpense.tags && projectExpense.tags.length > 0 && (
         <Box
           sx={{
             color: 'text.secondary',
+            mt: '4px',
           }}
         >
           {projectExpense.tags.map((tag, index) => {
@@ -253,8 +265,19 @@ const ProjectExpense = ({
           })}
         </Box>
       )}
+      {projectExpense.links && projectExpense.links.length > 0 && (
+        <Box sx={{ mt: '4px' }}>
+          {projectExpense.links.map((link, index) => {
+            return (
+              <Link key={index} href={link} target="_blank">
+                {link}
+              </Link>
+            )
+          })}
+        </Box>
+      )}
       {projectExpense.children?.length > 0 && (
-        <Box sx={{ ml: 3, flexGrow: 1 }}>
+        <Box sx={{ ml: 3, mt: '4px', flexGrow: 1 }}>
           {projectExpense.children?.map((child, childIndex) => {
             return (
               <ProjectExpense

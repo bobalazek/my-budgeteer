@@ -4,7 +4,7 @@ const ProjectExpenseDialogCostActualField = ({ project, value, onChange }) => {
   return (
     <TextField
       fullWidth
-      label="Actual cost"
+      label="Actual"
       variant="standard"
       size="small"
       value={value}

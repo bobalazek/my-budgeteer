@@ -1,4 +1,4 @@
-import { Grid, InputAdornment, TextField, Typography } from '@mui/material'
+import { Box, InputAdornment, TextField, Typography } from '@mui/material'
 
 const ProjectExpenseDialogCostRangeFields = ({
   project,
@@ -12,8 +12,8 @@ const ProjectExpenseDialogCostRangeFields = ({
       <Typography variant="h5" sx={{ fontSize: 16, px: 1, pt: 1 }}>
         Cost
       </Typography>
-      <Grid container spacing={2} sx={{ width: '100%' }}>
-        <Grid item xs={6}>
+      <Box display="grid" gridTemplateColumns="repeat(12, 1fr)" gap={2}>
+        <Box gridColumn="span 6">
           <TextField
             fullWidth
             label="From"
@@ -29,8 +29,8 @@ const ProjectExpenseDialogCostRangeFields = ({
               ),
             }}
           />
-        </Grid>
-        <Grid item xs={6}>
+        </Box>
+        <Box gridColumn="span 6">
           <TextField
             fullWidth
             label="To"
@@ -46,8 +46,8 @@ const ProjectExpenseDialogCostRangeFields = ({
               ),
             }}
           />
-        </Grid>
-      </Grid>
+        </Box>
+      </Box>
     </>
   )
 }

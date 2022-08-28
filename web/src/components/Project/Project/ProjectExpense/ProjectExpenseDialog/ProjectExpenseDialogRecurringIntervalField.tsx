@@ -1,6 +1,6 @@
 import { TextField } from '@mui/material'
 
-const ProjectExpenseRecurringIntervalsMap = {
+export const ProjectExpenseRecurringIntervalsMap = {
   NONE: 'None',
   DAILY: 'Daily',
   WEEKLY: 'Weekly',

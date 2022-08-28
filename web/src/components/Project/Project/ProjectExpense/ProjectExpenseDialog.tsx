@@ -28,6 +28,7 @@ import ProjectExpenseDialogNoteField from './ProjectExpenseDialog/ProjectExpense
 import ProjectExpenseDialogParentField from './ProjectExpenseDialog/ProjectExpenseDialogParentField'
 import ProjectExpenseDialogProgressPercentageField from './ProjectExpenseDialog/ProjectExpenseDialogProgressPercentageField'
 import ProjectExpenseDialogRecurringIntervalField from './ProjectExpenseDialog/ProjectExpenseDialogRecurringIntervalField'
+import ProjectExpenseDialogTagsField from './ProjectExpenseDialog/ProjectExpenseDialogTagsField'
 
 const ProjectExpenseDialog = ({ project }) => {
   const [projectExpenseModal, setProjectExpenseModal] = useRecoilState(
@@ -41,6 +42,7 @@ const ProjectExpenseDialog = ({ project }) => {
   const [costRangeFrom, setCostRangeFrom] = useState('')
   const [costRangeTo, setCostRangeTo] = useState('')
   const [progressPercentage, setProgressPercentage] = useState(0)
+  const [tags, setTags] = useState([])
   const [parentId, setParentId] = useState('')
   const refetchQueries = [
     {
@@ -57,6 +59,7 @@ const ProjectExpenseDialog = ({ project }) => {
     setCostRangeFrom('')
     setCostRangeTo('')
     setProgressPercentage(0)
+    setTags([])
     setParentId('')
   }
   const [createProjectExpense, { loading: createLoading }] = useMutation(
@@ -110,6 +113,7 @@ const ProjectExpenseDialog = ({ project }) => {
     setProgressPercentage(
       projectExpenseModal.selectedProjectExpense?.progressPercentage || 0
     )
+    setTags(projectExpenseModal.selectedProjectExpense?.tags || [])
     setParentId(
       projectExpenseModal.selectedProjectExpense?.parentId ||
         projectExpenseModal.selectedProjectExpenseParent?.id ||
@@ -138,6 +142,7 @@ const ProjectExpenseDialog = ({ project }) => {
           costRangeTo: costRangeTo ? parseFloat(costRangeTo) : null,
           costActual: costActual ? parseFloat(costActual) : null,
           progressPercentage,
+          tags,
           parentId: parentId || null,
           projectId: project.id,
         },
@@ -236,6 +241,12 @@ const ProjectExpenseDialog = ({ project }) => {
           value={progressPercentage}
           onChange={(value) => {
             setProgressPercentage(value)
+          }}
+        />
+        <ProjectExpenseDialogTagsField
+          value={tags}
+          onChange={(value) => {
+            setTags(value)
           }}
         />
       </DialogContent>

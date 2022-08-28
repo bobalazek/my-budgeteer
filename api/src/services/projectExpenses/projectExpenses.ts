@@ -8,7 +8,7 @@ import { validate } from '@redwoodjs/api'
 import { ValidationError } from '@redwoodjs/graphql-server'
 
 import { db } from 'src/lib/db'
-import { isNumeric } from 'src/lib/helpers'
+import { isArrayOfStrings, isNumeric } from 'src/lib/helpers'
 
 export const projectExpenses: QueryResolvers['projectExpenses'] = ({
   projectId,
@@ -62,6 +62,10 @@ export const createProjectExpense: MutationResolvers['createProjectExpense'] =
       throw new ValidationError(
         'The cost to value must be higher than the cost from value'
       )
+    }
+
+    if (!isArrayOfStrings(input.tags)) {
+      throw new ValidationError('The tags must be an array of strings')
     }
 
     const parentId = input.parentId || null
@@ -120,6 +124,10 @@ export const updateProjectExpense: MutationResolvers['updateProjectExpense'] =
       throw new ValidationError(
         'The cost to value must be higher than the cost from value'
       )
+    }
+
+    if (!isArrayOfStrings(input.tags)) {
+      throw new ValidationError('The tags must be an array of strings')
     }
 
     const transactionPromises = []

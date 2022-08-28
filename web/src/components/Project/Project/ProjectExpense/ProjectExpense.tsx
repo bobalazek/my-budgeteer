@@ -5,14 +5,20 @@ import {
   Edit as EditIcon,
   Delete as DeleteIcon,
   ExpandCircleDown as ExpandCircleDownIcon,
+  Alarm as AlarmIcon,
+  Sell as SellIcon,
+  PriceChange as PriceChangeIcon,
+  Timeline as TimelineIcon,
 } from '@mui/icons-material'
 import {
   Box,
+  Chip,
   Grid,
   IconButton,
   ListItemIcon,
   Menu,
   MenuItem,
+  Stack,
   TextField,
   Typography,
 } from '@mui/material'
@@ -22,6 +28,8 @@ import { useSetRecoilState } from 'recoil'
 import { projectExpenseModalState } from 'src/state/ProjectExpenseModalState'
 import { ProjectExpenseType } from 'src/types/ProjectExpenseType'
 import { isNumeric } from 'src/utils/helpers'
+
+import { ProjectExpenseRecurringIntervalsMap } from './ProjectExpenseDialog/ProjectExpenseDialogRecurringIntervalField'
 
 type ProjectExpensePropsType = {
   project: any // TODO
@@ -151,38 +159,99 @@ const ProjectExpense = ({
           {projectExpense.description}
         </Typography>
       )}
-      {projectExpense.recurringInterval !== 'NONE' && (
-        <Typography sx={{ color: 'text.secondary', whiteSpace: 'pre-wrap' }}>
-          Inverval: {projectExpense.recurringInterval}
-        </Typography>
-      )}
-      {(isNumeric(projectExpense.costRangeFrom) ||
-        isNumeric(projectExpense.costRangeTo)) && (
-        <Typography sx={{ color: 'text.secondary', whiteSpace: 'pre-wrap' }}>
-          <span>Cost: </span>
-          {isNumeric(projectExpense.costRangeFrom) && (
+      <Stack direction="row" spacing={2}>
+        {projectExpense.recurringInterval !== 'NONE' && (
+          <Box
+            sx={{
+              color: 'text.secondary',
+            }}
+          >
             <span>
-              from {projectExpense.costRangeFrom}
-              {project.currencySymbol}{' '}
+              <AlarmIcon fontSize="small" />{' '}
             </span>
-          )}
-          {isNumeric(projectExpense.costRangeTo) && (
+            <Box sx={{ display: 'inline', verticalAlign: 'top' }}>
+              {
+                ProjectExpenseRecurringIntervalsMap[
+                  projectExpense.recurringInterval
+                ]
+              }
+            </Box>
+          </Box>
+        )}
+        {(isNumeric(projectExpense.costRangeFrom) ||
+          isNumeric(projectExpense.costRangeTo)) && (
+          <Box
+            sx={{
+              color: 'text.secondary',
+            }}
+          >
             <span>
-              to {projectExpense.costRangeTo}
+              <PriceChangeIcon fontSize="small" />{' '}
+            </span>
+            <Box sx={{ display: 'inline', verticalAlign: 'top' }}>
+              {isNumeric(projectExpense.costRangeFrom) && (
+                <span>
+                  from {projectExpense.costRangeFrom}
+                  {project.currencySymbol}{' '}
+                </span>
+              )}
+              {isNumeric(projectExpense.costRangeTo) && (
+                <span>
+                  to {projectExpense.costRangeTo}
+                  {project.currencySymbol}
+                </span>
+              )}
+            </Box>
+          </Box>
+        )}
+        {isNumeric(projectExpense.costActual) && (
+          <Box
+            sx={{
+              color: 'text.secondary',
+            }}
+          >
+            <span>
+              <SellIcon fontSize="small" />{' '}
+            </span>
+            <Box sx={{ display: 'inline', verticalAlign: 'top' }}>
+              {projectExpense.costActual}
               {project.currencySymbol}
-            </span>
+            </Box>
+          </Box>
+        )}
+        {isNumeric(projectExpense.progressPercentage) &&
+          projectExpense.progressPercentage > 0 && (
+            <Box
+              sx={{
+                color: 'text.secondary',
+              }}
+            >
+              <span>
+                <TimelineIcon fontSize="small" />{' '}
+              </span>
+              <Box sx={{ display: 'inline', verticalAlign: 'top' }}>
+                {projectExpense.progressPercentage}%
+              </Box>
+            </Box>
           )}
-        </Typography>
-      )}
-      {isNumeric(projectExpense.costActual) && (
-        <Typography sx={{ color: 'text.secondary', whiteSpace: 'pre-wrap' }}>
-          Actual cost: {projectExpense.costActual}
-        </Typography>
-      )}
-      {isNumeric(projectExpense.progressPercentage) && (
-        <Typography sx={{ color: 'text.secondary', whiteSpace: 'pre-wrap' }}>
-          Progress: {projectExpense.progressPercentage}%
-        </Typography>
+      </Stack>
+      {projectExpense.tags && projectExpense.tags.length > 0 && (
+        <Box
+          sx={{
+            color: 'text.secondary',
+          }}
+        >
+          {projectExpense.tags.map((tag, index) => {
+            return (
+              <Chip
+                key={index}
+                label={tag}
+                size="small"
+                sx={{ mr: 1, mb: 1 }}
+              />
+            )
+          })}
+        </Box>
       )}
       {projectExpense.children?.length > 0 && (
         <Box sx={{ ml: 3, flexGrow: 1 }}>

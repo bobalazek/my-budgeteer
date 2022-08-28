@@ -2,6 +2,10 @@ export const isNumeric = (n: any): boolean => {
   return !isNaN(parseFloat(n)) && isFinite(n)
 }
 
+export const isArrayOfStrings = (array: any): boolean => {
+  return array.every((item) => typeof item === 'string')
+}
+
 export function generateTree<
   T extends {
     id: string

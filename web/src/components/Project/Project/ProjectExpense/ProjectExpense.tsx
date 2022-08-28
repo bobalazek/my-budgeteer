@@ -269,9 +269,11 @@ const ProjectExpense = ({
         <Box sx={{ mt: '4px' }}>
           {projectExpense.links.map((link, index) => {
             return (
-              <Link key={index} href={link} target="_blank">
-                {link}
-              </Link>
+              <Box key={index}>
+                <Link href={link} target="_blank">
+                  {link}
+                </Link>
+              </Box>
             )
           })}
         </Box>

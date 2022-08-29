@@ -13,40 +13,66 @@ import { ValidationError } from '@redwoodjs/graphql-server'
 import { db } from 'src/lib/db'
 import { generateTree } from 'src/lib/helpers'
 
-export const projects: QueryResolvers['projects'] = () => {
+const getProjectPermissions = (
+  project: Awaited<ReturnType<typeof db.project.findFirst>>
+) => {
+  const userId = context.currentUser?.id
+
+  // TODO
+
+  return {
+    allowRead: true,
+    allowUpdate: project.userId === userId,
+    allowDelete: project.userId === userId,
+    allowClone: project.userId === userId || project.isTemplate,
+  }
+}
+
+export const projects: QueryResolvers['projects'] = async () => {
   const userId = context.currentUser?.id
   if (!userId) {
     return []
   }
 
-  return db.project.findMany({
+  const projects = await db.project.findMany({
     where: {
       userId,
     },
   })
+
+  return projects.map((project) => {
+    return { ...project, permissions: getProjectPermissions(project) }
+  })
 }
 
-export const projectTemplates: QueryResolvers['projectTemplates'] = () => {
-  const userId = context.currentUser?.id
-  if (!userId) {
-    return []
+export const projectTemplates: QueryResolvers['projectTemplates'] =
+  async () => {
+    const userId = context.currentUser?.id
+    if (!userId) {
+      return []
+    }
+
+    const projects = await db.project.findMany({
+      where: {
+        userId: null,
+        isTemplate: true,
+      },
+    })
+
+    return projects.map((project) => {
+      return { ...project, permissions: getProjectPermissions(project) }
+    })
   }
 
-  return db.project.findMany({
-    where: {
-      userId: null,
-      isTemplate: true,
-    },
-  })
-}
-
-export const project: QueryResolvers['project'] = ({ id }) => {
-  return db.project.findUnique({
+export const project: QueryResolvers['project'] = async ({ id }) => {
+  const project = await db.project.findUnique({
     where: { id },
   })
+
+  return { ...project, permissions: getProjectPermissions(project) }
 }
 
-export const createProject: MutationResolvers['createProject'] = ({
+export const createProject: MutationResolvers['createProject'] = async ({
   input,
 }) => {
   const userId = context.currentUser?.id
@@ -85,9 +111,11 @@ export const createProject: MutationResolvers['createProject'] = ({
     categoryId: input.categoryId,
   }
 
-  return db.project.create({
+  const project = await db.project.create({
     data,
   })
+
+  return { ...project, permissions: getProjectPermissions(project) }
 }
 
 export const updateProject: MutationResolvers['updateProject'] = async ({
@@ -109,10 +137,15 @@ export const updateProject: MutationResolvers['updateProject'] = async ({
     throw new ValidationError('Project with this ID does not exist')
   }
 
-  return db.project.update({
+  const updatedProject = await db.project.update({
     data: input,
     where: { id },
   })
+
+  return {
+    ...updatedProject,
+    permissions: getProjectPermissions(updatedProject),
+  }
 }
 
 export const cloneProject: MutationResolvers['cloneProject'] = async ({
@@ -207,9 +240,10 @@ export const cloneProject: MutationResolvers['cloneProject'] = async ({
     },
   })
 
-  return db.project.findUnique({
-    where: { id: clonedProject.id },
-  })
+  return {
+    ...clonedProject,
+    permissions: getProjectPermissions(clonedProject),
+  }
 }
 
 export const deleteProject: MutationResolvers['deleteProject'] = async ({
@@ -238,9 +272,13 @@ export const deleteProject: MutationResolvers['deleteProject'] = async ({
     where: { projectId: id },
   })
 
-  return db.project.delete({
+  await db.project.delete({
     where: { id },
   })
+
+  return {
+    id,
+  }
 }
 
 export const Project: ProjectResolvers = {

@@ -15,6 +15,14 @@ export const schema = gql`
     projectExpenses: [ProjectExpense]!
     createdAt: DateTime!
     updatedAt: DateTime!
+    permissions: ProjectPermissions!
+  }
+
+  type ProjectPermissions {
+    allowRead: Boolean!
+    allowUpdate: Boolean!
+    allowDelete: Boolean!
+    allowClone: Boolean!
   }
 
   type Query {

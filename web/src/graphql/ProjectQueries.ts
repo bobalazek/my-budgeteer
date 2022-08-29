@@ -37,6 +37,13 @@ export const GET_PROJECT_QUERY = gql`
     }
   }
 `
+export const CREATE_PROJECT_MUTATION = gql`
+  mutation CreateProject($input: CreateProjectInput!) {
+    createProject(input: $input) {
+      id
+    }
+  }
+`
 
 export const DELETE_PROJECT_MUTATION = gql`
   mutation DeleteProjectMutation($id: String!) {

@@ -1,4 +1,4 @@
-import type { UpdateProject } from 'types/graphql'
+import type { GetProject } from 'types/graphql'
 
 import { navigate, routes } from '@redwoodjs/router'
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
@@ -19,7 +19,7 @@ export const Failure = ({ error }: CellFailureProps) => (
   <div className="rw-cell-error">{error.message}</div>
 )
 
-export const Success = ({ project }: CellSuccessProps<UpdateProject>) => {
+export const Success = ({ project }: CellSuccessProps<GetProject>) => {
   const [updateProject, { loading, error }] = useMutation(
     UPDATE_PROJECT_MUTATION,
     {

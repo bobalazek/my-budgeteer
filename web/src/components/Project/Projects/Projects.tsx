@@ -99,7 +99,8 @@ const ProjectsList = ({ projects }) => {
               <td>
                 {project.costEstimated && (
                   <>
-                    {project.costEstimated} {project.currencySymbol}
+                    {project.costEstimated}
+                    {project.currencySymbol}
                   </>
                 )}
               </td>

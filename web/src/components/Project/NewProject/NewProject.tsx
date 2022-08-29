@@ -3,25 +3,21 @@ import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
 import ProjectForm from 'src/components/Project/ProjectForm'
-
-const CREATE_PROJECT_MUTATION = gql`
-  mutation CreateProjectMutation($input: CreateProjectInput!) {
-    createProject(input: $input) {
-      id
-    }
-  }
-`
+import { CREATE_PROJECT_MUTATION } from 'src/graphql/ProjectQueries'
 
 const NewProject = () => {
-  const [createProject, { loading, error }] = useMutation(CREATE_PROJECT_MUTATION, {
-    onCompleted: () => {
-      toast.success('Project created')
-      navigate(routes.projects())
-    },
-    onError: (error) => {
-      toast.error(error.message)
-    },
-  })
+  const [createProject, { loading, error }] = useMutation(
+    CREATE_PROJECT_MUTATION,
+    {
+      onCompleted: () => {
+        toast.success('Project created')
+        navigate(routes.projects())
+      },
+      onError: (error) => {
+        toast.error(error.message)
+      },
+    }
+  )
 
   const onSave = (input) => {
     createProject({ variables: { input } })

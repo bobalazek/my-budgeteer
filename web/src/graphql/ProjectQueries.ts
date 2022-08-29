@@ -18,6 +18,26 @@ export const GET_PROJECTS_QUERY = gql`
   }
 `
 
+export const GET_PROJECT_TEMPLATES_QUERY = gql`
+  query GetProjectTemplates {
+    projectTemplates {
+      id
+      name
+      description
+      currencySymbol
+      isPublic
+      isTemplate
+      costEstimated
+      categoryId
+      category {
+        name
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`
+
 export const GET_PROJECT_QUERY = gql`
   query GetProject($id: String!) {
     project(id: $id) {

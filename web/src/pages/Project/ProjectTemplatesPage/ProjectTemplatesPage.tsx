@@ -3,7 +3,7 @@ import { Box, Grid, Typography } from '@mui/material'
 import { Link } from '@redwoodjs/router'
 import { MetaTags } from '@redwoodjs/web'
 
-import ProjectsCell from 'src/components/Project/ProjectsCell'
+import ProjectTemplatesCell from 'src/components/Project/ProjectTemplatesCell'
 
 const ProjectTemplatesPage = () => {
   return (
@@ -27,7 +27,7 @@ const ProjectTemplatesPage = () => {
             </Grid>
           </Grid>
         </Grid>
-        <ProjectsCell />
+        <ProjectTemplatesCell />
       </Box>
     </>
   )

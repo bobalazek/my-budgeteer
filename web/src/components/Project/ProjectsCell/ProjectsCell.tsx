@@ -4,26 +4,9 @@ import { Link, routes } from '@redwoodjs/router'
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
 
 import Projects from 'src/components/Project/Projects'
+import { GET_PROJECTS_QUERY } from 'src/graphql/ProjectQueries'
 
-export const QUERY = gql`
-  query FindProjects {
-    projects {
-      id
-      name
-      description
-      currencySymbol
-      costEstimated
-      isPublic
-      isTemplate
-      categoryId
-      category {
-        name
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`
+export const QUERY = GET_PROJECTS_QUERY
 
 export const Loading = () => <div>Loading...</div>
 

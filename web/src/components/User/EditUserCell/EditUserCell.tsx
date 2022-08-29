@@ -1,4 +1,4 @@
-import type { EditUserById } from 'types/graphql'
+import type { GetUser } from 'types/graphql'
 
 import { navigate, routes } from '@redwoodjs/router'
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
@@ -6,41 +6,9 @@ import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
 import UserForm from 'src/components/User/UserForm'
+import { GET_USER_QUERY, UPDATE_USER_MUTATION } from 'src/graphql/UserQueries'
 
-export const QUERY = gql`
-  query EditUserById($id: String!) {
-    user: user(id: $id) {
-      id
-      username
-      email
-      hashedPassword
-      salt
-      name
-      resetToken
-      resetTokenExpiresAt
-      roles
-      createdAt
-      updatedAt
-    }
-  }
-`
-const UPDATE_USER_MUTATION = gql`
-  mutation UpdateUserMutation($id: String!, $input: UpdateUserInput!) {
-    updateUser(id: $id, input: $input) {
-      id
-      username
-      email
-      hashedPassword
-      salt
-      name
-      resetToken
-      resetTokenExpiresAt
-      roles
-      createdAt
-      updatedAt
-    }
-  }
-`
+export const QUERY = GET_USER_QUERY
 
 export const Loading = () => <div>Loading...</div>
 
@@ -48,7 +16,7 @@ export const Failure = ({ error }: CellFailureProps) => (
   <div className="rw-cell-error">{error.message}</div>
 )
 
-export const Success = ({ user }: CellSuccessProps<EditUserById>) => {
+export const Success = ({ user }: CellSuccessProps<GetUser>) => {
   const [updateUser, { loading, error }] = useMutation(UPDATE_USER_MUTATION, {
     onCompleted: () => {
       toast.success('User updated')

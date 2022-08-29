@@ -26,6 +26,20 @@ export const projects: QueryResolvers['projects'] = () => {
   })
 }
 
+export const projectTemplates: QueryResolvers['projectTemplates'] = () => {
+  const userId = context.currentUser?.id
+  if (!userId) {
+    return []
+  }
+
+  return db.project.findMany({
+    where: {
+      userId: null,
+      isTemplate: true,
+    },
+  })
+}
+
 export const project: QueryResolvers['project'] = ({ id }) => {
   return db.project.findUnique({
     where: { id },

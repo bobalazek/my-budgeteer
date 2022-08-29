@@ -1,5 +1,6 @@
 export interface SeedProjectInterface {
   name: string
+  description: string
   currencySymbol: string
   expenses: SeedProjectExpenseInterface[]
 }
@@ -13,6 +14,8 @@ export interface SeedProjectExpenseInterface {
 export const projects: SeedProjectInterface[] = [
   {
     name: 'Buy plot + build a house on it',
+    description:
+      'A template that assumes you buying an empty plot of land and you are building a house onto it',
     currencySymbol: 'EUR',
     expenses: [
       {

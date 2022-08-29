@@ -1,4 +1,4 @@
-import type { EditCategoryById } from 'types/graphql'
+import type { GetCategory } from 'types/graphql'
 
 import { navigate, routes } from '@redwoodjs/router'
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
@@ -6,29 +6,12 @@ import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
 import CategoryForm from 'src/components/Category/CategoryForm'
+import {
+  GET_CATEGORY_QUERY,
+  UPDATE_CATEGORY_MUTATION,
+} from 'src/graphql/CategoryQueries'
 
-export const QUERY = gql`
-  query EditCategoryById($id: String!) {
-    category: category(id: $id) {
-      id
-      name
-      description
-      createdAt
-      updatedAt
-    }
-  }
-`
-const UPDATE_CATEGORY_MUTATION = gql`
-  mutation UpdateCategoryMutation($id: String!, $input: UpdateCategoryInput!) {
-    updateCategory(id: $id, input: $input) {
-      id
-      name
-      description
-      createdAt
-      updatedAt
-    }
-  }
-`
+export const QUERY = GET_CATEGORY_QUERY
 
 export const Loading = () => <div>Loading...</div>
 
@@ -36,7 +19,7 @@ export const Failure = ({ error }: CellFailureProps) => (
   <div className="rw-cell-error">{error.message}</div>
 )
 
-export const Success = ({ category }: CellSuccessProps<EditCategoryById>) => {
+export const Success = ({ category }: CellSuccessProps<GetCategory>) => {
   const [updateCategory, { loading, error }] = useMutation(
     UPDATE_CATEGORY_MUTATION,
     {

@@ -6,6 +6,7 @@ export const schema = gql`
     currencySymbol: String!
     costEstimated: Float
     isPublic: Boolean!
+    isTemplate: Boolean!
     categoryId: String
     category: Category
     userId: String
@@ -18,6 +19,7 @@ export const schema = gql`
 
   type Query {
     projects: [Project!]! @requireAuth
+    projectTemplates: [Project!]! @requireAuth
     project(id: String!): Project @requireAuth
   }
 

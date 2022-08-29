@@ -2,15 +2,10 @@ import { Link, routes } from '@redwoodjs/router'
 import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
-import { QUERY } from 'src/components/Category/CategoriesCell'
-
-const DELETE_CATEGORY_MUTATION = gql`
-  mutation DeleteCategoryMutation($id: String!) {
-    deleteCategory(id: $id) {
-      id
-    }
-  }
-`
+import {
+  DELETE_CATEGORY_MUTATION,
+  GET_CATEGORIES_QUERY,
+} from 'src/graphql/CategoryQueries'
 
 const MAX_STRING_LENGTH = 150
 
@@ -43,7 +38,7 @@ const CategoriesList = ({ categories }) => {
     // This refetches the query on the list page. Read more about other ways to
     // update the cache over here:
     // https://www.apollographql.com/docs/react/data/mutations/#making-all-other-cache-updates
-    refetchQueries: [{ query: QUERY }],
+    refetchQueries: [{ query: GET_CATEGORIES_QUERY }],
     awaitRefetchQueries: true,
   })
 

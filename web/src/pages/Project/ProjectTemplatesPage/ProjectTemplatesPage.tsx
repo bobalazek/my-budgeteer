@@ -5,28 +5,23 @@ import { MetaTags } from '@redwoodjs/web'
 
 import ProjectsCell from 'src/components/Project/ProjectsCell'
 
-const ProjectsPage = () => {
+const ProjectTemplatesPage = () => {
   return (
     <>
-      <MetaTags title="My Projects" />
+      <MetaTags title="Project templates" />
 
       <Box p={2}>
         <Grid container justifyContent="space-between" sx={{ mb: 2 }}>
           <Grid item>
             <Typography variant="h2" sx={{ fontSize: 32 }}>
-              My Projects
+              Project Templates
             </Typography>
           </Grid>
           <Grid item>
-            <Grid container spacing={1}>
+            <Grid container>
               <Grid item>
-                <Link to="/project-templates" className="rw-button">
-                  Templates
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link to="/projects/new" className="rw-button rw-button-blue">
-                  New Project
+                <Link to="/projects" className="rw-button">
+                  My projects
                 </Link>
               </Grid>
             </Grid>
@@ -38,4 +33,4 @@ const ProjectsPage = () => {
   )
 }
 
-export default ProjectsPage
+export default ProjectTemplatesPage

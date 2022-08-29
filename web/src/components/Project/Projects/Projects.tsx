@@ -2,10 +2,10 @@ import { Link, routes } from '@redwoodjs/router'
 import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
-import { QUERY } from 'src/components/Project/ProjectsCell'
 import {
   CLONE_PROJECT_MUTATION,
   DELETE_PROJECT_MUTATION,
+  GET_PROJECTS_QUERY,
 } from 'src/graphql/ProjectQueries'
 
 const MAX_STRING_LENGTH = 150
@@ -29,7 +29,7 @@ const timeTag = (datetime) => {
 }
 
 const ProjectsList = ({ projects }) => {
-  const refetchQueries = [{ query: QUERY }]
+  const refetchQueries = [{ query: GET_PROJECTS_QUERY }]
   const [deleteProject] = useMutation(DELETE_PROJECT_MUTATION, {
     onCompleted: () => {
       toast.success('Project deleted')

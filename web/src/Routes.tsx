@@ -29,6 +29,7 @@ const Routes = () => {
         <Route path="/projects/{id}/edit" page={ProjectEditProjectPage} name="editProject" />
         <Route path="/projects/{id}" page={ProjectProjectPage} name="project" />
         <Route path="/projects" page={ProjectProjectsPage} name="projects" />
+        <Route path="/project-templates" page={ProjectProjectTemplatesPage} name="projectTemplates" />
       </Set>
       <Route notfound page={NotFoundPage} />
     </Router>

@@ -1,10 +1,10 @@
 import { SelectField } from '@redwoodjs/forms'
 import { useQuery } from '@redwoodjs/web'
 
-import { QUERY } from 'src/components/Category/CategoriesCell'
+import { GET_CATEGORIES_QUERY } from 'src/graphql/CategoryQueries'
 
 const CategoryField = (props) => {
-  const { data } = useQuery(QUERY)
+  const { data } = useQuery(GET_CATEGORIES_QUERY)
 
   const categories = data?.categories || []
 

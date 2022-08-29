@@ -31,7 +31,7 @@ export default function Header() {
               component={Link}
               to={routes.projects()}
             >
-              My Projects
+              Projects
             </Button>
           )}
           {!isAuthenticated && (

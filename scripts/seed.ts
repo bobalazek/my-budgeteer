@@ -26,7 +26,12 @@ const insertProject = async (data: typeof projects[number]) => {
   console.log(`Inserting the "${data.name}" project ...`)
 
   const project = await db.project.create({
-    data: { name: data.name, currencySymbol: data.currencySymbol },
+    data: {
+      name: data.name,
+      description: data.description,
+      currencySymbol: data.currencySymbol,
+      isTemplate: true,
+    },
   })
 
   if (typeof data.expenses !== 'undefined') {

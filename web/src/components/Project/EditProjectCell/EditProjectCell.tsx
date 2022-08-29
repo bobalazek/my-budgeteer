@@ -1,4 +1,4 @@
-import type { EditProjectById } from 'types/graphql'
+import type { UpdateProject } from 'types/graphql'
 
 import { navigate, routes } from '@redwoodjs/router'
 import type { CellSuccessProps, CellFailureProps } from '@redwoodjs/web'
@@ -6,42 +6,12 @@ import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
 import ProjectForm from 'src/components/Project/ProjectForm'
+import {
+  GET_PROJECT_QUERY,
+  UPDATE_PROJECT_MUTATION,
+} from 'src/graphql/ProjectQueries'
 
-export const QUERY = gql`
-  query EditProjectById($id: String!) {
-    project: project(id: $id) {
-      id
-      name
-      description
-      currencySymbol
-      isPublic
-      isTemplate
-      costEstimated
-      categoryId
-      category {
-        name
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`
-const UPDATE_PROJECT_MUTATION = gql`
-  mutation UpdateProjectMutation($id: String!, $input: UpdateProjectInput!) {
-    updateProject(id: $id, input: $input) {
-      id
-      name
-      description
-      currencySymbol
-      costEstimated
-      isPublic
-      isTemplate
-      categoryId
-      createdAt
-      updatedAt
-    }
-  }
-`
+export const QUERY = GET_PROJECT_QUERY
 
 export const Loading = () => <div>Loading...</div>
 
@@ -49,7 +19,7 @@ export const Failure = ({ error }: CellFailureProps) => (
   <div className="rw-cell-error">{error.message}</div>
 )
 
-export const Success = ({ project }: CellSuccessProps<EditProjectById>) => {
+export const Success = ({ project }: CellSuccessProps<UpdateProject>) => {
   const [updateProject, { loading, error }] = useMutation(
     UPDATE_PROJECT_MUTATION,
     {

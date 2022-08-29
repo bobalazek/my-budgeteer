@@ -49,6 +49,7 @@ model Project {
   currencySymbol   String
   costEstimated    Float?
   isPublic         Boolean           @default(false)
+  isTemplate       Boolean           @default(false)
   categoryId       String?
   category         Category?         @relation(name: "Category_Projects", fields: [categoryId], references: [id])
   userId           String?

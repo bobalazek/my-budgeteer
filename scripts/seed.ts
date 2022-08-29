@@ -1,38 +1,60 @@
 import { db } from 'api/src/lib/db'
 import CryptoJS from 'crypto-js'
 
-const users = [
-  {
-    name: 'Borut',
-    username: 'borut',
-    email: 'bobalazek124@gmail.com',
-    rawPassword: 'password',
-    roles: ['admin'],
-  },
-]
+import { categories } from './seed/categories'
+import { projects } from './seed/projects'
+import { users } from './seed/users'
 
-const categories = [
-  { name: 'Building', description: 'All building related stuff' },
-  {
-    name: 'DIY',
-    description: 'All DIY related stuff',
-    children: [{ name: 'Woodwork', description: 'All wodwork related stuff' }],
-  },
-]
-
-const insertCategoryWithChildren = async (
-  category: typeof categories[0],
+const insertCategory = async (
+  data: typeof categories[number],
   parentId: string = null
 ) => {
-  console.log(`Inserting the "${category.name}" category ...`)
+  console.log(`Inserting the "${data.name}" category ...`)
 
-  const categoryEntity = await db.category.create({
-    data: { name: category.name, description: category.description, parentId },
+  const category = await db.category.create({
+    data: { name: data.name, description: data.description, parentId },
   })
 
-  if (typeof category.children !== 'undefined') {
-    for (const childCategory of category.children) {
-      await insertCategoryWithChildren(childCategory, categoryEntity.id)
+  if (typeof data.children !== 'undefined') {
+    for (const childCategory of data.children) {
+      await insertCategory(childCategory, category.id)
+    }
+  }
+}
+
+const insertProject = async (data: typeof projects[number]) => {
+  console.log(`Inserting the "${data.name}" project ...`)
+
+  const project = await db.project.create({
+    data: { name: data.name, currencySymbol: data.currencySymbol },
+  })
+
+  if (typeof data.expenses !== 'undefined') {
+    for (const expense of data.expenses) {
+      await insertProjectExpense(project, expense)
+    }
+  }
+}
+
+const insertProjectExpense = async (
+  project: Awaited<ReturnType<typeof db.project.create>>,
+  data: typeof projects[number]['expenses'][number],
+  parentId: string = null
+) => {
+  console.log(`Inserting the "${data.name}" project expense ...`)
+
+  const projectExpense = await db.projectExpense.create({
+    data: {
+      name: data.name,
+      recurringInterval: data.recurringInterval || 'NONE',
+      parentId,
+      projectId: project.id,
+    },
+  })
+
+  if (typeof data.children !== 'undefined') {
+    for (const child of data.children) {
+      await insertProjectExpense(project, child, projectExpense.id)
     }
   }
 }
@@ -68,7 +90,13 @@ export default async () => {
     // Categories
     console.log('========== Categories ==========')
     for (const data of categories) {
-      await insertCategoryWithChildren(data)
+      await insertCategory(data)
+    }
+
+    // Projects
+    console.log('========== Projects ==========')
+    for (const data of projects) {
+      await insertProject(data)
     }
   } catch (error) {
     console.warn('Please define your seed data.')

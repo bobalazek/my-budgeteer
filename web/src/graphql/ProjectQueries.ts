@@ -6,6 +6,7 @@ export const GET_PROJECT_QUERY = gql`
       description
       currencySymbol
       isPublic
+      isTemplate
       costEstimated
       categoryId
       category {

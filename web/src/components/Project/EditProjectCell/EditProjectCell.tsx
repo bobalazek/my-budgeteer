@@ -15,6 +15,7 @@ export const QUERY = gql`
       description
       currencySymbol
       isPublic
+      isTemplate
       costEstimated
       categoryId
       category {
@@ -34,6 +35,7 @@ const UPDATE_PROJECT_MUTATION = gql`
       currencySymbol
       costEstimated
       isPublic
+      isTemplate
       categoryId
       createdAt
       updatedAt

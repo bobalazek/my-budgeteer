@@ -48,6 +48,7 @@ CREATE TABLE "Project" (
     "currencySymbol" TEXT NOT NULL,
     "costEstimated" DOUBLE PRECISION,
     "isPublic" BOOLEAN NOT NULL DEFAULT false,
+    "isTemplate" BOOLEAN NOT NULL DEFAULT false,
     "categoryId" TEXT,
     "userId" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,

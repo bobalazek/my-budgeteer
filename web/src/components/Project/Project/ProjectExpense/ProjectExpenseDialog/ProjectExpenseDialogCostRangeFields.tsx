@@ -9,7 +9,10 @@ const ProjectExpenseDialogCostRangeFields = ({
 }) => {
   return (
     <>
-      <Typography variant="h5" sx={{ fontSize: 16, px: 1, pt: 1 }}>
+      <Typography
+        variant="h5"
+        sx={{ fontSize: 16, px: 1, pt: 1, color: 'text.secondary' }}
+      >
         Cost
       </Typography>
       <Box display="grid" gridTemplateColumns="repeat(12, 1fr)" gap={2}>

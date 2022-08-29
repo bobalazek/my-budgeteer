@@ -81,6 +81,7 @@ const ProjectsList = ({ projects }) => {
             <th>Name</th>
             <th>Description</th>
             <th>Public</th>
+            <th>Template</th>
             <th>Cost estimated</th>
             <th>Category</th>
             <th>Created at</th>
@@ -94,6 +95,7 @@ const ProjectsList = ({ projects }) => {
               <td>{truncate(project.name)}</td>
               <td>{truncate(project.description)}</td>
               <td>{project.isPublic ? 'Yes' : 'No'}</td>
+              <td>{project.isTemplate ? 'Yes' : 'No'}</td>
               <td>
                 {project.costEstimated && (
                   <>

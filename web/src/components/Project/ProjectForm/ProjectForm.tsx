@@ -122,6 +122,21 @@ const ProjectForm = (props) => {
         <FieldError name="isPublic" className="rw-field-error" />
 
         <Label
+          name="isTemplate"
+          className="rw-label"
+          errorClassName="rw-label rw-label-error"
+        >
+          Is template
+        </Label>
+        <CheckboxField
+          name="isTemplate"
+          defaultChecked={props.project?.isTemplate}
+          className="rw-input"
+          errorClassName="rw-input rw-input-error"
+        />
+        <FieldError name="isTemplate" className="rw-field-error" />
+
+        <Label
           name="categoryId"
           className="rw-label"
           errorClassName="rw-label rw-label-error"

@@ -170,7 +170,7 @@ const ProjectExpenseDialog = ({ project }) => {
 
   return (
     <Dialog open={projectExpenseModal.open} onClose={onClose}>
-      <DialogTitle>
+      <DialogTitle sx={{ mb: 0 }}>
         {projectExpenseModal.selectedProjectExpense && (
           <>
             Edit &quot;{projectExpenseModal.selectedProjectExpense.name}&quot;

@@ -27,6 +27,7 @@ export const schema = gql`
     currencySymbol: String!
     costEstimated: Float
     isPublic: Boolean!
+    isTemplate: Boolean!
     categoryId: String
     userId: String
   }
@@ -37,6 +38,7 @@ export const schema = gql`
     currencySymbol: String
     costEstimated: Float
     isPublic: Boolean
+    isTemplate: Boolean
     categoryId: String
     userId: String
   }

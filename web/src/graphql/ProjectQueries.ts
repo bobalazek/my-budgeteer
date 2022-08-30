@@ -14,6 +14,20 @@ export const GET_PROJECTS_QUERY = gql`
       }
       createdAt
       updatedAt
+      permissions {
+        allowRead
+        allowUpdate
+        allowDelete
+        allowClone
+        allowExpensesCreate
+        allowExpensesRead
+        allowExpensesUpdate
+        allowExpensesDelete
+        allowVariablesCreate
+        allowVariablesRead
+        allowVariabesUpdate
+        allowVariablesDelete
+      }
     }
   }
 `
@@ -34,6 +48,20 @@ export const GET_PROJECT_TEMPLATES_QUERY = gql`
       }
       createdAt
       updatedAt
+      permissions {
+        allowRead
+        allowUpdate
+        allowDelete
+        allowClone
+        allowExpensesCreate
+        allowExpensesRead
+        allowExpensesUpdate
+        allowExpensesDelete
+        allowVariablesCreate
+        allowVariablesRead
+        allowVariabesUpdate
+        allowVariablesDelete
+      }
     }
   }
 `
@@ -54,6 +82,20 @@ export const GET_PROJECT_QUERY = gql`
       }
       createdAt
       updatedAt
+      permissions {
+        allowRead
+        allowUpdate
+        allowDelete
+        allowClone
+        allowExpensesCreate
+        allowExpensesRead
+        allowExpensesUpdate
+        allowExpensesDelete
+        allowVariablesCreate
+        allowVariablesRead
+        allowVariabesUpdate
+        allowVariablesDelete
+      }
     }
   }
 `
@@ -66,7 +108,7 @@ export const CREATE_PROJECT_MUTATION = gql`
 `
 
 export const DELETE_PROJECT_MUTATION = gql`
-  mutation DeleteProjectMutation($id: String!) {
+  mutation DeleteProject($id: String!) {
     deleteProject(id: $id) {
       id
     }

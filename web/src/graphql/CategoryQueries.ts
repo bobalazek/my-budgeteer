@@ -22,6 +22,14 @@ export const GET_CATEGORY_QUERY = gql`
   }
 `
 
+export const CREATE_CATEGORY_MUTATION = gql`
+  mutation CreateCategory($input: CreateCategoryInput!) {
+    createCategory(input: $input) {
+      id
+    }
+  }
+`
+
 export const DELETE_CATEGORY_MUTATION = gql`
   mutation DeleteCategory($id: String!) {
     deleteCategory(id: $id) {

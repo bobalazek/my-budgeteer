@@ -28,12 +28,13 @@ import { useSetRecoilState } from 'recoil'
 
 import { projectExpenseModalState } from 'src/state/ProjectExpenseModalState'
 import { ProjectExpenseType } from 'src/types/ProjectExpenseType'
+import { ProjectType } from 'src/types/ProjectType'
 import { isNumeric } from 'src/utils/helpers'
 
 import { ProjectExpenseRecurringIntervalsMap } from './ProjectExpenseDialog/ProjectExpenseDialogRecurringIntervalField'
 
 type ProjectExpensePropsType = {
-  project: any // TODO
+  project: ProjectType
   projectExpense: ProjectExpenseType
   index: number
   level: number
@@ -97,71 +98,86 @@ const ProjectExpense = ({
     <Box sx={sx}>
       <Grid container>
         <Grid item sx={{ flexGrow: 1 }}>
-          <TextField
-            hiddenLabel
-            fullWidth
-            multiline
-            variant="standard"
-            size="small"
-            inputRef={nameInputRef}
-            value={name}
-            onChange={onNameChange}
-          />
+          {!project.permissions.allowExpensesUpdate && (
+            <Typography>{name}</Typography>
+          )}
+          {project.permissions.allowExpensesUpdate && (
+            <TextField
+              hiddenLabel
+              fullWidth
+              multiline
+              variant="standard"
+              size="small"
+              inputRef={nameInputRef}
+              value={name}
+              onChange={onNameChange}
+            />
+          )}
         </Grid>
-        <Grid item>
-          <IconButton
-            onClick={(event) => setAnchorElement(event.currentTarget)}
-          >
-            <ExpandCircleDownIcon />
-          </IconButton>
-          <Menu
-            anchorEl={anchorElement}
-            open={!!anchorElement}
-            onClose={() => setAnchorElement(null)}
-          >
-            <MenuItem
-              onClick={() => {
-                setAnchorElement(null)
-                setProjectExpenseModal({
-                  open: true,
-                  selectedProjectExpenseParent: null,
-                  selectedProjectExpense: projectExpense,
-                })
-              }}
+        {(project.permissions.allowExpensesUpdate ||
+          project.permissions.allowExpensesDelete) && (
+          <Grid item>
+            <IconButton
+              onClick={(event) => setAnchorElement(event.currentTarget)}
             >
-              <ListItemIcon>
-                <EditIcon fontSize="small" />
-              </ListItemIcon>
-              <Typography variant="inherit">Edit</Typography>
-            </MenuItem>
-            <MenuItem
-              onClick={() => {
-                setAnchorElement(null)
-                setProjectExpenseModal({
-                  open: true,
-                  selectedProjectExpenseParent: projectExpense,
-                  selectedProjectExpense: null,
-                })
-              }}
+              <ExpandCircleDownIcon />
+            </IconButton>
+            <Menu
+              anchorEl={anchorElement}
+              open={!!anchorElement}
+              onClose={() => setAnchorElement(null)}
             >
-              <ListItemIcon>
-                <AddIcon fontSize="small" />
-              </ListItemIcon>
-              <Typography variant="inherit">Add child expense</Typography>
-            </MenuItem>
-            <MenuItem
-              onClick={() => {
-                setAnchorElement(null)
-                onDeleteButtonClick(projectExpense)
-              }}
-            >
-              <ListItemIcon>
-                <DeleteIcon fontSize="small" />
-              </ListItemIcon>
-              <Typography variant="inherit">Delete</Typography>
-            </MenuItem>
-          </Menu>
-        </Grid>
+              {project.permissions.allowExpensesUpdate && (
+                <>
+                  <MenuItem
+                    onClick={() => {
+                      setAnchorElement(null)
+                      setProjectExpenseModal({
+                        open: true,
+                        selectedProjectExpenseParent: null,
+                        selectedProjectExpense: projectExpense,
+                      })
+                    }}
+                  >
+                    <ListItemIcon>
+                      <EditIcon fontSize="small" />
+                    </ListItemIcon>
+                    <Typography variant="inherit">Edit</Typography>
+                  </MenuItem>
+
+                  <MenuItem
+                    onClick={() => {
+                      setAnchorElement(null)
+                      setProjectExpenseModal({
+                        open: true,
+                        selectedProjectExpenseParent: projectExpense,
+                        selectedProjectExpense: null,
+                      })
+                    }}
+                  >
+                    <ListItemIcon>
+                      <AddIcon fontSize="small" />
+                    </ListItemIcon>
+                    <Typography variant="inherit">Add child expense</Typography>
+                  </MenuItem>
+                </>
+              )}
+              {project.permissions.allowExpensesDelete && (
+                <MenuItem
+                  onClick={() => {
+                    setAnchorElement(null)
+                    onDeleteButtonClick(projectExpense)
+                  }}
+                >
+                  <ListItemIcon>
+                    <DeleteIcon fontSize="small" />
+                  </ListItemIcon>
+                  <Typography variant="inherit">Delete</Typography>
+                </MenuItem>
+              )}
+            </Menu>
+          </Grid>
+        )}
       </Grid>
       {projectExpense.description && (
         <Typography sx={{ color: 'text.secondary', whiteSpace: 'pre-wrap' }}>

@@ -24,7 +24,7 @@ export const GET_PROJECT_EXPENSES_QUERY = gql`
 `
 
 export const CREATE_PROJECT_EXPENSE_MUTATION = gql`
-  mutation CreateProjectExpenseMutation($input: CreateProjectExpenseInput!) {
+  mutation CreateProjectExpense($input: CreateProjectExpenseInput!) {
     createProjectExpense(input: $input) {
       id
     }
@@ -32,7 +32,7 @@ export const CREATE_PROJECT_EXPENSE_MUTATION = gql`
 `
 
 export const DELETE_PROJECT_EXPENSE_MUTATION = gql`
-  mutation DeleteProjectExpenseMutation($id: String!) {
+  mutation DeleteProjectExpense($id: String!) {
     deleteProjectExpense(id: $id) {
       id
     }

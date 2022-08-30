@@ -7,6 +7,7 @@ import {
   DELETE_PROJECT_MUTATION,
   GET_PROJECTS_QUERY,
 } from 'src/graphql/ProjectQueries'
+import { ProjectType } from 'src/types/ProjectType'
 
 const MAX_STRING_LENGTH = 150
 
@@ -28,7 +29,7 @@ const timeTag = (datetime) => {
   )
 }
 
-const ProjectsList = ({ projects }) => {
+const ProjectsList = ({ projects }: { projects: ProjectType[] }) => {
   const refetchQueries = [{ query: GET_PROJECTS_QUERY }]
   const [deleteProject] = useMutation(DELETE_PROJECT_MUTATION, {
     onCompleted: () => {
@@ -109,36 +110,44 @@ const ProjectsList = ({ projects }) => {
               <td>{timeTag(project.updatedAt)}</td>
               <td>
                 <nav className="rw-table-actions">
-                  <Link
-                    to={routes.project({ id: project.id })}
-                    title={'Show project ' + project.id + ' detail'}
-                    className="rw-button rw-button-small"
-                  >
-                    Show
-                  </Link>
-                  <Link
-                    to={routes.editProject({ id: project.id })}
-                    title={'Edit project ' + project.id}
-                    className="rw-button rw-button-small rw-button-blue"
-                  >
-                    Edit
-                  </Link>
-                  <button
-                    type="button"
-                    title={'Clone project ' + project.id}
-                    className="rw-button rw-button-small rw-button-blue"
-                    onClick={() => onCloneClick(project)}
-                  >
-                    Clone
-                  </button>
-                  <button
-                    type="button"
-                    title={'Delete project ' + project.id}
-                    className="rw-button rw-button-small rw-button-red"
-                    onClick={() => onDeleteClick(project)}
-                  >
-                    Delete
-                  </button>
+                  {project.permissions.allowRead && (
+                    <Link
+                      to={routes.project({ id: project.id })}
+                      title={'Show project ' + project.id + ' detail'}
+                      className="rw-button rw-button-small"
+                    >
+                      Show
+                    </Link>
+                  )}
+                  {project.permissions.allowUpdate && (
+                    <Link
+                      to={routes.editProject({ id: project.id })}
+                      title={'Edit project ' + project.id}
+                      className="rw-button rw-button-small rw-button-blue"
+                    >
+                      Edit
+                    </Link>
+                  )}
+                  {project.permissions.allowClone && (
+                    <button
+                      type="button"
+                      title={'Clone project ' + project.id}
+                      className="rw-button rw-button-small rw-button-blue"
+                      onClick={() => onCloneClick(project)}
+                    >
+                      Clone
+                    </button>
+                  )}
+                  {project.permissions.allowDelete && (
+                    <button
+                      type="button"
+                      title={'Delete project ' + project.id}
+                      className="rw-button rw-button-small rw-button-red"
+                      onClick={() => onDeleteClick(project)}
+                    >
+                      Delete
+                    </button>
+                  )}
                 </nav>
               </td>
             </tr>

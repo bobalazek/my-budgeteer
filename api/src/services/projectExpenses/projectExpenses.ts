@@ -43,7 +43,9 @@ export const createProjectExpense: MutationResolvers['createProjectExpense'] =
       },
     })
     if (!project) {
-      throw new ValidationError('Project with this ID does not exist')
+      throw new ValidationError(
+        'Project with this ID does not exist or is now owned by the current user'
+      )
     }
 
     validate(input.name, {
@@ -96,16 +98,6 @@ export const updateProjectExpense: MutationResolvers['updateProjectExpense'] =
     const userId = context.currentUser?.id
     if (!userId) {
       throw new ValidationError('You must be logged in to update a project')
-    }
-
-    const project = await db.project.findFirst({
-      where: {
-        id: input.projectId,
-        userId,
-      },
-    })
-    if (!project) {
-      throw new ValidationError('Project with this ID does not exist')
     }
 
     const projectExpense = await db.projectExpense.findFirst({

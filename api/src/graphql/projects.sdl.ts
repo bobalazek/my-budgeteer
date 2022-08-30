@@ -23,6 +23,14 @@ export const schema = gql`
     allowUpdate: Boolean!
     allowDelete: Boolean!
     allowClone: Boolean!
+    allowExpensesCreate: Boolean!
+    allowExpensesRead: Boolean!
+    allowExpensesUpdate: Boolean!
+    allowExpensesDelete: Boolean!
+    allowVariablesCreate: Boolean!
+    allowVariablesRead: Boolean!
+    allowVariabesUpdate: Boolean!
+    allowVariablesDelete: Boolean!
   }
 
   type Query {

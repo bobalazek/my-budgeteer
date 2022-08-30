@@ -12,19 +12,7 @@ import { ValidationError } from '@redwoodjs/graphql-server'
 
 import { db } from 'src/lib/db'
 import { generateTree } from 'src/lib/helpers'
-
-const getProjectPermissions = (
-  project: Awaited<ReturnType<typeof db.project.findFirst>>
-) => {
-  const userId = context.currentUser?.id
-
-  return {
-    allowRead: project.isPublic || project.userId === userId,
-    allowUpdate: project.userId === userId,
-    allowDelete: project.userId === userId,
-    allowClone: project.userId === userId || project.isTemplate,
-  }
-}
+import { getProjectPermissions } from 'src/lib/permissions'
 
 export const projects: QueryResolvers['projects'] = async () => {
   const userId = context.currentUser?.id
@@ -67,6 +55,11 @@ export const project: QueryResolvers['project'] = async ({ id }) => {
   const project = await db.project.findUnique({
     where: { id },
   })
+
+  const projectPermissions = getProjectPermissions(project)
+  if (!projectPermissions.allowRead) {
+    throw new ValidationError('You are not allowed to do this')
+  }
 
   return { ...project, permissions: getProjectPermissions(project) }
 }
@@ -136,6 +129,11 @@ export const updateProject: MutationResolvers['updateProject'] = async ({
     throw new ValidationError('Project with this ID does not exist')
   }
 
+  const projectPermissions = getProjectPermissions(project)
+  if (!projectPermissions.allowUpdate) {
+    throw new ValidationError('You are not allowed to do this')
+  }
+
   const updatedProject = await db.project.update({
     data: input,
     where: { id },
@@ -163,6 +161,11 @@ export const cloneProject: MutationResolvers['cloneProject'] = async ({
   })
   if (!project) {
     throw new ValidationError('Project with this ID does not exist')
+  }
+
+  const projectPermissions = getProjectPermissions(project)
+  if (!projectPermissions.allowClone) {
+    throw new ValidationError('You are not allowed to do this')
   }
 
   const projectVariables = await db.projectVariable.findMany({
@@ -261,6 +264,11 @@ export const deleteProject: MutationResolvers['deleteProject'] = async ({
   })
   if (!project) {
     throw new ValidationError('Project with this ID does not exist')
+  }
+
+  const projectPermissions = getProjectPermissions(project)
+  if (!projectPermissions.allowDelete) {
+    throw new ValidationError('You are not allowed to do this')
   }
 
   await db.projectVariable.deleteMany({

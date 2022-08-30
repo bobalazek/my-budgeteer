@@ -13,7 +13,7 @@ export const GET_PROJECT_VARIABLES_QUERY = gql`
 `
 
 export const CREATE_PROJECT_VARIABLE_MUTATION = gql`
-  mutation CreateProjectVariableMutation($input: CreateProjectVariableInput!) {
+  mutation CreateProjectVariable($input: CreateProjectVariableInput!) {
     createProjectVariable(input: $input) {
       id
     }
@@ -21,7 +21,7 @@ export const CREATE_PROJECT_VARIABLE_MUTATION = gql`
 `
 
 export const DELETE_PROJECT_VARIABLE_MUTATION = gql`
-  mutation DeleteProjectVariableMutation($id: String!) {
+  mutation DeleteProjectVariable($id: String!) {
     deleteProjectVariable(id: $id) {
       id
     }

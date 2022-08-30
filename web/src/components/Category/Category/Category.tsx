@@ -2,13 +2,7 @@ import { Link, routes, navigate } from '@redwoodjs/router'
 import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
-const DELETE_CATEGORY_MUTATION = gql`
-  mutation DeleteCategoryMutation($id: String!) {
-    deleteCategory(id: $id) {
-      id
-    }
-  }
-`
+import { DELETE_CATEGORY_MUTATION } from 'src/graphql/CategoryQueries'
 
 const timeTag = (datetime) => {
   return (

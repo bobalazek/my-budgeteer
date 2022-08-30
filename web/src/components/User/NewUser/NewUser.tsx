@@ -3,14 +3,7 @@ import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
 import UserForm from 'src/components/User/UserForm'
-
-const CREATE_USER_MUTATION = gql`
-  mutation CreateUserMutation($input: CreateUserInput!) {
-    createUser(input: $input) {
-      id
-    }
-  }
-`
+import { CREATE_USER_MUTATION } from 'src/graphql/UserQueries'
 
 const NewUser = () => {
   const [createUser, { loading, error }] = useMutation(CREATE_USER_MUTATION, {

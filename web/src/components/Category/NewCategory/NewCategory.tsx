@@ -3,25 +3,21 @@ import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
 import CategoryForm from 'src/components/Category/CategoryForm'
-
-const CREATE_CATEGORY_MUTATION = gql`
-  mutation CreateCategoryMutation($input: CreateCategoryInput!) {
-    createCategory(input: $input) {
-      id
-    }
-  }
-`
+import { CREATE_CATEGORY_MUTATION } from 'src/graphql/CategoryQueries'
 
 const NewCategory = () => {
-  const [createCategory, { loading, error }] = useMutation(CREATE_CATEGORY_MUTATION, {
-    onCompleted: () => {
-      toast.success('Category created')
-      navigate(routes.categories())
-    },
-    onError: (error) => {
-      toast.error(error.message)
-    },
-  })
+  const [createCategory, { loading, error }] = useMutation(
+    CREATE_CATEGORY_MUTATION,
+    {
+      onCompleted: () => {
+        toast.success('Category created')
+        navigate(routes.categories())
+      },
+      onError: (error) => {
+        toast.error(error.message)
+      },
+    }
+  )
 
   const onSave = (input) => {
     createCategory({ variables: { input } })

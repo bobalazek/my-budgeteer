@@ -18,10 +18,8 @@ const getProjectPermissions = (
 ) => {
   const userId = context.currentUser?.id
 
-  // TODO
-
   return {
-    allowRead: true,
+    allowRead: project.isPublic || project.userId === userId,
     allowUpdate: project.userId === userId,
     allowDelete: project.userId === userId,
     allowClone: project.userId === userId || project.isTemplate,
@@ -56,6 +54,7 @@ export const projectTemplates: QueryResolvers['projectTemplates'] =
       where: {
         userId: null,
         isTemplate: true,
+        isPublic: true,
       },
     })
 

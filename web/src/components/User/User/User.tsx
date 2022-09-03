@@ -18,7 +18,7 @@ const User = ({ user }) => {
   const [deleteUser] = useMutation(DELETE_USER_MUTATION, {
     onCompleted: () => {
       toast.success('User deleted')
-      navigate(routes.users())
+      navigate(routes.adminUsers())
     },
     onError: (error) => {
       toast.error(error.message)
@@ -90,7 +90,7 @@ const User = ({ user }) => {
       </div>
       <nav className="rw-button-group">
         <Link
-          to={routes.editUser({ id: user.id })}
+          to={routes.editAdminUser({ id: user.id })}
           className="rw-button rw-button-blue"
         >
           Edit

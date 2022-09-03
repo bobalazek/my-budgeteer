@@ -9,14 +9,14 @@ const Routes = () => {
       <Private unauthenticated="login" roles={['admin']}>
         <Set wrap={AdminLayout}>
           <Route path="/admin" page={AdminPage} name="admin" />
-          <Route path="/admin/users/new" page={AdminUserNewUserPage} name="newUser" />
-          <Route path="/admin/users/{id}/edit" page={AdminUserEditUserPage} name="editUser" />
-          <Route path="/admin/users/{id}" page={AdminUserUserPage} name="user" />
-          <Route path="/admin/users" page={AdminUserUsersPage} name="users" />
-          <Route path="/admin/categories/new" page={AdminCategoryNewCategoryPage} name="newCategory" />
-          <Route path="/admin/categories/{id}/edit" page={AdminCategoryEditCategoryPage} name="editCategory" />
-          <Route path="/admin/categories/{id}" page={AdminCategoryCategoryPage} name="category" />
-          <Route path="/admin/categories" page={AdminCategoryCategoriesPage} name="categories" />
+          <Route path="/admin/users/new" page={AdminUserNewUserPage} name="newAdminUser" />
+          <Route path="/admin/users/{id}/edit" page={AdminUserEditUserPage} name="editAdminUser" />
+          <Route path="/admin/users/{id}" page={AdminUserUserPage} name="adminUser" />
+          <Route path="/admin/users" page={AdminUserUsersPage} name="adminUsers" />
+          <Route path="/admin/categories/new" page={AdminCategoryNewCategoryPage} name="newAdminCategory" />
+          <Route path="/admin/categories/{id}/edit" page={AdminCategoryEditCategoryPage} name="editAdminCategory" />
+          <Route path="/admin/categories/{id}" page={AdminCategoryCategoryPage} name="adminCategory" />
+          <Route path="/admin/categories" page={AdminCategoryCategoriesPage} name="adminCategories" />
         </Set>
       </Private>
       <Set wrap={DefaultLayout}>

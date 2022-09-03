@@ -1,6 +1,6 @@
-import { Box, Grid, Typography } from '@mui/material'
+import { Box, Grid, Typography, Button } from '@mui/material'
 
-import { Link } from '@redwoodjs/router'
+import { Link, routes } from '@redwoodjs/router'
 import { MetaTags } from '@redwoodjs/web'
 
 import ProjectTemplatesCell from 'src/components/Project/ProjectTemplatesCell'
@@ -20,9 +20,15 @@ const ProjectTemplatesPage = () => {
           <Grid item>
             <Grid container>
               <Grid item>
-                <Link to="/projects" className="rw-button">
+                <Button
+                  href="#"
+                  color="inherit"
+                  variant="outlined"
+                  component={Link}
+                  to={routes.projects()}
+                >
                   My projects
-                </Link>
+                </Button>
               </Grid>
             </Grid>
           </Grid>

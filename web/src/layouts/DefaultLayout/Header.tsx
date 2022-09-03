@@ -1,10 +1,10 @@
-import { AppBar, Button, Toolbar, Typography } from '@mui/material'
+import { AppBar, Button, Toolbar, Typography, Box } from '@mui/material'
 
 import { useAuth } from '@redwoodjs/auth'
 import { Link, routes } from '@redwoodjs/router'
 
 export default function Header() {
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, hasRole } = useAuth()
 
   return (
     <header>
@@ -24,26 +24,38 @@ export default function Header() {
           >
             My Budgeteer
           </Typography>
-          {isAuthenticated && (
-            <Button
-              href="#"
-              color="inherit"
-              component={Link}
-              to={routes.projects()}
-            >
-              Projects
-            </Button>
-          )}
-          {!isAuthenticated && (
-            <Button
-              href="#"
-              color="inherit"
-              component={Link}
-              to={routes.login()}
-            >
-              Login
-            </Button>
-          )}
+          <Box>
+            {hasRole('admin') && (
+              <Button
+                href="#"
+                color="inherit"
+                component={Link}
+                to={routes.admin()}
+              >
+                Admin
+              </Button>
+            )}
+            {isAuthenticated && (
+              <Button
+                href="#"
+                color="inherit"
+                component={Link}
+                to={routes.projects()}
+              >
+                Projects
+              </Button>
+            )}
+            {!isAuthenticated && (
+              <Button
+                href="#"
+                color="inherit"
+                component={Link}
+                to={routes.login()}
+              >
+                Login
+              </Button>
+            )}
+          </Box>
         </Toolbar>
       </AppBar>
     </header>

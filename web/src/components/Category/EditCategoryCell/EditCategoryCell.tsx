@@ -25,7 +25,7 @@ export const Success = ({ category }: CellSuccessProps<GetCategory>) => {
     {
       onCompleted: () => {
         toast.success('Category updated')
-        navigate(routes.categories())
+        navigate(routes.adminCategories())
       },
       onError: (error) => {
         toast.error(error.message)

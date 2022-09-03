@@ -1,3 +1,14 @@
+import {
+  Button,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from '@mui/material'
+
 import { Link, routes, navigate } from '@redwoodjs/router'
 import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
@@ -76,86 +87,94 @@ const ProjectsList = ({ projects }: { projects: ProjectType[] }) => {
   }
 
   return (
-    <div className="rw-segment rw-table-wrapper-responsive">
-      <table className="rw-table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Public</th>
-            <th>Template</th>
-            <th>Cost estimated</th>
-            <th>Category</th>
-            <th>Created at</th>
-            <th>Updated at</th>
-            <th>&nbsp;</th>
-          </tr>
-        </thead>
-        <tbody>
+    <TableContainer component={Paper}>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>Name</TableCell>
+            <TableCell>Description</TableCell>
+            <TableCell>Public</TableCell>
+            <TableCell>Template</TableCell>
+            <TableCell>Cost estimated</TableCell>
+            <TableCell>Category</TableCell>
+            <TableCell>Created at</TableCell>
+            <TableCell>Updated at</TableCell>
+            <TableCell>&nbsp;</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
           {projects.map((project) => (
-            <tr key={project.id}>
-              <td>{truncate(project.name)}</td>
-              <td>{truncate(project.description)}</td>
-              <td>{project.isPublic ? 'Yes' : 'No'}</td>
-              <td>{project.isTemplate ? 'Yes' : 'No'}</td>
-              <td>
+            <TableRow key={project.id}>
+              <TableCell>{truncate(project.name)}</TableCell>
+              <TableCell>{truncate(project.description)}</TableCell>
+              <TableCell>{project.isPublic ? 'Yes' : 'No'}</TableCell>
+              <TableCell>{project.isTemplate ? 'Yes' : 'No'}</TableCell>
+              <TableCell>
                 {project.costEstimated && (
                   <>
                     {project.costEstimated}
                     {project.currencySymbol}
                   </>
                 )}
-              </td>
-              <td>{truncate(project.category?.name)}</td>
-              <td>{timeTag(project.createdAt)}</td>
-              <td>{timeTag(project.updatedAt)}</td>
-              <td>
+              </TableCell>
+              <TableCell>{truncate(project.category?.name)}</TableCell>
+              <TableCell>{timeTag(project.createdAt)}</TableCell>
+              <TableCell>{timeTag(project.updatedAt)}</TableCell>
+              <TableCell>
                 <nav className="rw-table-actions">
                   {project.permissions.allowRead && (
-                    <Link
+                    <Button
+                      size="small"
+                      color="inherit"
+                      component={Link}
                       to={routes.project({ id: project.id })}
-                      title={'Show project ' + project.id + ' detail'}
-                      className="rw-button rw-button-small"
                     >
                       Show
-                    </Link>
+                    </Button>
                   )}
                   {project.permissions.allowUpdate && (
-                    <Link
+                    <Button
+                      size="small"
+                      color="primary"
+                      component={Link}
                       to={routes.editProject({ id: project.id })}
-                      title={'Edit project ' + project.id}
-                      className="rw-button rw-button-small rw-button-blue"
                     >
                       Edit
-                    </Link>
+                    </Button>
                   )}
                   {project.permissions.allowClone && (
-                    <button
-                      type="button"
-                      title={'Clone project ' + project.id}
-                      className="rw-button rw-button-small rw-button-blue"
-                      onClick={() => onCloneClick(project)}
+                    <Button
+                      size="small"
+                      href="#"
+                      color="secondary"
+                      onClick={(event) => {
+                        event.preventDefault()
+                        onCloneClick(project)
+                      }}
                     >
                       Clone
-                    </button>
+                    </Button>
                   )}
                   {project.permissions.allowDelete && (
-                    <button
-                      type="button"
-                      title={'Delete project ' + project.id}
-                      className="rw-button rw-button-small rw-button-red"
-                      onClick={() => onDeleteClick(project)}
+                    <Button
+                      size="small"
+                      href="#"
+                      color="error"
+                      onClick={(event) => {
+                        event.preventDefault()
+                        onDeleteClick(project)
+                      }}
                     >
                       Delete
-                    </button>
+                    </Button>
                   )}
                 </nav>
-              </td>
-            </tr>
+              </TableCell>
+            </TableRow>
           ))}
-        </tbody>
-      </table>
-    </div>
+        </TableBody>
+      </Table>
+    </TableContainer>
   )
 }
 

@@ -18,7 +18,7 @@ const Category = ({ category }) => {
   const [deleteCategory] = useMutation(DELETE_CATEGORY_MUTATION, {
     onCompleted: () => {
       toast.success('Category deleted')
-      navigate(routes.categories())
+      navigate(routes.adminCategories())
     },
     onError: (error) => {
       toast.error(error.message)
@@ -66,7 +66,7 @@ const Category = ({ category }) => {
       </div>
       <nav className="rw-button-group">
         <Link
-          to={routes.editCategory({ id: category.id })}
+          to={routes.newAdminCategory({ id: category.id })}
           className="rw-button rw-button-blue"
         >
           Edit

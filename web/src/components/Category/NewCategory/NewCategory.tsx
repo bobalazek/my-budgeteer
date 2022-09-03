@@ -11,7 +11,7 @@ const NewCategory = () => {
     {
       onCompleted: () => {
         toast.success('Category created')
-        navigate(routes.categories())
+        navigate(routes.adminCategories())
       },
       onError: (error) => {
         toast.error(error.message)

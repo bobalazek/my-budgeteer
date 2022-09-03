@@ -72,14 +72,14 @@ const CategoriesList = ({ categories }) => {
               <td>
                 <nav className="rw-table-actions">
                   <Link
-                    to={routes.category({ id: category.id })}
+                    to={routes.adminCategory({ id: category.id })}
                     title={'Show category ' + category.id + ' detail'}
                     className="rw-button rw-button-small"
                   >
                     Show
                   </Link>
                   <Link
-                    to={routes.editCategory({ id: category.id })}
+                    to={routes.newAdminCategory({ id: category.id })}
                     title={'Edit category ' + category.id}
                     className="rw-button rw-button-small rw-button-blue"
                   >

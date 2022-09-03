@@ -16,10 +16,13 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
           </Link>
         </h1>
         <div style={{ display: 'flex' }}>
-          <Link to={routes.users()} className="rw-button">
+          <Link to={routes.home()} className="rw-button">
+            Back to website
+          </Link>
+          <Link to={routes.adminUsers()} className="rw-button">
             Users
           </Link>
-          <Link to={routes.categories()} className="rw-button">
+          <Link to={routes.adminCategories()} className="rw-button">
             Categories
           </Link>
         </div>

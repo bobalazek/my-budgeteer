@@ -34,7 +34,9 @@ const ProjectExpenseDialogParentField = ({ value, onChange }) => {
       size="small"
       variant="standard"
       value={value || '__NONE__'}
-      onChange={onChange}
+      onChange={(event) => {
+        onChange(event.target.value)
+      }}
       SelectProps={{
         native: true,
       }}

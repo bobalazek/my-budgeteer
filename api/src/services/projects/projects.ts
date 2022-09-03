@@ -97,8 +97,8 @@ export const createProject: MutationResolvers['createProject'] = async ({
     description: input.description,
     currencySymbol: input.currencySymbol,
     costEstimated: input.costEstimated,
-    isPublic: input.isPublic || false,
-    isTemplate: input.isTemplate || false,
+    isPublic: input.isPublic,
+    isTemplate: input.isTemplate,
     userId,
     categoryId: input.categoryId,
   }
@@ -133,6 +133,19 @@ export const updateProject: MutationResolvers['updateProject'] = async ({
   if (!projectPermissions.allowUpdate) {
     throw new ValidationError('You are not allowed to do this')
   }
+
+  validateWith(() => {
+    if (input.categoryId) {
+      const category = db.category.findUnique({
+        where: {
+          id: input.categoryId,
+        },
+      })
+      if (!category) {
+        throw new ValidationError('Category with this ID does not exist')
+      }
+    }
+  })
 
   const updatedProject = await db.project.update({
     data: input,

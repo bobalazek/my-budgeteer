@@ -6,6 +6,7 @@ export type ProjectType = {
   isPublic: boolean
   isTemplate: boolean
   costEstimated: number
+  categoryId: null | string
   category: null | {
     name: string
   }

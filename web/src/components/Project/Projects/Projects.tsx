@@ -95,7 +95,7 @@ const ProjectsList = ({ projects }: { projects: ProjectType[] }) => {
             <TableCell>Description</TableCell>
             <TableCell>Public</TableCell>
             <TableCell>Template</TableCell>
-            <TableCell>Estimated const</TableCell>
+            <TableCell>Estimated cost</TableCell>
             <TableCell>Category</TableCell>
             <TableCell>Created at</TableCell>
             <TableCell>Updated at</TableCell>

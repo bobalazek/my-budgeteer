@@ -53,6 +53,13 @@ export const createProjectVariable: MutationResolvers['createProjectVariable'] =
       },
     })
 
+    validate(input.type, {
+      inclusion: {
+        in: ['string'],
+        message: 'Invalid type',
+      },
+    })
+
     validate(input.value, {
       length: {
         min: 1,
@@ -91,6 +98,28 @@ export const updateProjectVariable: MutationResolvers['updateProjectVariable'] =
     if (!project) {
       throw new ValidationError('Project with this ID does not exist')
     }
+
+    validate(input.name, {
+      length: {
+        min: 2,
+        max: 255,
+        message: 'Name needs to be between 2 and 255 characters long',
+      },
+    })
+
+    validate(input.type, {
+      inclusion: {
+        in: ['string'],
+        message: 'Invalid type',
+      },
+    })
+
+    validate(input.value, {
+      length: {
+        min: 1,
+        message: 'Please set a value',
+      },
+    })
 
     return db.projectVariable.update({
       data: input,

@@ -25,7 +25,7 @@ export const Success = ({ project }: CellSuccessProps<GetProject>) => {
     {
       onCompleted: () => {
         toast.success('Project updated')
-        navigate(routes.projects())
+        navigate(routes.myProjects())
       },
       onError: (error) => {
         toast.error(error.message)

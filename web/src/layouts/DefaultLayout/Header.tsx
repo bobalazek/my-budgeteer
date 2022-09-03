@@ -40,7 +40,7 @@ export default function Header() {
                 href="#"
                 color="inherit"
                 component={Link}
-                to={routes.projects()}
+                to={routes.myProjects()}
               >
                 Projects
               </Button>

@@ -8,7 +8,7 @@ import ProjectExpensesSection from './ProjectExpense/ProjectExpensesSection'
 import ProjectVariablesSection from './ProjectVariable/ProjectVariablesSection'
 
 const Project = ({ project }) => {
-  const [tab, setTab] = useState(0)
+  const [tab, setTab] = useState('expenses')
 
   return (
     <>
@@ -24,7 +24,7 @@ const Project = ({ project }) => {
             color="inherit"
             variant="outlined"
             component={Link}
-            to={routes.projects()}
+            to={routes.myProjects()}
           >
             Back to Projects
           </Button>
@@ -35,11 +35,11 @@ const Project = ({ project }) => {
         <Typography sx={{ p: 2 }}>{project.description}</Typography>
       )}
       <Tabs value={tab} onChange={(_, value) => setTab(value)}>
-        <Tab label="Expenses" />
-        <Tab label="Variables" />
+        <Tab label="Expenses" value="expenses" />
+        <Tab label="Variables" value="variables" />
       </Tabs>
-      {tab === 0 && <ProjectExpensesSection project={project} />}
-      {tab === 1 && <ProjectVariablesSection project={project} />}
+      {tab === 'expenses' && <ProjectExpensesSection project={project} />}
+      {tab === 'variables' && <ProjectVariablesSection project={project} />}
     </>
   )
 }

@@ -25,7 +25,7 @@ const ProjectTemplatesPage = () => {
                   color="inherit"
                   variant="outlined"
                   component={Link}
-                  to={routes.projects()}
+                  to={routes.myProjects()}
                 >
                   My projects
                 </Button>

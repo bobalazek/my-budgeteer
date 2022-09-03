@@ -82,7 +82,7 @@ const ProjectsList = ({ projects }: { projects: ProjectType[] }) => {
           },
         },
       })
-      navigate(routes.projects())
+      navigate(routes.myProjects())
     }
   }
 

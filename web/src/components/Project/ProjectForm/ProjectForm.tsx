@@ -152,7 +152,7 @@ const ProjectForm = (props) => {
         <FieldError name="categoryId" className="rw-field-error" />
 
         <div className="rw-button-group">
-          <Link to={routes.projects()} className="rw-button">
+          <Link to={routes.myProjects()} className="rw-button">
             Back
           </Link>
           <Submit disabled={props.loading} className="rw-button rw-button-blue">

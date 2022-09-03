@@ -5,7 +5,7 @@ import { MetaTags } from '@redwoodjs/web'
 
 import ProjectsCell from 'src/components/Project/ProjectsCell'
 
-const ProjectsPage = () => {
+const MyProjectsPage = () => {
   return (
     <>
       <MetaTags title="My Projects" />
@@ -50,4 +50,4 @@ const ProjectsPage = () => {
   )
 }
 
-export default ProjectsPage
+export default MyProjectsPage

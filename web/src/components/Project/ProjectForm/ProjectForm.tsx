@@ -7,8 +7,11 @@ import { Link, routes } from '@redwoodjs/router'
 import { ProjectType } from 'src/types/ProjectType'
 
 import ProjectFormCategoryField from './ProjectForm/ProjectFormCategoryField'
+import ProjectFormCostEstimatedField from './ProjectForm/ProjectFormCostEstimatedField'
 import ProjectFormCurrencySymbolField from './ProjectForm/ProjectFormCurrencySymbolField'
 import ProjectFormDescriptionField from './ProjectForm/ProjectFormDescriptionField'
+import ProjectFormIsPublicField from './ProjectForm/ProjectFormIsPublicField'
+import ProjectFormIsTemplateField from './ProjectForm/ProjectFormIsTemplateField'
 import ProjectFormNameField from './ProjectForm/ProjectFormNameField'
 
 const ProjectForm = ({
@@ -27,15 +30,17 @@ const ProjectForm = ({
   const [description, setDescription] = useState('')
   const [currencySymbol, setCurrencySymbol] = useState('')
   const [costEstimated, setCostEstimated] = useState(null)
+  const [categoryId, setCategoryId] = useState(null)
   const [isPublic, setIsPublic] = useState(false)
   const [isTemplate, setIsTemplate] = useState(false)
-  const [categoryId, setCategoryId] = useState(null)
 
   useEffect(() => {
     setName(project?.name || '')
     setDescription(project?.description || '')
     setCurrencySymbol(project?.currencySymbol || '')
     setCategoryId(project?.categoryId || '')
+    setIsPublic(project?.isPublic || false)
+    setIsTemplate(project?.isTemplate || false)
   }, [project])
 
   const onSubmit = () => {
@@ -44,7 +49,7 @@ const ProjectForm = ({
         name,
         description,
         currencySymbol,
-        costEstimated,
+        costEstimated: costEstimated ? parseFloat(costEstimated) : null,
         isPublic,
         isTemplate,
         categoryId: categoryId || null,
@@ -77,10 +82,29 @@ const ProjectForm = ({
           setCurrencySymbol(value)
         }}
       />
+      <ProjectFormCostEstimatedField
+        value={costEstimated}
+        onChange={(value) => {
+          setCostEstimated(value)
+        }}
+        currencySymbol={currencySymbol}
+      />
       <ProjectFormCategoryField
         value={categoryId}
         onChange={(value) => {
           setCategoryId(value)
+        }}
+      />
+      <ProjectFormIsPublicField
+        value={isPublic}
+        onChange={(value) => {
+          setIsPublic(value)
+        }}
+      />
+      <ProjectFormIsTemplateField
+        value={isTemplate}
+        onChange={(value) => {
+          setIsTemplate(value)
         }}
       />
       <Box sx={{ textAlign: 'center', mt: 2 }}>

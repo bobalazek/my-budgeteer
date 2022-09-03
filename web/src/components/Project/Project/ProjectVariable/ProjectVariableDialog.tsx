@@ -125,7 +125,7 @@ const ProjectVariableDialog = ({ project }) => {
       </DialogTitle>
       <DialogContent
         sx={{
-          '& .MuiTextField-root': { m: 1 },
+          '& .MuiTextField-root': { my: 1 },
         }}
       >
         <ProjectVariableDialogNameField
@@ -137,7 +137,7 @@ const ProjectVariableDialog = ({ project }) => {
         <ProjectVariableDialogTypeField
           value={name}
           onChange={(value) => {
-            setName(value)
+            setType(value)
           }}
         />
         <ProjectVariableDialogValueField

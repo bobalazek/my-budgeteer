@@ -22,7 +22,7 @@ export type ProjectType = {
     allowExpensesDelete: boolean
     allowVariablesCreate: boolean
     allowVariablesRead: boolean
-    allowVariabesUpdate: boolean
+    allowVariablesUpdate: boolean
     allowVariablesDelete: boolean
   }
 }

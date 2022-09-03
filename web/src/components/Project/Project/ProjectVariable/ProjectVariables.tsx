@@ -1,6 +1,9 @@
-import { Delete as DeleteIcon } from '@mui/icons-material'
+import { useEffect } from 'react'
+
+import { Delete as DeleteIcon, Edit as EditIcon } from '@mui/icons-material'
 import { Box, IconButton } from '@mui/material'
 import { useConfirm } from 'material-ui-confirm'
+import { useSetRecoilState } from 'recoil'
 
 import { useMutation, useQuery } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
@@ -9,8 +12,13 @@ import {
   DELETE_PROJECT_VARIABLE_MUTATION,
   GET_PROJECT_VARIABLES_QUERY,
 } from 'src/graphql/ProjectVariableQueries'
+import { projectVariableModalState } from 'src/state/ProjectVariableModalState'
+import { projectVariablesState } from 'src/state/ProjectVariablesState'
+import { ProjectType } from 'src/types/ProjectType'
+import { ProjectVariableType } from 'src/types/ProjectVariableType'
 
-const ProjectVariables = ({ project }) => {
+const ProjectVariables = ({ project }: { project: ProjectType }) => {
+  const setProjectVariableModal = useSetRecoilState(projectVariableModalState)
   const { data, loading, error } = useQuery(GET_PROJECT_VARIABLES_QUERY, {
     variables: {
       projectId: project.id,
@@ -34,8 +42,20 @@ const ProjectVariables = ({ project }) => {
     }
   )
   const confirm = useConfirm()
+  const setProjectVariables = useSetRecoilState(projectVariablesState)
 
-  const onDeleteButtonClick = async (id: string) => {
+  useEffect(() => {
+    setProjectVariables(data?.projectVariables || [])
+  }, [setProjectVariables, data])
+
+  const onEditButtonClick = async (projectVariable: ProjectVariableType) => {
+    setProjectVariableModal({
+      open: true,
+      selectedProjectVariable: projectVariable,
+    })
+  }
+
+  const onDeleteButtonClick = async (projectVariable: ProjectVariableType) => {
     try {
       await confirm({
         description:
@@ -44,7 +64,7 @@ const ProjectVariables = ({ project }) => {
 
       deleteProjectVariable({
         variables: {
-          id,
+          id: projectVariable.id,
         },
       })
     } catch (err) {
@@ -73,13 +93,24 @@ const ProjectVariables = ({ project }) => {
               {projectVariable.name} ({projectVariable.type}):&nbsp;
             </b>
             <span>{projectVariable.value}</span>
-            <IconButton
-              size="small"
-              sx={{ ml: 1 }}
-              onClick={() => onDeleteButtonClick(projectVariable.id)}
-            >
-              <DeleteIcon />
-            </IconButton>
+            {project.permissions.allowVariablesUpdate && (
+              <IconButton
+                size="small"
+                sx={{ ml: 1 }}
+                onClick={() => onEditButtonClick(projectVariable)}
+              >
+                <EditIcon />
+              </IconButton>
+            )}
+            {project.permissions.allowVariablesDelete && (
+              <IconButton
+                size="small"
+                sx={{ ml: 1 }}
+                onClick={() => onDeleteButtonClick(projectVariable)}
+              >
+                <DeleteIcon />
+              </IconButton>
+            )}
           </Box>
         )
       })}

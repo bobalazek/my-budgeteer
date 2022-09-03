@@ -193,7 +193,7 @@ const ProjectExpenseDialog = ({ project }) => {
       </DialogTitle>
       <DialogContent
         sx={{
-          '& .MuiTextField-root': { m: 1 },
+          '& .MuiTextField-root': { my: 1 },
         }}
       >
         <ProjectExpenseDialogNameField

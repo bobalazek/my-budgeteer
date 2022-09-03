@@ -29,7 +29,7 @@ export const schema = gql`
     allowExpensesDelete: Boolean!
     allowVariablesCreate: Boolean!
     allowVariablesRead: Boolean!
-    allowVariabesUpdate: Boolean!
+    allowVariablesUpdate: Boolean!
     allowVariablesDelete: Boolean!
   }
 

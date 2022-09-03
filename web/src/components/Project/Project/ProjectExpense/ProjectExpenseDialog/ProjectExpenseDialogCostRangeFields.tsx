@@ -11,7 +11,7 @@ const ProjectExpenseDialogCostRangeFields = ({
     <>
       <Typography
         variant="h5"
-        sx={{ fontSize: 16, px: 1, pt: 1, color: 'text.secondary' }}
+        sx={{ fontSize: 16, pt: 2, color: 'text.secondary' }}
       >
         Cost
       </Typography>

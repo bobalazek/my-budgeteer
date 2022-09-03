@@ -11,8 +11,8 @@ import {
 
 const ProjectExpenseDialogLinksField = ({ value, onChange }) => {
   return (
-    <FormGroup sx={{ px: 1 }}>
-      <Grid container>
+    <FormGroup>
+      <Grid container sx={{ mb: 1 }}>
         <Grid item>
           <FormLabel sx={{ verticalAlign: 'sub', mr: 1 }}>Links</FormLabel>
         </Grid>

@@ -25,7 +25,7 @@ export const GET_PROJECTS_QUERY = gql`
         allowExpensesDelete
         allowVariablesCreate
         allowVariablesRead
-        allowVariabesUpdate
+        allowVariablesUpdate
         allowVariablesDelete
       }
     }
@@ -59,7 +59,7 @@ export const GET_PROJECT_TEMPLATES_QUERY = gql`
         allowExpensesDelete
         allowVariablesCreate
         allowVariablesRead
-        allowVariabesUpdate
+        allowVariablesUpdate
         allowVariablesDelete
       }
     }
@@ -93,7 +93,7 @@ export const GET_PROJECT_QUERY = gql`
         allowExpensesDelete
         allowVariablesCreate
         allowVariablesRead
-        allowVariabesUpdate
+        allowVariablesUpdate
         allowVariablesDelete
       }
     }

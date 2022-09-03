@@ -21,7 +21,7 @@ export const getProjectPermissions = (
     allowExpensesDelete: allowDelete,
     allowVariablesCreate: allowCreate,
     allowVariablesRead: allowRead,
-    allowVariabesUpdate: allowUpdate,
-    allowVariablesDelete: allowRead,
+    allowVariablesUpdate: allowUpdate,
+    allowVariablesDelete: allowDelete,
   }
 }

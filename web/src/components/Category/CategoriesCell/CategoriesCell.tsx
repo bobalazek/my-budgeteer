@@ -14,7 +14,7 @@ export const Empty = () => {
   return (
     <div className="rw-text-center">
       {'No categories yet. '}
-      <Link to={routes.newCategory()} className="rw-link">
+      <Link to={routes.newAdminCategory()} className="rw-link">
         {'Create one?'}
       </Link>
     </div>

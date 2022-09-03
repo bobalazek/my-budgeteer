@@ -1,4 +1,4 @@
-import { Link, routes } from '@redwoodjs/router'
+import { Link, routes, navigate } from '@redwoodjs/router'
 import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
@@ -57,13 +57,13 @@ const ProjectsList = ({ projects }: { projects: ProjectType[] }) => {
       deleteProject({ variables: { id: project.id } })
     }
   }
-  const onCloneClick = (project) => {
+  const onCloneClick = async (project) => {
     const name = prompt(
       'What do you want to call the new project?',
       `${project.name} (clone)`
     )
     if (name) {
-      cloneProject({
+      await cloneProject({
         variables: {
           id: project.id,
           input: {
@@ -71,6 +71,7 @@ const ProjectsList = ({ projects }: { projects: ProjectType[] }) => {
           },
         },
       })
+      navigate(routes.projects())
     }
   }
 

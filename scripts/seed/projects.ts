@@ -56,17 +56,67 @@ export const projects: SeedProjectInterface[] = [
       {
         name: 'Building',
         children: [
-          { name: 'Building exterior' },
           {
-            name: 'Building interior',
+            name: 'Interior',
             children: [
-              { name: 'Bathroom' },
-              { name: 'Bedroom' },
-              { name: 'Kitchen' },
-              { name: 'Living room' },
+              {
+                name: 'Bathroom',
+                children: [
+                  { name: 'Toilet' },
+                  { name: 'Shower' },
+                  { name: 'Bathroom block' },
+                  { name: 'Top load washer' },
+                  { name: 'Humidity ventilator' },
+                  { name: 'Heater' },
+                ],
+              },
+              {
+                name: 'Kitchen',
+                children: [
+                  { name: 'Kitchen block' },
+                  { name: 'Sink' },
+                  {
+                    name: 'Appliances',
+                    children: [
+                      { name: 'Hob' },
+                      { name: 'Oven' },
+                      { name: 'Hood' },
+                      { name: 'Fridge' },
+                      { name: 'Microwave' },
+                    ],
+                  },
+                  { name: 'Plates' },
+                  { name: 'Pans' },
+                  { name: 'Cutlery' },
+                ],
+              },
+              {
+                name: 'Dining room',
+                children: [{ name: 'Dining table' }, { name: 'Dining chairs' }],
+              },
+              {
+                name: 'Bedroom',
+                children: [
+                  { name: 'Nightstand' },
+                  { name: 'Wardrobe' },
+                  { name: 'Bedroom TV' },
+                  { name: 'Bed', children: [{ name: 'Mattress' }] },
+                ],
+              },
+
+              {
+                name: 'Living room',
+                children: [
+                  { name: 'Couch' },
+                  { name: 'Living room TV' },
+                  { name: 'Living room cabinet' },
+                  { name: 'Living room table' },
+                ],
+              },
               { name: 'Garage' },
             ],
           },
+          { name: 'Terrace', children: [{ name: 'Terrace chairs' }] },
         ],
       },
       {

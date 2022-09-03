@@ -128,39 +128,38 @@ const ProjectExpense = ({
               onClose={() => setAnchorElement(null)}
             >
               {project.permissions.allowExpensesUpdate && (
-                <>
-                  <MenuItem
-                    onClick={() => {
-                      setAnchorElement(null)
-                      setProjectExpenseModal({
-                        open: true,
-                        selectedProjectExpenseParent: null,
-                        selectedProjectExpense: projectExpense,
-                      })
-                    }}
-                  >
-                    <ListItemIcon>
-                      <EditIcon fontSize="small" />
-                    </ListItemIcon>
-                    <Typography variant="inherit">Edit</Typography>
-                  </MenuItem>
-
-                  <MenuItem
-                    onClick={() => {
-                      setAnchorElement(null)
-                      setProjectExpenseModal({
-                        open: true,
-                        selectedProjectExpenseParent: projectExpense,
-                        selectedProjectExpense: null,
-                      })
-                    }}
-                  >
-                    <ListItemIcon>
-                      <AddIcon fontSize="small" />
-                    </ListItemIcon>
-                    <Typography variant="inherit">Add child expense</Typography>
-                  </MenuItem>
-                </>
+                <MenuItem
+                  onClick={() => {
+                    setAnchorElement(null)
+                    setProjectExpenseModal({
+                      open: true,
+                      selectedProjectExpenseParent: null,
+                      selectedProjectExpense: projectExpense,
+                    })
+                  }}
+                >
+                  <ListItemIcon>
+                    <EditIcon fontSize="small" />
+                  </ListItemIcon>
+                  <Typography variant="inherit">Edit</Typography>
+                </MenuItem>
+              )}
+              {project.permissions.allowExpensesUpdate && (
+                <MenuItem
+                  onClick={() => {
+                    setAnchorElement(null)
+                    setProjectExpenseModal({
+                      open: true,
+                      selectedProjectExpenseParent: projectExpense,
+                      selectedProjectExpense: null,
+                    })
+                  }}
+                >
+                  <ListItemIcon>
+                    <AddIcon fontSize="small" />
+                  </ListItemIcon>
+                  <Typography variant="inherit">Add child expense</Typography>
+                </MenuItem>
               )}
               {project.permissions.allowExpensesDelete && (
                 <MenuItem

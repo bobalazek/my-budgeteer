@@ -182,7 +182,13 @@ export const cloneProject: MutationResolvers['cloneProject'] = async ({
   const { id: _, createdAt: __, updatedAt: ___, ...rawProject } = project
 
   const clonedProject = await db.project.create({
-    data: { ...rawProject, ...input, userId },
+    data: {
+      ...rawProject,
+      ...input,
+      userId,
+      isTemplate: false,
+      isPublic: false,
+    },
   })
 
   await db.projectVariable.createMany({

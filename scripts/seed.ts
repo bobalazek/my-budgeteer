@@ -31,6 +31,7 @@ const insertProject = async (data: typeof projects[number]) => {
       description: data.description,
       currencySymbol: data.currencySymbol,
       isTemplate: true,
+      isPublic: true,
     },
   })
 

@@ -4,9 +4,10 @@ import { useRecoilState } from 'recoil'
 import { projectExpenseModalState } from 'src/state/ProjectExpenseModalState'
 import { projectExpensesState } from 'src/state/ProjectExpensesState'
 
-const ProjectExpenseOption = ({ projectExpense, level }) => {
+const ProjectExpenseOption = ({ projectExpense, level, disabled }) => {
   const [projectExpenseModal] = useRecoilState(projectExpenseModalState)
   const isCurrentlySelected =
+    disabled ||
     projectExpense.id === projectExpenseModal.selectedProjectExpense?.id
 
   return (
@@ -18,7 +19,6 @@ const ProjectExpenseOption = ({ projectExpense, level }) => {
       >
         {level ? '-'.repeat(level) + ' ' : ''}
         {projectExpense.name}
-        {isCurrentlySelected ? ' (currently selected)' : ''}
       </option>
       {projectExpense.children?.map((child) => {
         return (
@@ -26,6 +26,7 @@ const ProjectExpenseOption = ({ projectExpense, level }) => {
             key={child.id}
             projectExpense={child}
             level={level + 1}
+            disabled={isCurrentlySelected}
           />
         )
       })}
@@ -59,6 +60,7 @@ const ProjectExpenseDialogParentField = ({ value, onChange }) => {
             key={projectExpense.id}
             projectExpense={projectExpense}
             level={0}
+            disabled={false}
           />
         )
       })}

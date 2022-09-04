@@ -1,3 +1,4 @@
+import { breadth } from 'treeverse'
 import type {
   QueryResolvers,
   MutationResolvers,
@@ -8,7 +9,32 @@ import { validate } from '@redwoodjs/api'
 import { ValidationError } from '@redwoodjs/graphql-server'
 
 import { db } from 'src/lib/db'
-import { isArrayOfLinks, isArrayOfStrings, isNumeric } from 'src/lib/helpers'
+import {
+  generateTree,
+  isArrayOfLinks,
+  isArrayOfStrings,
+  isNumeric,
+} from 'src/lib/helpers'
+
+// Helpers
+function searchTree(
+  tree: ReturnType<typeof generateTree>,
+  searchId: string
+): ReturnType<typeof generateTree>[number] | null {
+  for (const projectExpenseTree of tree) {
+    if (projectExpenseTree.id === searchId) {
+      return projectExpenseTree
+    } else if (projectExpenseTree.children.length > 0) {
+      let result = null
+      for (const child of projectExpenseTree.children) {
+        result = searchTree(child as any, searchId)
+      }
+      return result
+    }
+  }
+
+  return null
+}
 
 export const projectExpenses: QueryResolvers['projectExpenses'] = ({
   projectId,
@@ -132,6 +158,29 @@ export const updateProjectExpense: MutationResolvers['updateProjectExpense'] =
 
     if (input.parentId === projectExpense.id) {
       throw new ValidationError('You can not set the parent expense to itself')
+    }
+
+    if (input.parentId) {
+      const projectExpenses = await db.projectExpense.findMany({
+        where: {
+          projectId: id,
+        },
+      })
+      const projectExpensesTree = generateTree(projectExpenses as any)
+      const currentProjectTree = searchTree(projectExpensesTree, input.parentId)
+
+      const childIds: string[] = []
+      await breadth({
+        tree: { id: 'root', children: [currentProjectTree] },
+        getChildren: (node) => node.children,
+        visit: async (node) => {
+          childIds.push(node.id)
+        },
+      })
+
+      if (childIds.includes(input.parentId)) {
+        throw new ValidationError('The parent can not be set a child of itself')
+      }
     }
 
     const transactionPromises = []

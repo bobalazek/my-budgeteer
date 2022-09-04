@@ -1,14 +1,24 @@
 import { TextField } from '@mui/material'
 import { useRecoilState } from 'recoil'
 
+import { projectExpenseModalState } from 'src/state/ProjectExpenseModalState'
 import { projectExpensesState } from 'src/state/ProjectExpensesState'
 
 const ProjectExpenseOption = ({ projectExpense, level }) => {
+  const [projectExpenseModal] = useRecoilState(projectExpenseModalState)
+  const isCurrentlySelected =
+    projectExpense.id === projectExpenseModal.selectedProjectExpense?.id
+
   return (
     <>
-      <option key={projectExpense.id} value={projectExpense.id}>
+      <option
+        key={projectExpense.id}
+        value={projectExpense.id}
+        disabled={isCurrentlySelected}
+      >
         {level ? '-'.repeat(level) + ' ' : ''}
         {projectExpense.name}
+        {isCurrentlySelected ? ' (currently selected)' : ''}
       </option>
       {projectExpense.children?.map((child) => {
         return (

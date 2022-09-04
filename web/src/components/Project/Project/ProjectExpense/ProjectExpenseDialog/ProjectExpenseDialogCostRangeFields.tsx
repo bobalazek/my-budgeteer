@@ -19,7 +19,7 @@ const ProjectExpenseDialogCostRangeFields = ({
         <Box gridColumn="span 6">
           <TextField
             fullWidth
-            label="From"
+            label="From range"
             variant="standard"
             size="small"
             value={valueFrom}
@@ -36,7 +36,7 @@ const ProjectExpenseDialogCostRangeFields = ({
         <Box gridColumn="span 6">
           <TextField
             fullWidth
-            label="To"
+            label="To range"
             variant="standard"
             size="small"
             value={valueTo}

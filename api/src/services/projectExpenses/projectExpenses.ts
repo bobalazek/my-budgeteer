@@ -130,6 +130,10 @@ export const updateProjectExpense: MutationResolvers['updateProjectExpense'] =
       throw new ValidationError('All links are required and must be valid')
     }
 
+    if (input.parentId === projectExpense.id) {
+      throw new ValidationError('You can not set the parent expense to itself')
+    }
+
     const transactionPromises = []
     if (
       typeof input.order !== 'undefined' &&

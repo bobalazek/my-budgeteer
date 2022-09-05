@@ -45,7 +45,9 @@ export const handler = async (event, context) => {
     // didn't validate their email yet), throw an error and it will be returned
     // by the `logIn()` function from `useAuth()` in the form of:
     // `{ message: 'Error message' }`
-    handler: (user) => {
+    handler: async (user) => {
+      // TODO: check if email is validated
+
       return user
     },
 
@@ -102,7 +104,9 @@ export const handler = async (event, context) => {
     //
     // If this returns anything else, it will be returned by the
     // `signUp()` function in the form of: `{ message: 'String here' }`.
-    handler: ({ username, hashedPassword, salt, userAttributes }) => {
+    handler: async ({ username, hashedPassword, salt, userAttributes }) => {
+      // TODO: send email
+
       return db.user.create({
         data: {
           username,

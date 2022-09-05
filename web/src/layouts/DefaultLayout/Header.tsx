@@ -1,10 +1,23 @@
-import { AppBar, Button, Toolbar, Typography, Box } from '@mui/material'
+import { useState } from 'react'
+
+import {
+  AppBar,
+  Button,
+  Toolbar,
+  Typography,
+  Box,
+  Menu,
+  MenuItem,
+  IconButton,
+  Avatar,
+} from '@mui/material'
 
 import { useAuth } from '@redwoodjs/auth'
-import { Link, routes } from '@redwoodjs/router'
+import { Link, navigate, routes } from '@redwoodjs/router'
 
 export default function Header() {
   const { isAuthenticated, hasRole } = useAuth()
+  const [anchorElement, setAnchorElement] = useState(null)
 
   return (
     <header>
@@ -36,14 +49,47 @@ export default function Header() {
               </Button>
             )}
             {isAuthenticated && (
-              <Button
-                href="#"
-                color="inherit"
-                component={Link}
-                to={routes.myProjects()}
-              >
-                Projects
-              </Button>
+              <>
+                <Button
+                  href="#"
+                  color="inherit"
+                  component={Link}
+                  to={routes.myProjects()}
+                >
+                  Projects
+                </Button>
+                <IconButton
+                  onClick={(event) => setAnchorElement(event.currentTarget)}
+                  sx={{ p: 0, ml: 2 }}
+                >
+                  <Avatar
+                    alt="Profile"
+                    src="https://avatars.dicebear.com/api/pixel-art/aaa.svg"
+                  />
+                </IconButton>
+                <Menu
+                  anchorEl={anchorElement}
+                  open={!!anchorElement}
+                  onClose={() => setAnchorElement(null)}
+                >
+                  <MenuItem
+                    onClick={() => {
+                      navigate(routes.profile())
+                      setAnchorElement(null)
+                    }}
+                  >
+                    Profile
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      navigate(routes.settings())
+                      setAnchorElement(null)
+                    }}
+                  >
+                    Settings
+                  </MenuItem>
+                </Menu>
+              </>
             )}
             {!isAuthenticated && (
               <Button

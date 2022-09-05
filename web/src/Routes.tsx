@@ -25,12 +25,18 @@ const Routes = () => {
         <Route path="/signup" page={SignupPage} name="signup" />
         <Route path="/forgot-password" page={ForgotPasswordPage} name="forgotPassword" />
         <Route path="/reset-password" page={ResetPasswordPage} name="resetPassword" />
-        <Route path="/projects/new" page={ProjectNewProjectPage} name="newProject" />
-        <Route path="/projects/{id}/edit" page={ProjectEditProjectPage} name="editProject" />
-        <Route path="/projects/{id}" page={ProjectProjectPage} name="project" />
-        <Route path="/my-projects" page={ProjectMyProjectsPage} name="myProjects" />
-        <Route path="/project-templates" page={ProjectProjectTemplatesPage} name="projectTemplates" />
       </Set>
+      <Private unauthenticated="login">
+        <Set wrap={DefaultLayout}>
+          <Route path="/profile" page={ProfilePage} name="profile" />
+          <Route path="/settings" page={SettingsPage} name="settings" />
+          <Route path="/projects/new" page={ProjectNewProjectPage} name="newProject" />
+          <Route path="/projects/{id}/edit" page={ProjectEditProjectPage} name="editProject" />
+          <Route path="/projects/{id}" page={ProjectProjectPage} name="project" />
+          <Route path="/my-projects" page={ProjectMyProjectsPage} name="myProjects" />
+          <Route path="/project-templates" page={ProjectProjectTemplatesPage} name="projectTemplates" />
+        </Set>
+      </Private>
       <Route notfound page={NotFoundPage} />
     </Router>
   )

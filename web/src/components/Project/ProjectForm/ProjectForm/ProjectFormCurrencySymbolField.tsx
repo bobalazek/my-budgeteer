@@ -18,7 +18,7 @@ const ProjectFormCurrencySymbolField = ({ value, onChange }) => {
         variant="standard"
         value={value || '__NONE__'}
         onChange={(event) => {
-          onChange(event.target.value)
+          onChange(event.target.value === '__NONE__' ? '' : event.target.value)
         }}
         SelectProps={{
           native: true,

@@ -148,19 +148,21 @@ export const updateProjectExpense: MutationResolvers['updateProjectExpense'] =
       )
     }
 
-    if (!isArrayOfStrings(input.tags)) {
+    if (typeof input.tags !== 'undefined' && !isArrayOfStrings(input.tags)) {
       throw new ValidationError('The tags must be an array of strings')
     }
 
-    if (!isArrayOfLinks(input.links)) {
+    if (typeof input.links !== 'undefined' && !isArrayOfLinks(input.links)) {
       throw new ValidationError('All links are required and must be valid')
     }
 
-    if (input.parentId === projectExpense.id) {
-      throw new ValidationError('You can not set the parent expense to itself')
-    }
-
     if (input.parentId) {
+      if (input.parentId === projectExpense.id) {
+        throw new ValidationError(
+          'You can not set the parent expense to itself'
+        )
+      }
+
       const projectExpenses = await db.projectExpense.findMany({
         where: {
           projectId: id,
@@ -172,9 +174,11 @@ export const updateProjectExpense: MutationResolvers['updateProjectExpense'] =
       const childIds: string[] = []
       await breadth({
         tree: { id: 'root', children: [currentProjectTree] },
-        getChildren: (node) => node.children,
+        getChildren: (node) => node?.children || [],
         visit: async (node) => {
-          childIds.push(node.id)
+          if (node) {
+            childIds.push(node.id)
+          }
         },
       })
 
@@ -200,7 +204,14 @@ export const updateProjectExpense: MutationResolvers['updateProjectExpense'] =
           },
         })
       )
+    } else {
+      input.order = await db.projectExpense.count({
+        where: {
+          projectId: input.projectId,
+        },
+      })
     }
+
     transactionPromises.push(
       db.projectExpense.update({
         data: input,

@@ -1,8 +1,8 @@
 export const users = [
   {
-    name: 'Borut',
-    username: 'borut',
-    email: 'bobalazek124@gmail.com',
+    name: 'Admin',
+    username: 'admin',
+    email: 'admin@mybudgeteer.com',
     rawPassword: 'password',
     roles: ['admin'],
   },

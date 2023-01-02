@@ -16,7 +16,7 @@ import { useAuth } from '@redwoodjs/auth'
 import { Link, navigate, routes } from '@redwoodjs/router'
 
 export default function Header() {
-  const { isAuthenticated, hasRole } = useAuth()
+  const { isAuthenticated, hasRole, logOut } = useAuth()
   const [anchorElement, setAnchorElement] = useState(null)
 
   return (
@@ -87,6 +87,14 @@ export default function Header() {
                     }}
                   >
                     Settings
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      logOut()
+                      navigate(routes.login())
+                    }}
+                  >
+                    Logout
                   </MenuItem>
                 </Menu>
               </>

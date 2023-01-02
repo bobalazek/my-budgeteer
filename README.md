@@ -2,7 +2,7 @@
 
 My budgeteer is a simple self-hosted budgetting app.
 
-**Currently in active development. Not intended to use in production.**
+**Currently in active development. Not intended for use in production!**
 
 ## Stack
 

@@ -1,6 +1,6 @@
 # My Budgeteer
 
-My budgeteer is a simple self-hosted budgetting app.
+My Budgeteer is a simple self-hosted budgeting app.
 
 **Currently in active development. Not intended for use in production!**
 
